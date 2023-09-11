@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ErrorHelperTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">10sp</item> <!-- Adjust the text size as needed -->
+    </style>
+</resources>

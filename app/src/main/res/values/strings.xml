@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NutriEye</string>
+    <string name="select_sex">Sex</string>
+    <string name="age">Age</string>
+</resources>
