@@ -130,7 +130,7 @@
 
             </LinearLayout>
 
-            <View android:layout_width="wrap_content" android:layout_height="30dp"/>
+            <View android:layout_width="wrap_content" android:layout_height="32dp"/>
 
             <RelativeLayout
                     android:layout_width="match_parent"
@@ -456,7 +456,7 @@
                         android:id="@+id/backToPersonalButton"
                         android:layout_width="wrap_content"
                         android:layout_height="60dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="23dp"
                         android:layout_weight="2"
                         android:layout_marginRight="20dp"
                         app:cornerRadius="32dp"
@@ -468,7 +468,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="60dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="23dp"
                         android:layout_marginLeft="20dp"
                         android:layout_weight="2"
                         app:cornerRadius="32dp"

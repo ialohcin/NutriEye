@@ -13,6 +13,9 @@
             android:theme="@style/Theme.NutriEye"
             tools:targetApi="31">
         <activity
+                android:name=".NavigationScreen"
+                android:exported="false"/>
+        <activity
                 android:name=".SignUpScreen"
                 android:exported="true"
                 android:windowSoftInputMode="adjustPan">
