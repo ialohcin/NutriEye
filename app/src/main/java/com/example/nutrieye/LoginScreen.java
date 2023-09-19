@@ -132,6 +132,9 @@ public class LoginScreen extends AppCompatActivity {
             // Successful login
             Toast.makeText(LoginScreen.this, "Please Verify your Email Address", Toast.LENGTH_SHORT).show();
             // ...
+            Intent intent = new Intent(LoginScreen.this, NavigationScreen.class);
+            startActivity(intent);
+            finish();
         }
     }
 

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/white"
+             tools:context=".ProfileFragment">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/topbg"
+                        android:scaleType="fitXY"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="35dp"
+                        android:text="Profile"
+                        android:textSize="30sp"
+                        android:textColor="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/textView7"/>
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pic"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/imageView3"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="John Doe"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@id/imageView3"
+                        app:layout_constraintStart_toStartOf="@id/imageView3"
+                        app:layout_constraintTop_toBottomOf="@id/imageView3"
+                        android:id="@+id/textView4"/>
+
+                <TextView
+                        android:text="johndoe@gmail.com"
+                        android:textSize="15sp"
+                        android:alpha="0.7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView3"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView4"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintVertical_bias="0.0"/>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/editProfileButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Edit Profile"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textAlignment="viewStart"
+                            android:background="@drawable/btn_bg"
+                            android:drawableStart="@drawable/edit"
+                            android:drawableEnd="@drawable/chevron_right"
+                            android:drawablePadding="20dp"
+                            android:paddingStart="20dp"
+                            app:cornerRadius="10dp"
+                            />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/settingsButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Settings"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textAlignment="viewStart"
+                            android:background="@drawable/btn_bg"
+                            android:drawableStart="@drawable/settings"
+                            android:drawableEnd="@drawable/chevron_right"
+                            android:drawablePadding="20dp"
+                            android:paddingStart="20dp"
+                            app:cornerRadius="10dp"
+                            />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/helpCenterButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Help Center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textAlignment="viewStart"
+                            android:background="@drawable/btn_bg"
+                            android:drawableStart="@drawable/help"
+                            android:drawableEnd="@drawable/chevron_right"
+                            android:drawablePadding="20dp"
+                            android:paddingStart="20dp"
+                            app:cornerRadius="10dp"
+                            />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/logoutButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="Log Out"
+                            android:textStyle="bold"
+                            android:textColor="@color/light_orange"
+                            android:textAlignment="viewStart"
+                            android:background="@drawable/btn_bg"
+                            android:drawableStart="@drawable/logout"
+                            android:drawableEnd="@drawable/chevron_right"
+                            android:drawableTint="@color/light_orange"
+                            android:drawablePadding="20dp"
+                            android:paddingStart="20dp"
+                            app:cornerRadius="10dp"
+                            />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
