@@ -209,18 +209,21 @@ public class EditProfileScreen extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             // Navigate back to NavigationScreen with ProfileFragment active
-            Intent intent = new Intent(this, NavigationScreen.class);
-            intent.putExtra("activeFragment", "ProfileFragment");
-            startActivity(intent);
-            finish(); // Finish the EditProfileScreen activity
-            onBackPressed();
+            navigateToProfileFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        navigateToProfileFragment();
+    }
+
+    private void navigateToProfileFragment() {
+        Intent intent = new Intent(this, NavigationScreen.class);
+        intent.putExtra("activeFragment", "ProfileFragment");
+        startActivity(intent);
+        finish(); // Finish the EditProfileScreen activity
     }
 
     private boolean isValidEmail(CharSequence email) {
