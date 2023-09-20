@@ -24,6 +24,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         AppCompatButton logout = view.findViewById(R.id.logoutButton);
+        AppCompatButton editProfie = view.findViewById(R.id.editProfileButton);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +49,15 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 alertDialog.show();
+            }
+        });
+
+        editProfie.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), EditProfileScreen.class);
+            startActivity(intent);
+            //To be modified
+            if (getActivity() != null) {
+                getActivity().finishAffinity();
             }
         });
 
