@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import static androidx.core.app.ActivityCompat.finishAffinity;
 
+import com.google.android.material.button.MaterialButton;
+
 
 public class ProfileFragment extends Fragment {
 
@@ -23,8 +25,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        AppCompatButton logout = view.findViewById(R.id.logoutButton);
-        AppCompatButton editProfie = view.findViewById(R.id.editProfileButton);
+        MaterialButton logout = view.findViewById(R.id.logoutButton);
+        MaterialButton editProfie = view.findViewById(R.id.editProfileButton);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

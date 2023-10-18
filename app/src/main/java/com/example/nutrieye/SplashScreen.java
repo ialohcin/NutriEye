@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.firebase.FirebaseApp;
 
 public class SplashScreen extends AppCompatActivity {
 

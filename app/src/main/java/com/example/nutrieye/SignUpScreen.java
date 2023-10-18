@@ -1,6 +1,7 @@
 package com.example.nutrieye;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,10 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
@@ -28,18 +37,24 @@ import java.util.regex.Pattern;
 
 public class SignUpScreen extends AppCompatActivity {
 
-    LinearLayout account, personal, health;
-    CardView signUpContainer;
-    MaterialButton registerButton, goToPersonalButton, backToPersonalButton, backtoAccountButton, goToHealthButton;
-    TextView loginAcc1, loginAcc2, loginAcc3;
+    private LinearLayout account, personal, health;
+    private CardView signUpContainer;
+    private MaterialButton registerButton, goToPersonalButton, backToPersonalButton, backtoAccountButton, goToHealthButton;
+    private TextView loginAcc1, loginAcc2, loginAcc3;
 
-    TextInputEditText email, password, confirmPass, firstName, lastName, dob, contactNumber, height, weight;
-    AutoCompleteTextView selectSex, selectPhyActivityLvl, selectFoodAllergens, selectHealthConditions;
-    TextInputLayout emailTextInput, passwordTextInput, confirmPassTextInput, firstNameTextInput, lastNameTextInput, dobTextInput, sexTextInput, contactNumTextInput,
+    private TextInputEditText email, password, confirmPass, firstName, lastName, dob, contactNumber, height, weight;
+    private AutoCompleteTextView selectSex, selectPhyActivityLvl, selectFoodAllergens, selectHealthConditions;
+    private TextInputLayout emailTextInput, passwordTextInput, confirmPassTextInput, firstNameTextInput, lastNameTextInput, dobTextInput, sexTextInput, contactNumTextInput,
             heightTextInput, weightTextInput, phyActivityTextInput, foodAllergensTextInput, healthConditionsTextInput;
+
+    ProgressDialog signUpProgress;
 
     private boolean[] foodAllergenCheckedItems;
     private boolean[] healthConditionCheckedItems;
+
+    FirebaseAuth auth;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +66,15 @@ public class SignUpScreen extends AppCompatActivity {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        auth = FirebaseAuth.getInstance();
+
         account = findViewById(R.id.accountDetails);
         personal = findViewById(R.id.personalDetails);
         health = findViewById(R.id.healthDetails);
         health.setVisibility(View.INVISIBLE);
         personal.setVisibility(View.INVISIBLE);
+
+        signUpProgress = new ProgressDialog(this);
 
         signUpContainer = findViewById(R.id.signUpContainer);
         signUpContainer.setBackgroundResource(R.drawable.cardview);
@@ -248,17 +267,27 @@ public class SignUpScreen extends AppCompatActivity {
                 currentFocus.clearFocus();
             }
 
-            String emailStr = Objects.requireNonNull(email.getText()).toString().trim();
-            String passwordStr = Objects.requireNonNull(password.getText()).toString().trim();
-            String confirmPasswordStr = Objects.requireNonNull(confirmPass.getText()).toString().trim();
-            String firstNameStr = Objects.requireNonNull(firstName.getText()).toString().trim();
-            String lastNameStr = Objects.requireNonNull(lastName.getText()).toString().trim();
-            String dobStr = Objects.requireNonNull(dob.getText()).toString().trim();
+            signUpProgress.setTitle("Registering Account");
+            signUpProgress.setMessage("Verifying Information...");
+            signUpProgress.setCancelable(false);
+            signUpProgress.show();
+
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference("users");
+
+            String emailStr = email.getText().toString().trim();
+            String passwordStr = password.getText().toString().trim();
+            String confirmPasswordStr = confirmPass.getText().toString().trim();
+            String firstNameStr = firstName.getText().toString().trim();
+            String lastNameStr = lastName.getText().toString().trim();
+            String dobStr = dob.getText().toString().trim();
             String selectedSex = selectSex.getText().toString().trim();
-            String contactNumberStr = Objects.requireNonNull(contactNumber.getText()).toString().trim();
+            String contactNumberStr = contactNumber.getText().toString().trim();
             String selectedPhysicalActivityLevel = selectPhyActivityLvl.getText().toString().trim();
-            String heightStr = Objects.requireNonNull(height.getText()).toString().trim();
-            String weightStr = Objects.requireNonNull(weight.getText()).toString().trim();
+            String selectHealthConditionsStr = selectHealthConditions.getText().toString().trim();
+            String selectFoodAllergensStr = selectFoodAllergens.getText().toString().trim();
+            String heightStr = height.getText().toString().trim();
+            String weightStr = weight.getText().toString().trim();
 
             boolean hasError = false;
 
@@ -281,12 +310,36 @@ public class SignUpScreen extends AppCompatActivity {
                 alertDialog.setPositiveButton("OK", (dialogInterface, option) -> dialogInterface.dismiss());
                 alertDialog.show();
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SignUpScreen.this);
-                builder.setMessage("An email has been sent.\nPlease check your email for a confirmation link.")
-                        .setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                builder.create().show();
+                auth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(SignUpScreen.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            signUpProgress.dismiss(); // Dismiss the progress dialog if registration fails
+                        } else {
+                            final FirebaseUser user = auth.getCurrentUser();
+                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                    if (!task.isSuccessful()) {
+                                        Toast.makeText(SignUpScreen.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        signUpProgress.dismiss(); // Dismiss the progress dialog if email verification fails
+                                    } else {
+                                        // Registration and email verification successful
+                                        Toast.makeText(SignUpScreen.this, "Please Verify your Email. Thank you!", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(SignUpScreen.this, LoginScreen.class));
+                                        finish();
+
+                                        signUpProgress.dismiss(); // Dismiss the progress dialog after registration and email verification
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
+
 
         loginAcc1 = findViewById(R.id.goToLoginAcc1);
         loginAcc2 = findViewById(R.id.goToLoginAcc2);

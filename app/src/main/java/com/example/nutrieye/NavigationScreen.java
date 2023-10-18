@@ -1,8 +1,6 @@
 package com.example.nutrieye;
 
 import android.content.Intent;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -31,12 +29,12 @@ public class NavigationScreen extends AppCompatActivity {
                     replaceFragment(new ProfileFragment());
                     break;
                 case "SearchFragment":
-                    setBottomNavigationItemChecked(R.id.search);
-                    replaceFragment(new SearchFragment());
+                    setBottomNavigationItemChecked(R.id.mealplan);
+                    replaceFragment(new MealPlanFragment());
                     break;
-                case "InsightFragment":
-                    setBottomNavigationItemChecked(R.id.insight);
-                    replaceFragment(new InsightFragment());
+                case "ResourcesFragment":
+                    setBottomNavigationItemChecked(R.id.resources);
+                    replaceFragment(new ResourcesFragment());
                     break;
                 default:
                     // Default to HomeFragment if no or unrecognized activeFragment specified
@@ -57,10 +55,10 @@ public class NavigationScreen extends AppCompatActivity {
 
             if (item.getItemId() == R.id.home) {
                 replaceFragment(new HomeFragment());
-            } else if (item.getItemId() == R.id.search) {
-                replaceFragment(new SearchFragment());
-            } else if (item.getItemId() == R.id.insight) {
-                replaceFragment(new InsightFragment());
+            } else if (item.getItemId() == R.id.mealplan) {
+                replaceFragment(new MealPlanFragment());
+            } else if (item.getItemId() == R.id.resources) {
+                replaceFragment(new ResourcesFragment());
             } else if (item.getItemId() == R.id.profile) {
                 replaceFragment(new ProfileFragment());
             }
@@ -84,4 +82,5 @@ public class NavigationScreen extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
         bottomNavigationView.getMenu().findItem(itemId).setChecked(true);
     }
+
 }

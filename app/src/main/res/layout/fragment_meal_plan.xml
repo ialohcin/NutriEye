@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:tag="@+id/meal_plan_tag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/mainbg"
+    android:padding="12dp"
+    tools:context=".MealPlanFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="All Meals"
+                android:textColor="@color/black"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/mealSearchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/search_view_bg"
+                app:iconifiedByDefault="false"
+                app:queryHint="Search for meals"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/mealSearchView">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/mealSearchView">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/allButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onMealButtonClick"
+                        android:text="All"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="32dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/breakfastButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onMealButtonClick"
+                        android:text="Breakfast"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="32dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/lunchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onMealButtonClick"
+                        android:text="Lunch"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        app:cornerRadius="32dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/dinnerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onMealButtonClick"
+                        android:text="Dinner"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        app:cornerRadius="32dp" />
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="150dp"
+                android:background="@color/transparentColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

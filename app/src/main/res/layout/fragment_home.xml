@@ -1,18 +1,706 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/light_coral"
+             android:background="@color/mainbg"
              tools:context=".HomeFragment">
 
-
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Home"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:gravity="center"/>
+            android:layout_height="match_parent">
 
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/green">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:id="@+id/profilePicture"
+                                android:src="@drawable/pic"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:layout_marginTop="32dp"
+                                android:layout_marginStart="32dp"/>
+
+                        <TextView
+                                android:text="Hi, John"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/userText"
+                                app:layout_constraintStart_toEndOf="@+id/profilePicture"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/profilePicture"
+                                android:layout_marginStart="16dp"/>
+
+                        <ImageView
+                                android:src="@drawable/notification"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView5"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintTop_toTopOf="@+id/profilePicture"
+                                android:layout_marginEnd="32dp"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                            android:text="Welcome to your Dashboard"
+                            android:textStyle="bold"
+                            android:textSize="30sp"
+                            android:textColor="@color/white"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView5"/>
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <ImageView
+                            android:src="@drawable/arc_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView7"
+                            android:scaleType="fitXY"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_bg"
+                            app:cardCornerRadius="15dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:id="@+id/homeCardView">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="14dp">
+
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:progress="25"
+                                    app:trackColor="#808EBE26"
+                                    app:indicatorColor="@color/green"
+                                    app:indicatorSize="140dp"
+                                    app:trackThickness="18dp"
+                                    app:trackCornerRadius="8dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    android:id="@+id/circularProgressIndicator"/>
+
+                            <TextView
+                                    android:id="@+id/caloriesVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1000"
+                                    android:textColor="@color/green"
+                                    android:textStyle="bold"
+                                    android:textSize="22sp"
+                                    app:layout_constraintStart_toStartOf="@+id/circularProgressIndicator"
+                                    app:layout_constraintEnd_toEndOf="@+id/circularProgressIndicator"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintBottom_toTopOf="@+id/textView6"
+                                    app:layout_constraintVertical_chainStyle="packed"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="10sp"
+                                    android:text="of 4000 Calories"
+                                    android:textColor="#CC8EBE26"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/circularProgressIndicator"
+                                    app:layout_constraintEnd_toEndOf="@+id/circularProgressIndicator"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesVal"
+                                    android:id="@+id/textView6"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintBottom_toBottomOf="@+id/circularProgressIndicator"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Carbs (g)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator1"
+                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator1"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
+                                    android:id="@+id/textView9"/>
+
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:progress="25"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp"
+                                    app:trackColor="#80E9935F"
+                                    app:indicatorColor="@color/light_orange"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
+                                    android:id="@+id/linearProgressIndicator1"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintEnd_toStartOf="@+id/linearProgressIndicator2"
+                                    android:layout_marginTop="32dp"
+                                    />
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2000"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator1"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator1"
+                                    android:id="@+id/textView8"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textSize="12sp"
+                                    android:text="of 3000"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
+                                    app:layout_constraintStart_toEndOf="@+id/textView8"
+                                    android:id="@+id/textView12"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Protein (g)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:id="@+id/textView10"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator2"
+                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator2"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"/>
+
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:progress="25"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp"
+                                    app:trackColor="#806200EE"
+                                    app:indicatorColor="@color/purple_500"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
+                                    android:id="@+id/linearProgressIndicator2"
+                                    app:layout_constraintStart_toEndOf="@+id/linearProgressIndicator1"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintEnd_toStartOf="@+id/linearProgressIndicator3"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_marginTop="32dp"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1000"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:id="@+id/textView11"
+                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator2"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator2"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textSize="12sp"
+                                    android:text="of 2000"
+                                    android:textStyle="bold"
+                                    android:id="@+id/textView13"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
+                                    app:layout_constraintStart_toEndOf="@+id/textView11"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Fats (g)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:id="@+id/textView14"
+                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator3"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator3"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"/>
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:progress="25"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp"
+                                    app:trackColor="#80009688"
+                                    app:indicatorColor="@color/teal_500"
+                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
+                                    android:id="@+id/linearProgressIndicator3"
+                                    app:layout_constraintStart_toEndOf="@+id/linearProgressIndicator2"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    android:layout_marginTop="32dp"
+                                    />
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="500"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:textSize="16sp"
+                                    android:id="@+id/textView15"
+                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator3"
+                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator3"/>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textSize="12sp"
+                                    android:text="of 3000"
+                                    android:textStyle="bold"
+                                    android:id="@+id/textView16"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/textView15"
+                                    app:layout_constraintStart_toEndOf="@+id/textView15"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:padding="8dp">
+
+                    <TextView
+                            android:id="@+id/dateToday"
+                            android:drawableStart="@drawable/calendar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:alpha=".7"
+                            android:text=" Today, Current Date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="15dp"
+                        app:layout_constraintTop_toBottomOf="@id/homeCardView">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                        <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/breakfast"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:id="@+id/imgBreakfast"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Breakfast"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="21sp"
+                                app:layout_constraintStart_toEndOf="@+id/imgBreakfast"
+                                app:layout_constraintTop_toTopOf="@+id/imgBreakfast"
+                                android:id="@+id/txtBreakfast"
+                                app:layout_constraintVertical_chainStyle="packed"
+                                />
+
+                        <TextView
+                            android:id="@+id/breakfastCal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="295.5 cal"
+                            android:textColor="@color/green"
+                            android:textStyle="bold"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/txtBreakfast"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toEndOf="@+id/imgBreakfast"
+                            app:layout_constraintTop_toBottomOf="@id/txtBreakfast">
+
+                            <TextView
+                                android:id="@+id/breakfastCarbsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/light_orange"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="C"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/breakfastProteinTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/purple_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="P"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/breakfastFatsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/teal_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="F"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
+                        app:cardCornerRadius="15dp"
+                        app:layout_constraintTop_toBottomOf="@id/homeCardView">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                        <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/lunch"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:id="@+id/imgLunch"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Lunch"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="21sp"
+                                app:layout_constraintStart_toEndOf="@+id/imgLunch"
+                                app:layout_constraintTop_toTopOf="@+id/imgLunch"
+                                android:id="@+id/txtLunch"
+                                app:layout_constraintVertical_chainStyle="packed"
+                                />
+
+                        <TextView
+                            android:id="@+id/lunchCal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="295.5 cal"
+                            android:textColor="@color/green"
+                            android:textStyle="bold"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/txtLunch"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toEndOf="@+id/imgLunch"
+                            app:layout_constraintTop_toBottomOf="@id/txtLunch">
+
+                            <TextView
+                                android:id="@+id/lunchCarbsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/light_orange"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="C"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/lunchProteinTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/purple_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="P"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/lunchFatsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/teal_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="F"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="80dp"
+                        app:cardCornerRadius="15dp"
+                        app:layout_constraintTop_toBottomOf="@id/homeCardView">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                        <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/dinner"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:id="@+id/imgDinner"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Dinner"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="21sp"
+                                app:layout_constraintStart_toEndOf="@+id/imgDinner"
+                                app:layout_constraintTop_toTopOf="@+id/imgDinner"
+                                android:id="@+id/txtDinner"
+                                app:layout_constraintVertical_chainStyle="packed"
+                                />
+
+                        <TextView
+                            android:id="@+id/dinnerCal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="295.5 cal"
+                            android:textColor="@color/green"
+                            android:textStyle="bold"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/txtDinner"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toEndOf="@+id/imgDinner"
+                            app:layout_constraintTop_toBottomOf="@id/txtDinner">
+
+                            <TextView
+                                android:id="@+id/dinnerCarbsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/light_orange"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="C"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dinnerProteinTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/purple_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="P"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dinnerFatsTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="390g" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_box_rounded"
+                                android:backgroundTint="@color/teal_500"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="F"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

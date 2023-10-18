@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
@@ -77,6 +78,10 @@ public class EditProfileScreen extends AppCompatActivity {
         binding.dobProfile.setOnClickListener(view -> {
             binding.dobProfile.setFocusableInTouchMode(true);
             binding.dobProfile.requestFocus();
+
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(binding.dobProfile.getWindowToken(), 0);
+
             DatePickerDialog dobPickerDialog = new DatePickerDialog(EditProfileScreen.this, (datePicker, year1, month1, dayOfMonth) -> {
                 month1 = month1 + 1;
                 Calendar calendar1 = Calendar.getInstance();
@@ -87,6 +92,8 @@ public class EditProfileScreen extends AppCompatActivity {
                 String date = dateFormat.format(calendar1.getTime());
                 binding.dobProfile.setText(date);
             },year,month - 1,day);
+
+
             dobPickerDialog.show();
         });
 
@@ -216,6 +223,7 @@ public class EditProfileScreen extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         navigateToProfileFragment();
     }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/mainbg">
+
+    <ImageView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/food_empty"
+        android:backgroundTint="@color/grey"
+        android:alpha=".6" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/empty"
+        android:layout_centerInParent="true"
+        android:alpha=".8"
+        android:text="No meals found for today. \nAdd some meals to your meal plan."
+        android:textAlignment="center"
+        />
+
+</RelativeLayout>

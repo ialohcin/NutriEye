@@ -7,9 +7,9 @@
         android:icon="@drawable/home"/>
 
     <item
-        android:id="@+id/search"
-        android:title="Search"
-        android:icon="@drawable/search"/>
+        android:id="@+id/mealplan"
+        android:title="Meal Plan"
+        android:icon="@drawable/meal_plan"/>
 
     <item
         android:id="@+id/fab"
@@ -17,8 +17,8 @@
         android:enabled="false"/>
 
     <item
-        android:id="@+id/insight"
-        android:title="Insight"
+        android:id="@+id/resources"
+        android:title="Resources"
         android:icon="@drawable/bulb"/>
 
     <item

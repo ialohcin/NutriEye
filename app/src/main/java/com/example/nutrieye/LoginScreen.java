@@ -1,5 +1,6 @@
 package com.example.nutrieye;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,9 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
+import org.jetbrains.annotations.NotNull;
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -26,15 +36,20 @@ public class LoginScreen extends AppCompatActivity {
     private TextView forgotPassword, toSignUp;
     private MaterialButton loginButton;
     private CardView loginContainer;
+    private ProgressDialog loginProgress;
+
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
 
-        initializeViews();
+        initComponents();
 
         setupClickableSpan();
+
+        auth = FirebaseAuth.getInstance();
 
         emailLogin.addTextChangedListener(createTextWatcher(emailLogin));
         passwordLogin.addTextChangedListener(createTextWatcher(passwordLogin));
@@ -47,7 +62,7 @@ public class LoginScreen extends AppCompatActivity {
         });
     }
 
-    private void initializeViews() {
+    private void initComponents() {
         emailLogin = findViewById(R.id.emailAddLogin);
         passwordLogin = findViewById(R.id.passwordLogin);
         emailTextInput = findViewById(R.id.emailAddTextInput);
@@ -56,6 +71,7 @@ public class LoginScreen extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         toSignUp = findViewById(R.id.signUpAcc);
         loginContainer = findViewById(R.id.loginContainer);
+        loginProgress = new ProgressDialog(this);
 
         int paintFlags = forgotPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG;
         forgotPassword.setPaintFlags(paintFlags);
@@ -110,6 +126,11 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void handleLoginButtonClick() {
+        loginProgress.setTitle("Logging in");
+        loginProgress.setMessage("Verifying User Credentials...");
+        loginProgress.setCancelable(false);
+        loginProgress.show();
+
         String email = emailLogin.getText().toString().trim();
         String password = passwordLogin.getText().toString().trim();
 
@@ -118,23 +139,37 @@ public class LoginScreen extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)) {
             emailTextInput.setError("Email is required");
+            loginProgress.dismiss();
         } else {
             emailTextInput.setError(null);
         }
 
         if (TextUtils.isEmpty(password)) {
             passwordLoginTextInput.setError("Password is required");
+            loginProgress.dismiss();
         } else {
             passwordLoginTextInput.setError(null);
         }
 
         if (isEmailValid && isPasswordValid && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            // Successful login
-            Toast.makeText(LoginScreen.this, "Please Verify your Email Address", Toast.LENGTH_SHORT).show();
-            // ...
-            Intent intent = new Intent(LoginScreen.this, NavigationScreen.class);
-            startActivity(intent);
-            finish();
+           auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+               @Override
+               public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+                   loginProgress.dismiss();
+                   if(!task.isSuccessful()){
+                       Toast.makeText(LoginScreen.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                   } else {
+                       if(!auth.getCurrentUser().isEmailVerified()){
+                           loginProgress.dismiss();
+                           Toast.makeText(LoginScreen.this, "Please verify your email first. Thank you!", Toast.LENGTH_SHORT).show();
+                       } else{
+                           startActivity(new Intent(LoginScreen.this, NavigationScreen.class));
+                           loginProgress.dismiss();
+                           finish();
+                       }
+                   }
+               }
+           });
         }
     }
 

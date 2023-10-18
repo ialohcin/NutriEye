@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="14dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/green"
+                android:textColor="@color/white"
+                android:text="Add to Meal Plan"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="16dp"/>
+
+            <ImageButton
+                android:id="@+id/closeDialog"
+                android:layout_width="40dp"
+                android:src="@drawable/close"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:scaleType="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mealPlanLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_below="@id/textView00"
+                android:hint="Meal Time"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+
+                <AutoCompleteTextView
+                    android:id="@+id/mealPlanSelection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/servingSizeLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_below="@id/mealPlanLayout"
+                android:hint="Serving Size"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/servingSizeSelection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            
+            <TextView
+                android:id="@+id/recommendedLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/servingSizeLayout"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:gravity="right"
+                android:text="Recommended serving size based on your dietary requirements:"
+                android:textColor="@color/black"
+                android:alpha=".7"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/recommServingSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="12dp"
+                android:layout_below="@id/recommendedLabel"
+                android:text="1 Cup"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recommServingSize"
+                android:layout_margin="14dp"
+                android:weightSum="2">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancelMeal"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="12dp"
+                    app:cornerRadius="32dp"
+                    android:backgroundTint="@color/light_orange"
+                    android:text="Cancel"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveMeal"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="12dp"
+                    app:cornerRadius="32dp"
+                    android:text="Save"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
