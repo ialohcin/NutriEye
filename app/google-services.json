@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144557026020",
+    "project_id": "nutrieyefirebase",
+    "storage_bucket": "nutrieyefirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144557026020:android:72952b1e5e2903ddd99af1",
+        "android_client_info": {
+          "package_name": "com.example.nutrieye"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5uBlko5uccQvfKwFmpxRVkbR_Ts68YzQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
