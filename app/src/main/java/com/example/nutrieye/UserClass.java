@@ -1,9 +1,16 @@
 package com.example.nutrieye;
 
-public class HelperClass {
+public class UserClass {
 
-    String email, password, confirmPass, firstName, lastName, DOB, Sex, contactNum , height, weight, phyActivity, foodAllergens, healthConditions;
+    String profilePhoto, email, password, confirmPass, firstName, lastName, DOB, Sex, contactNum , height, weight, phyActivity, foodAllergens, healthConditions;
 
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
     public String getEmail() {
         return email;
     }
@@ -108,7 +115,8 @@ public class HelperClass {
         this.healthConditions = healthConditions;
     }
 
-    public HelperClass(String email, String password, String confirmPass, String firstName, String lastName, String DOB, String sex, String contactNum, String height, String weight, String phyActivity, String foodAllergens, String healthConditions) {
+    public UserClass(String profilePhoto, String email, String password, String confirmPass, String firstName, String lastName, String DOB, String sex, String contactNum, String height, String weight, String phyActivity, String foodAllergens, String healthConditions) {
+        this.profilePhoto = profilePhoto;
         this.email = email;
         this.password = password;
         this.confirmPass = confirmPass;

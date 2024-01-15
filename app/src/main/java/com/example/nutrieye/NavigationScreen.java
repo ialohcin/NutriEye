@@ -1,18 +1,23 @@
 package com.example.nutrieye;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.example.nutrieye.databinding.ActivityNavigationScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class NavigationScreen extends AppCompatActivity {
-
+    private String userUID;
     ActivityNavigationScreenBinding binding;
+
+    public static final String USER_UID_KEY = "userUID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,13 +27,24 @@ public class NavigationScreen extends AppCompatActivity {
 
         // Check for the activeFragment extra and set it if present
         String activeFragment = getIntent().getStringExtra("activeFragment");
+
+        // Retrieve userUID from SharedPreferences
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        userUID = preferences.getString(USER_UID_KEY, null);
+
+        if (userUID == null) {
+            // If userUID is not available in SharedPreferences, set a default value or handle it as needed
+            userUID = getIntent().getStringExtra("USER_UID");
+            preferences.edit().putString(USER_UID_KEY, userUID).apply(); // Store the default userUID
+        }
+
         if (activeFragment != null) {
             switch (activeFragment) {
                 case "ProfileFragment":
                     setBottomNavigationItemChecked(R.id.profile);
                     replaceFragment(new ProfileFragment());
                     break;
-                case "SearchFragment":
+                case "MealPlanFragment":
                     setBottomNavigationItemChecked(R.id.mealplan);
                     replaceFragment(new MealPlanFragment());
                     break;
@@ -46,6 +62,16 @@ public class NavigationScreen extends AppCompatActivity {
             // Default to HomeFragment if no activeFragment specified
             setBottomNavigationItemChecked(R.id.home);
             replaceFragment(new HomeFragment());
+            // Retrieve userUID from SharedPreferences
+            String userUID = preferences.getString(USER_UID_KEY, null);
+
+//            // Display userUID in a Toast message
+//            if (userUID != null) {
+//                //Toast.makeText(this, "User UID: " + userUID, Toast.LENGTH_SHORT).show();
+//            } else {
+//                // Handle case where userUID is not available
+//                Toast.makeText(this, "User UID not found", Toast.LENGTH_SHORT).show();
+//            }
         }
 
         binding.bottomNavigationView.setBackground(null);
@@ -82,5 +108,4 @@ public class NavigationScreen extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = binding.bottomNavigationView;
         bottomNavigationView.getMenu().findItem(itemId).setChecked(true);
     }
-
 }

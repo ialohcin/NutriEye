@@ -31,45 +31,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
-                            android:id="@+id/profilePicture"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/pictureProfile"
                             android:layout_width="100dp"
+                            android:src="@drawable/nutrieyelogo"
                             android:layout_height="100dp"
                             android:layout_marginTop="32dp"
-                            android:src="@drawable/pic"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/titleName"
+                            android:id="@+id/profileName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Name"
                             android:textColor="@color/white"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            app:layout_constraintBottom_toTopOf="@+id/titleUsername"
-                            app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                            app:layout_constraintBottom_toTopOf="@+id/profileEmail"
+                            app:layout_constraintEnd_toEndOf="@+id/pictureProfile"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@+id/profilePicture"
-                            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
+                            app:layout_constraintStart_toStartOf="@+id/pictureProfile"
+                            app:layout_constraintTop_toBottomOf="@+id/pictureProfile"
                             app:layout_constraintVertical_chainStyle="packed" />
 
                         <TextView
-                            android:id="@+id/titleUsername"
+                            android:id="@+id/profileEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:text="Username"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="@+id/titleName"
+                            app:layout_constraintEnd_toEndOf="@+id/profileName"
                             app:layout_constraintHorizontal_bias="0.5"
-                            app:layout_constraintStart_toStartOf="@+id/titleName"
-                            app:layout_constraintTop_toBottomOf="@+id/titleName" />
+                            app:layout_constraintStart_toStartOf="@+id/profileName"
+                            app:layout_constraintTop_toBottomOf="@+id/profileName" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -127,7 +125,6 @@
                                         android:layout_height="60dp"
                                         android:layout_gravity="center"
                                         android:gravity="center"
-                                        android:text="22"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
                                         android:textSize="26sp"
@@ -157,7 +154,6 @@
                                         android:layout_height="60dp"
                                         android:layout_gravity="center"
                                         android:gravity="center"
-                                        android:text="71"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
                                         android:textSize="26sp"
@@ -187,7 +183,6 @@
                                         android:layout_height="60dp"
                                         android:layout_gravity="center"
                                         android:gravity="center"
-                                        android:text="170"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
                                         android:textSize="26sp"
@@ -218,16 +213,16 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Name"
+                                    android:text="Gender"
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/profileGender"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="John Doe Jr."
                                     android:textAlignment="viewEnd"
                                     android:textColor="@color/grey"
                                     android:textSize="18sp"
@@ -249,16 +244,16 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Email"
+                                    android:text="Food Allergens"
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/profileFoodAllergens"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="doe@gmail.com"
                                     android:textAlignment="viewEnd"
                                     android:textColor="@color/grey"
                                     android:textSize="18sp"
@@ -280,16 +275,16 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Username"
+                                    android:text="Health Conditions"
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/profileHealthCond"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="John Doe Jr."
                                     android:textAlignment="viewEnd"
                                     android:textColor="@color/grey"
                                     android:textSize="18sp"
@@ -311,17 +306,16 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Password"
+                                    android:text="Activity Level"
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/profileActivityLevel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:password="true"
-                                    android:text="password"
                                     android:textAlignment="viewEnd"
                                     android:textColor="@color/grey"
                                     android:textSize="18sp"
@@ -345,6 +339,17 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:text="Edit profile"
+                    android:textStyle="bold"
+                    app:cornerRadius="32dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/activityLogsButton"
+                    android:backgroundTint="@color/light_coral"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="Activity Logs"
                     android:textStyle="bold"
                     app:cornerRadius="32dp" />
 

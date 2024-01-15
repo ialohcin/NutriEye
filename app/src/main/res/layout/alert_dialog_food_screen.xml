@@ -59,31 +59,60 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/servingSizeLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
+                android:id="@+id/wow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_below="@id/mealPlanLayout"
-                android:hint="Serving Size"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_below="@+id/mealPlanLayout">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/servingSizeSelection"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/quantityServingSizeLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="225dp"
                     android:layout_height="wrap_content"
-                    android:inputType="none"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:hint="Quantity"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/quantityServingSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/servingSizeLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:hint="Serving Size"
+                    app:errorEnabled="true"
+                    app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/servingSizeSelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
             
             <TextView
                 android:id="@+id/recommendedLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/servingSizeLayout"
+                android:layout_below="@id/wow"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:gravity="right"
@@ -93,7 +122,7 @@
                 android:textSize="12sp"/>
 
             <TextView
-                android:id="@+id/recommServingSize"
+                android:id="@+id/recommendedServingSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -107,7 +136,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/recommServingSize"
+                android:layout_below="@id/recommendedServingSize"
                 android:layout_margin="14dp"
                 android:weightSum="2">
 

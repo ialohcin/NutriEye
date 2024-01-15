@@ -4,12 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import androidx.viewpager.widget.PagerAdapter;
+
 import java.util.List;
 
 public class SwipeView extends PagerAdapter {
-    private Context context;
-    private List<Integer> layoutIds;
+    private final Context context;
+    private final List<Integer> layoutIds;
+
+    TextView rCaloriesVal, rCarbsVal, rFatVal, rProteinVal, rSugarVal, rFiberVal, rWaterVal, rVitAVal, rVitB1Val, rVitB2Val, rVitCVal, rCalciumVal, rSodiumVal, rIronVal, rServingSize;
+    TextView sCaloriesVal, sCarbsVal, sFatVal, sProteinVal, sSugarVal, sFiberVal, sWaterVal, sVitAVal, sVitB1Val, sVitB2Val, sVitCVal, sCalciumVal, sSodiumVal, sIronVal, sServingSize;
+
 
     public SwipeView(Context context, List<Integer> layoutIds) {
         this.context = context;
@@ -26,8 +33,11 @@ public class SwipeView extends PagerAdapter {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(layoutIds.get(position), container, false);
         container.addView(view);
+
         return view;
+
     }
+
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
@@ -50,3 +60,5 @@ public class SwipeView extends PagerAdapter {
         ((View) object).setVisibility(View.VISIBLE);
     }
 }
+
+

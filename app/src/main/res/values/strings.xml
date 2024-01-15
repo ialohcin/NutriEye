@@ -6,4 +6,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="philfct_description" translatable="false">Food Composition Tables (FCT) and databases (FCDBs) are considered important nutrition tools which provide information on the chemical/nutritional composition of foods. They are widely used by users in variety of areas: nutrition, public health surveys, nutrition education, dietetics and clinical practice, nutritional epidemiology, agricultural research, food regulation and consumer action programs. The access to and availability of electronic tables and databases are needed to accommodate the user\'s specific needs. This is now possible through the advancements in Information and Communication Technology (ICT) and the accessibility of computer technology.</string>
     <string name="pdri_description" translatable="false">The Food and Nutrition Research Institute of the Department of Science and Technology (FNRI-DOST) launches the PDRI 2015 during the opening ceremony of the 41st FNRI Seminar Series on July 1, 2015 at the FNRI Auditorium. The 2015 PDRI adopts the multi-level approach for setting nutrient reference values to meet the needs of various stakeholders for appropriate nutrient reference values.</string>
+
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+
+        <string-array name="physical_activity_levels">
+            <item>Very Active</item>
+            <item>Moderately Active</item>
+            <item>Lightly Active</item>
+            <item>Sedentary</item>
+        </string-array>
+
 </resources>

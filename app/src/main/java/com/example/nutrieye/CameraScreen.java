@@ -182,14 +182,6 @@ public class CameraScreen extends AppCompatActivity {
         });
     }
 
-
-    private Bitmap imageProxyToBitmap(ImageProxy image) {
-        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
     private void setFlashIcon(Camera camera){
         if (camera.getCameraInfo().hasFlashUnit()){
             if (camera.getCameraInfo().getTorchState().getValue() == 0){

@@ -1,28 +1,32 @@
 package com.example.nutrieye;
 
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Item> itemList;
     private OnItemClickListener onItemClickListener;
-    private static final int VIEW_TYPE_NORMAL = 0;
-    private static final int VIEW_TYPE_EMPTY = 1;
+    public static final int VIEW_TYPE_NORMAL = 0;
+    public static final int VIEW_TYPE_EMPTY = 1;
 
     public MealAdapter(List<Item> itemList) {
         this.itemList = itemList;
+    }
+
+    public void updateData(List<Item> filteredList) {
+        itemList.clear();
+        itemList.addAll(filteredList);
     }
 
     public interface OnItemClickListener {
@@ -82,6 +86,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView mealCategory;
         private TextView mealServingSize;
         private TextView mealTime;
+        private SwitchMaterial mealIsDone;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +95,12 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mealCategory = itemView.findViewById(R.id.mealCategory);
             mealServingSize = itemView.findViewById(R.id.mealServingSize);
             mealTime = itemView.findViewById(R.id.mealTime);
+            mealIsDone = itemView.findViewById(R.id.foodIndicator);
+
+            // Disable user interaction with the SwitchMaterial
+            mealIsDone.setClickable(false);
+            mealIsDone.setFocusable(false);
+            mealIsDone.setFocusableInTouchMode(false);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,11 +116,12 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         public void bind(Item item) {
-            mealPhoto.setBackgroundResource(item.getImageResource());
+            Picasso.get().load(item.getImageResource()).into(mealPhoto);
             mealName.setText(item.getFoodName());
             mealCategory.setText(item.getCategory());
             mealServingSize.setText(item.getServingSize());
             mealTime.setText(item.getMealTime());
+            mealIsDone.setChecked(item.isDone());
         }
     }
 
