@@ -51,7 +51,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="170dp"
                             android:layout_marginTop="16dp"
-                            android:src="@drawable/philfct"
+                            android:background="@drawable/philfct"
                             app:layout_constraintTop_toBottomOf="@+id/textView"
                             tools:layout_editor_absoluteX="14dp" />
 
@@ -68,13 +68,11 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-                        <TextView
+                        <com.uncopt.android.widget.text.justify.JustifiedTextView
                             android:id="@+id/philFCTdesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:justificationMode="inter_word"
-                            android:text="@string/philfct_description"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -86,7 +84,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Website Link"
                             android:textColor="@color/black"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +97,7 @@
                             android:layout_marginTop="8dp"
                             android:text="https://i.fnri.dost.gov.ph/fct/library"
                             android:textColor="#3366CC"
-                            android:textSize="10sp"
+                            android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView3" />"/>
@@ -109,9 +107,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="170dp"
                             android:layout_marginTop="16dp"
-                            android:src="@drawable/pdri"
-                            app:layout_constraintTop_toBottomOf="@+id/linkPhilFCT"
-                            tools:layout_editor_absoluteX="14dp" />
+                            android:background="@drawable/pdri"
+                            app:layout_constraintTop_toBottomOf="@+id/linkPhilFCT"/>
 
                         <TextView
                             android:id="@+id/textView18"
@@ -126,13 +123,11 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-                        <TextView
+                        <com.uncopt.android.widget.text.justify.JustifiedTextView
                             android:id="@+id/pdriDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:justificationMode="inter_word"
-                            android:text="@string/pdri_description"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -144,7 +139,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Website Link"
                             android:textColor="@color/black"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -158,7 +153,7 @@
                             android:text="https://www.fnri.dost.gov.ph/index.php/tools-and-standard/philippine-dietary-reference-intakes-pdri"
                             android:textAlignment="center"
                             android:textColor="#3366CC"
-                            android:textSize="10sp"
+                            android:textSize="14sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView20" />
@@ -169,8 +164,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"/>
+                    android:layout_height="60dp"/>
 
             </LinearLayout>
 

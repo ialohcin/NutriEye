@@ -111,6 +111,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             onItemClickListener.onItemClick(itemList.get(position));
                         }
                     }
+
                 }
             });
         }

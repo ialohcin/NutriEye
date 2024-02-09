@@ -35,25 +35,23 @@ public class ServingSize {
     private static String calculateFruitsServingSize(String foodName) {
         switch (foodName) {
             case "Green Apple":
-                return "1 medium apple (182g)";
+                return "1 Medium Apple (182g)";
             case "Lakatan Banana":
-                return "1 medium banana (118g)";
+                return "1 Medium Banana (118g)";
             case "Mandarin Orange":
-                return "1 medium orange (131g)";
+                return "1 Medium Orange (131g)";
             case "Red Grapes":
-                return "1 cup (92g)";
+                return "1 Cup (92g)";
             case "Strawberry":
-                return "1 cup (152g)";
+                return "1 Cup (152g)";
             case "Carabao Mango":
-                return "1 medium mango (336g)";
+                return "1 Medium Mango (336g)";
             case "Rambutan":
-                return "1 cup (143g)";
+                return "1 Cup (143g)";
             case "Guyabano":
-                return "1 cup (225g)";
-            case "Mangosteen":
-                return "1 cup (196g)";
+                return "1 Cup (225g)";
             case "Pomelo":
-                return "1 cup (190g)";
+                return "1 Cup (190g)";
             default:
                 return "Unknown serving size";
         }
@@ -62,25 +60,18 @@ public class ServingSize {
     private static String calculateVegetablesServingSize(String foodName) {
         switch (foodName) {
             case "Bitter Gourd":
-                return "1 cup (94g)";
+                return "1 Cup (94g)";
             case "Eggplant":
-                return "1 cup (82g)";
+                return "1 Cup (82g)";
             case "Okra":
-                return "1 cup (100g)";
-            case "Winged Bean":
-                return "1 cup (100g)";
-            case "Broccoli":
-                return "1 cup (91g)";
-            case "Carrot":
-                return "1 cup, chopped (128g)";
-            case "Roma Tomato":
-                return "1 medium tomato (123g)";
-            case "Cucumber":
-                return "1 cup, sliced (119g)";
-            case "Red Bell Pepper":
-                return "1 cup, chopped (149g)";
             case "Cauliflower":
-                return "1 cup (100g)";
+                return "1 Cup (100g)";
+            case "Broccoli":
+                return "1 Cup (91g)";
+            case "Carrots":
+                return "1 Cup, Chopped (128g)";
+            case "Cucumber":
+                return "1 Cup, Sliced (119g)";
             default:
                 return "Unknown serving size";
         }
@@ -89,15 +80,11 @@ public class ServingSize {
     private static String calculateGrainsServingSize(String foodName) {
         switch (foodName) {
             case "Brown Rice":
-                return "1 cup, cooked (195g)";
+                return "1 Cup, Cooked (195g)";
             case "White Rice":
-                return "1 cup, cooked (186g)";
-            case "Rolled Oats":
-                return "1 cup, cooked (234g)";
-            case "Sweet Corn":
-                return "1 cup (154g)";
+                return "1 Cup, Cooked (186g)";
             case "White Bread":
-                return "1 slice (25g)";
+                return "1 Slice (25g)";
             default:
                 return "Unknown serving size";
         }
@@ -106,21 +93,15 @@ public class ServingSize {
     private static String calculateMeatAndPoultryServingSize(String foodName) {
         switch (foodName) {
             case "Pork Chops":
-                return "1 chop, boneless (136g)";
+                return "1 Chop, Boneless (136g)";
             case "Chicken Breast":
-                return "1 breast, boneless, skinless (172g)";
+                return "1 Breast, Boneless, Skinless (172g)";
             case "Beef Ground":
-                return "1 cup, cooked (220g)";
-            case "Chicken Thigh":
-                return "1 thigh, boneless, skinless (87g)";
-            case "Chicken Wings":
-                return "1 wing, boneless, skinless (84g)";
-            case "Pork Belly":
-                return "1 cup, sliced (81g)";
+                return "1 Cup, Cooked (220g)";
             case "Chicken Drumstick":
-                return "1 drumstick, boneless, skinless (44g)";
+                return "1 Drumstick, Boneless, Skinless (44g)";
             case "Chicken Eggs":
-                return "1 large egg (50g approximately)";
+                return "1 Large Egg (50g approximately)";
             default:
                 return "Unknown serving size";
         }
@@ -129,15 +110,13 @@ public class ServingSize {
     private static String calculateSeafoodProductsServingSize(String foodName) {
         switch (foodName) {
             case "Blue Crab":
-                return "1 crab (134g)";
+                return "1 Crab (134g)";
             case "Milkfish":
-                return "1 fillet (180g)";
+                return "1 Fillet (180g)";
             case "Tilapia":
-                return "1 fillet (87g)";
-            case "Spanish Mackerel":
-                return "1 fillet (154g)";
+                return "1 Fillet (87g)";
             case "Squid":
-                return "1 cup, sliced (85g)";
+                return "1 Cup, Sliced (85g)";
             default:
                 return "Unknown serving size";
         }
@@ -145,32 +124,16 @@ public class ServingSize {
 
     private static String calculateFilipinoCookedDishesServingSize(String foodName) {
         switch (foodName) {
-            case "Pancit Canton":
-                return "1 cup (160g)";
             case "Pork Barbeque":
-                return "1 skewer (80g)";
-            case "Chicken Inasal":
-                return "1 serving (200g)";
-            case "Crispy Pata":
-                return "1 serving (150g)";
+                return "1 Skewer (80g)";
             case "Beef Ribs Sinigang":
-                return "1 cup (240g)";
-            case "Beef Kare-Kare":
-                return "1 cup (250g)";
-            case "Shrimp Sinigang":
-                return "1 cup (240g)";
             case "Chicken Adobo":
-                return "1 cup (240g)";
             case "Bulalo":
-                return "1 cup (240g)";
-            case "Chicken Tinola":
-                return "1 cup (240g)";
             case "Chicken Afritada":
-                return "1 cup (240g)";
-            case "Beef Kaldereta":
-                return "1 cup (240g)";
             case "Pork Menudo":
-                return "1 cup (240g)";
+                return "1 Cup (240g)";
+            case "Beef Kare-Kare":
+                return "1 Cup (250g)";
             default:
                 return "Unknown serving size";
         }

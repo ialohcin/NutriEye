@@ -67,6 +67,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/emailAddSignUp"
                         android:layout_width="match_parent"
+                        android:textSize="14sp"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"/>
 
@@ -86,6 +87,7 @@
                         android:id="@+id/passwordSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -105,12 +107,8 @@
                         android:id="@+id/confirmPassSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="textPassword"/>
-                <View
-                        android:id="@+id/errorIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,6 +183,7 @@
                         android:id="@+id/firstNameSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -203,6 +202,7 @@
                         android:id="@+id/lastNameSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="textPersonName"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -230,6 +230,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none"
+                            android:textSize="14sp"
                             android:editable="false"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -248,6 +249,7 @@
                     <AutoCompleteTextView
                             android:id="@+id/selectSexSignUp"
                             android:layout_width="match_parent"
+                            android:textSize="14sp"
                             android:layout_height="wrap_content"
                             android:inputType="none"/>
 
@@ -262,16 +264,19 @@
                     android:hint="Contact Number"
                     app:endIconMode="clear_text"
                     app:counterEnabled="true"
-                    app:counterMaxLength="11"
+                    app:counterMaxLength="10"
                     app:errorEnabled="true"
-                    app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+                    app:errorTextAppearance="@style/ErrorHelperTextAppearance"
+                    app:prefixText="+63"
+                    app:prefixTextAppearance="@style/PrefixTextAppearance">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/contactNumSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
-                        android:maxLength="11"/>
+                        android:textSize="14sp"
+                        android:maxLength="10"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -369,6 +374,7 @@
                             android:id="@+id/heightSignUp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="14sp"
                             android:inputType="numberDecimal"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -389,6 +395,7 @@
                             android:id="@+id/weightSignUp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="14sp"
                             android:inputType="numberDecimal"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -401,6 +408,8 @@
                     android:layout_height="wrap_content"
                     app:endIconMode="dropdown_menu"
                     android:hint="Physical Activity Level"
+                    app:helperTextEnabled="false"
+                    app:helperTextTextAppearance="@style/ErrorHelperTextAppearance"
                     app:errorEnabled="true"
                     app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
@@ -408,6 +417,7 @@
                         android:id="@+id/phyActivityLvlSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="none"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -425,6 +435,7 @@
                         android:id="@+id/foodAllergensSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="none"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -442,6 +453,7 @@
                         android:id="@+id/healthConditionsSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="none"/>
 
             </com.google.android.material.textfield.TextInputLayout>

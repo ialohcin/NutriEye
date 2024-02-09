@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/homeCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/btn_bg"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/expandableForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="14dp">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/caloriesProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progress="0"
+                app:indicatorColor="@color/green"
+                app:indicatorSize="140dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackColor="#808EBE26"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="18dp" />
+
+            <TextView
+                android:id="@+id/caloriesVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/green"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/caloriesLimitTotal"
+                app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/caloriesLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="of 4000 Calories"
+                android:textColor="#CC8EBE26"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/caloriesProgress"
+                app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesVal" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carbs (g)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/carbsProgress"
+                app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
+
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/carbsProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="25"
+                app:indicatorColor="@color/light_orange"
+                app:layout_constraintEnd_toStartOf="@+id/proteinProgress"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                app:trackColor="#80E9935F"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/carbsVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@+id/carbsProgress" />
+
+            <TextView
+                android:id="@+id/carbsLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/carbsVal"
+                app:layout_constraintStart_toEndOf="@+id/carbsVal" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protein (g)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/proteinProgress"
+                app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/proteinProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:progress="25"
+                app:indicatorColor="@color/purple_500"
+                app:layout_constraintEnd_toStartOf="@+id/fatsProgress"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                app:trackColor="#806200EE"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/proteinVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                app:layout_constraintTop_toBottomOf="@+id/proteinProgress" />
+
+            <TextView
+                android:id="@+id/proteinLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 2000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/proteinVal"
+                app:layout_constraintStart_toEndOf="@+id/proteinVal" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fats (g)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/fatsProgress"
+                app:layout_constraintStart_toStartOf="@+id/fatsProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/fatsProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="25"
+                app:indicatorColor="@color/teal_500"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/proteinProgress"
+                app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                app:trackColor="#80009688"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/fatsVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/fatsProgress"
+                app:layout_constraintTop_toBottomOf="@+id/fatsProgress" />
+
+            <TextView
+                android:id="@+id/fatsLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/fatsVal"
+                app:layout_constraintStart_toEndOf="@+id/fatsVal" />
+
+
+            <TextView
+                android:id="@+id/textView15"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fiber (g)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/fiberProgress"
+                app:layout_constraintStart_toStartOf="@+id/fiberProgress"
+                app:layout_constraintTop_toBottomOf="@+id/carbsVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/fiberProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="25"
+                app:indicatorColor="@android:color/darker_gray"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/carbsVal"
+                app:trackColor="#80AAAAAA"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/fiberVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/fiberProgress"
+                app:layout_constraintTop_toBottomOf="@+id/fiberProgress" />
+
+            <TextView
+                android:id="@+id/fiberLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/fiberVal"
+                app:layout_constraintStart_toEndOf="@+id/fiberVal" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Water (g)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/waterProgress"
+                app:layout_constraintStart_toStartOf="@+id/waterProgress"
+                app:layout_constraintTop_toBottomOf="@+id/proteinVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/waterProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#3F51B5"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/proteinVal"
+                app:layout_constraintTop_toBottomOf="@+id/proteinVal"
+                app:trackColor="#803F51B5"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/waterVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/waterProgress"
+                app:layout_constraintTop_toBottomOf="@+id/waterProgress" />
+
+            <TextView
+                android:id="@+id/waterLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/waterVal"
+                app:layout_constraintStart_toEndOf="@+id/waterVal" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vitamin A (mcg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/vitAProgress"
+                app:layout_constraintStart_toStartOf="@+id/vitAProgress"
+                app:layout_constraintTop_toBottomOf="@+id/fatsVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/vitAProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#D3FFC107"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/fatsVal"
+                app:layout_constraintTop_toBottomOf="@+id/fatsVal"
+                app:trackColor="#80FFC107"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/vitAVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/vitAProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitAProgress" />
+
+            <TextView
+                android:id="@+id/vitALimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/vitAVal"
+                app:layout_constraintStart_toEndOf="@+id/vitAVal" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vitamin B1 (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/vitB1Progress"
+                app:layout_constraintStart_toStartOf="@+id/vitB1Progress"
+                app:layout_constraintTop_toBottomOf="@+id/fiberVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/vitB1Progress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#4CAF50"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/fiberVal"
+                app:layout_constraintTop_toBottomOf="@+id/fiberVal"
+                app:trackColor="#804CAF50"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/vitB1Val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/vitB1Progress"
+                app:layout_constraintTop_toBottomOf="@+id/vitB1Progress" />
+
+            <TextView
+                android:id="@+id/vitB1LimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/vitB1Val"
+                app:layout_constraintStart_toEndOf="@+id/vitB1Val" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vitamin B2 (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/vitB2Progress"
+                app:layout_constraintStart_toStartOf="@+id/vitB2Progress"
+                app:layout_constraintTop_toBottomOf="@+id/fiberVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/vitB2Progress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#03A9F4"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/waterVal"
+                app:layout_constraintTop_toBottomOf="@+id/waterVal"
+                app:trackColor="#8003A9F4"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/vitB2Val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/vitB2Progress"
+                app:layout_constraintTop_toBottomOf="@+id/vitB2Progress" />
+
+            <TextView
+                android:id="@+id/vitB2LimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/vitB2Val"
+                app:layout_constraintStart_toEndOf="@+id/vitB2Val" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vitamin C (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/vitCProgress"
+                app:layout_constraintStart_toStartOf="@+id/vitCProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitAVal" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/vitCProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#F436EB"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/vitAVal"
+                app:layout_constraintTop_toBottomOf="@+id/vitAVal"
+                app:trackColor="#80F436EB"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/vitCVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/vitCProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitCProgress" />
+
+            <TextView
+                android:id="@+id/vitCLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/vitCVal"
+                app:layout_constraintStart_toEndOf="@+id/vitCVal" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calcium (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/calciumProgress"
+                app:layout_constraintStart_toStartOf="@+id/calciumProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitB1Val" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/calciumProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="#FF5722"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/vitB1Val"
+                app:layout_constraintTop_toBottomOf="@+id/vitB1Val"
+                app:trackColor="#80FF5722"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/calciumVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/calciumProgress"
+                app:layout_constraintTop_toBottomOf="@+id/calciumProgress" />
+
+            <TextView
+                android:id="@+id/calciumLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/calciumVal"
+                app:layout_constraintStart_toEndOf="@+id/calciumVal" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sodium (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/sodiumProgress"
+                app:layout_constraintStart_toStartOf="@+id/sodiumProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitB2Val" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/sodiumProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="@color/black"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/vitB2Val"
+                app:layout_constraintTop_toBottomOf="@+id/vitB2Val"
+                app:trackColor="#80000000"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/sodiumVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/sodiumProgress"
+                app:layout_constraintTop_toBottomOf="@+id/sodiumProgress" />
+
+            <TextView
+                android:id="@+id/sodiumLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/sodiumVal"
+                app:layout_constraintStart_toEndOf="@+id/sodiumVal" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iron (mg)"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ironProgress"
+                app:layout_constraintStart_toStartOf="@+id/ironProgress"
+                app:layout_constraintTop_toBottomOf="@+id/vitB2Val" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/ironProgress"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:progress="50"
+                app:indicatorColor="@color/red"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@id/vitCVal"
+                app:layout_constraintTop_toBottomOf="@+id/vitCVal"
+                app:trackColor="#80E91E63"
+                app:trackCornerRadius="8dp"
+                app:trackThickness="8dp" />
+
+            <TextView
+                android:id="@+id/ironVal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/ironProgress"
+                app:layout_constraintTop_toBottomOf="@+id/ironProgress" />
+
+            <TextView
+                android:id="@+id/ironLimitTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="of 3000"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/ironVal"
+                app:layout_constraintStart_toEndOf="@+id/ironVal" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

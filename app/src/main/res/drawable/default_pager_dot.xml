@@ -7,7 +7,7 @@
             android:thickness="18dp"
             android:shape="oval"
             android:useLevel="false">
-            <solid android:color="@color/light_grey"/>
+            <solid android:color="@color/light_gray"/>
         </shape>
     </item>
 </layer-list>

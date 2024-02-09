@@ -1,69 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@color/mainbg"
+             android:id="@+id/home_refresh"
              tools:context=".HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ScrollView
+            <ScrollView
+                android:id="@+id/home_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <LinearLayout
+                <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <LinearLayout
+                    <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/green">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="16dp">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/pictureProfile"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="32dp"
-                            android:src="@drawable/nutrieyelogo"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/pictureProfile"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_marginStart="32dp"
+                                android:src="@drawable/nutrieyelogo"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/userText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/pictureProfile"
-                            app:layout_constraintTop_toTopOf="@+id/pictureProfile" />
-
-                        <ImageView
-                                android:src="@drawable/notification"
+                            <TextView
+                                android:id="@+id/userText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/imageView5"
-                                app:layout_constraintEnd_toEndOf="parent"
+                                android:layout_marginStart="8dp"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintTop_toTopOf="@+id/pictureProfile"
-                                android:layout_marginEnd="32dp"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                app:layout_constraintStart_toEndOf="@+id/pictureProfile"
+                                app:layout_constraintTop_toTopOf="@+id/pictureProfile" />
 
-                    <TextView
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
                             android:text="Nutrients Tracking"
                             android:textStyle="bold"
                             android:textSize="25sp"
@@ -76,13 +69,13 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/textView5"/>
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                    <ImageView
+                        <ImageView
                             android:src="@drawable/arc_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -92,244 +85,725 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"/>
 
-                    <com.google.android.material.card.MaterialCardView
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/homeCardView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/btn_bg"
-                            app:cardCornerRadius="15dp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:background="@drawable/btn_bg"
+                            app:cardCornerRadius="15dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            android:id="@+id/homeCardView">
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/expandableForm"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="14dp">
 
-                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                <com.google.android.material.progressindicator.CircularProgressIndicator
+                                    android:id="@+id/caloriesProgress"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:progress="0"
-                                    app:trackColor="#808EBE26"
                                     app:indicatorColor="@color/green"
                                     app:indicatorSize="140dp"
-                                    app:trackThickness="18dp"
-                                    app:trackCornerRadius="8dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    android:id="@+id/circularProgressIndicator"/>
+                                    app:trackColor="#808EBE26"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="18dp" />
 
-                            <TextView
+                                <TextView
                                     android:id="@+id/caloriesVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
                                     android:textColor="@color/green"
-                                    android:textStyle="bold"
                                     android:textSize="22sp"
-                                    app:layout_constraintStart_toStartOf="@+id/circularProgressIndicator"
-                                    app:layout_constraintEnd_toEndOf="@+id/circularProgressIndicator"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.5"
+                                    android:textStyle="bold"
                                     app:layout_constraintBottom_toTopOf="@+id/caloriesLimitTotal"
-                                    app:layout_constraintVertical_chainStyle="packed"/>
+                                    app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_chainStyle="packed" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/caloriesLimitTotal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textSize="10sp"
                                     android:text="of 4000 Calories"
                                     android:textColor="#CC8EBE26"
+                                    android:textSize="10sp"
                                     android:textStyle="bold"
-                                    app:layout_constraintStart_toStartOf="@+id/circularProgressIndicator"
-                                    app:layout_constraintEnd_toEndOf="@+id/circularProgressIndicator"
-                                    app:layout_constraintTop_toBottomOf="@+id/caloriesVal"
-                                    android:id="@+id/caloriesLimitTotal"
+                                    app:layout_constraintBottom_toBottomOf="@+id/caloriesProgress"
+                                    app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
                                     app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintBottom_toBottomOf="@+id/circularProgressIndicator"/>
+                                    app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesVal" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/textView9"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Carbs (g)"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator1"
-                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator1"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
-                                    android:id="@+id/textView9"/>
+                                    app:layout_constraintBottom_toTopOf="@+id/carbsProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
 
 
-                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/carbsProgress"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:progress="25"
-                                    app:trackCornerRadius="8dp"
-                                    app:trackThickness="8dp"
-                                    app:trackColor="#80E9935F"
-                                    app:indicatorColor="@color/light_orange"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
-                                    android:id="@+id/linearProgressIndicator1"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintEnd_toStartOf="@+id/linearProgressIndicator2"
                                     android:layout_marginTop="32dp"
-                                    />
+                                    android:progress="25"
+                                    app:indicatorColor="@color/light_orange"
+                                    app:layout_constraintEnd_toStartOf="@+id/proteinProgress"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                                    app:trackColor="#80E9935F"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/carbsVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
                                     android:textSize="16sp"
-                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator1"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator1"
-                                    android:id="@+id/carbsVal"/>
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/carbsProgress" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/carbsLimitTotal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:textSize="12sp"
                                     android:text="of 3000"
+                                    android:textSize="12sp"
                                     android:textStyle="bold"
                                     app:layout_constraintBaseline_toBaselineOf="@+id/carbsVal"
-                                    app:layout_constraintStart_toEndOf="@+id/carbsVal"
-                                    android:id="@+id/carbsLimitTotal"/>
+                                    app:layout_constraintStart_toEndOf="@+id/carbsVal" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/textView10"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Protein (g)"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
-                                    android:id="@+id/textView10"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator2"
-                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator2"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"/>
+                                    app:layout_constraintBottom_toTopOf="@+id/proteinProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
 
-
-                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/proteinProgress"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:progress="25"
-                                    app:trackCornerRadius="8dp"
-                                    app:trackThickness="8dp"
-                                    app:trackColor="#806200EE"
-                                    app:indicatorColor="@color/purple_500"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
-                                    android:id="@+id/linearProgressIndicator2"
-                                    app:layout_constraintStart_toEndOf="@+id/linearProgressIndicator1"
-                                    app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintEnd_toStartOf="@+id/linearProgressIndicator3"
                                     android:layout_marginStart="16dp"
+                                    android:layout_marginTop="32dp"
                                     android:layout_marginEnd="16dp"
-                                    android:layout_marginTop="32dp"/>
+                                    android:progress="25"
+                                    app:indicatorColor="@color/purple_500"
+                                    app:layout_constraintEnd_toStartOf="@+id/fatsProgress"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toEndOf="@+id/carbsProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                                    app:trackColor="#806200EE"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/proteinVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
                                     android:textSize="16sp"
-                                    android:id="@+id/proteinVal"
-                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator2"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator2"/>
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/proteinProgress" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/proteinLimitTotal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:textSize="12sp"
                                     android:text="of 2000"
+                                    android:textSize="12sp"
                                     android:textStyle="bold"
-                                    android:id="@+id/proteinLimitTotal"
                                     app:layout_constraintBaseline_toBaselineOf="@+id/proteinVal"
-                                    app:layout_constraintStart_toEndOf="@+id/proteinVal"/>
+                                    app:layout_constraintStart_toEndOf="@+id/proteinVal" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/textView14"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Fats (g)"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
-                                    android:id="@+id/textView14"
-                                    app:layout_constraintBottom_toTopOf="@+id/linearProgressIndicator3"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator3"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"/>
+                                    app:layout_constraintBottom_toTopOf="@+id/fatsProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/fatsProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress" />
 
-                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/fatsProgress"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:progress="25"
-                                    app:trackCornerRadius="8dp"
-                                    app:trackThickness="8dp"
-                                    app:trackColor="#80009688"
-                                    app:indicatorColor="@color/teal_500"
-                                    app:layout_constraintTop_toBottomOf="@+id/circularProgressIndicator"
-                                    android:id="@+id/linearProgressIndicator3"
-                                    app:layout_constraintStart_toEndOf="@+id/linearProgressIndicator2"
-                                    app:layout_constraintHorizontal_bias="0.5"
-                                    app:layout_constraintEnd_toEndOf="parent"
                                     android:layout_marginTop="32dp"
-                                    />
+                                    android:progress="25"
+                                    app:indicatorColor="@color/teal_500"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toEndOf="@+id/proteinProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/caloriesProgress"
+                                    app:trackColor="#80009688"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/fatsVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
                                     android:textSize="16sp"
-                                    android:id="@+id/fatsVal"
-                                    app:layout_constraintTop_toBottomOf="@+id/linearProgressIndicator3"
-                                    app:layout_constraintStart_toStartOf="@+id/linearProgressIndicator3"/>
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/fatsProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/fatsProgress" />
 
-                            <TextView
+                                <TextView
+                                    android:id="@+id/fatsLimitTotal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:textSize="12sp"
                                     android:text="of 3000"
+                                    android:textSize="12sp"
                                     android:textStyle="bold"
-                                    android:id="@+id/fatsLimitTotal"
                                     app:layout_constraintBaseline_toBaselineOf="@+id/fatsVal"
-                                    app:layout_constraintStart_toEndOf="@+id/fatsVal"/>
+                                    app:layout_constraintStart_toEndOf="@+id/fatsVal" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </com.google.android.material.card.MaterialCardView>
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                                <TextView
+                                    android:id="@+id/textView15"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Sugar (g)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/sugarProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/sugarProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/carbsVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/sugarProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="25"
+                                    app:indicatorColor="@color/purple_200"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/carbsVal"
+                                    app:trackColor="#80BB86FC"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/sugarVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/sugarProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/sugarProgress" />
+
+                                <TextView
+                                    android:id="@+id/sugarLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/sugarVal"
+                                    app:layout_constraintStart_toEndOf="@+id/sugarVal" />
+
+                                <TextView
+                                    android:id="@+id/textView16"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Fiber (g)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/fiberProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/fiberProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/proteinVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/fiberProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="@android:color/darker_gray"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/proteinVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/proteinVal"
+                                    app:trackColor="#80AAAAAA"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/fiberVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/fiberProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/fiberProgress" />
+
+                                <TextView
+                                    android:id="@+id/fiberLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/fiberVal"
+                                    app:layout_constraintStart_toEndOf="@+id/fiberVal" />
+
+                                <TextView
+                                    android:id="@+id/textView17"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Water (mL)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/waterProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/waterProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/fatsVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/waterProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#3F51B5"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/fatsVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/fatsVal"
+                                    app:trackColor="#803F51B5"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/waterVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/waterProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/waterProgress" />
+
+                                <TextView
+                                    android:id="@+id/waterLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/waterVal"
+                                    app:layout_constraintStart_toEndOf="@+id/waterVal" />
+
+                                <TextView
+                                    android:id="@+id/textView18"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vit A (mcg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/vitAProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/vitAProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/sugarVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/vitAProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#FFC107"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/sugarVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/sugarVal"
+                                    app:trackColor="#80FFC107"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/vitAVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/vitAProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitAProgress" />
+
+                                <TextView
+                                    android:id="@+id/vitALimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/vitAVal"
+                                    app:layout_constraintStart_toEndOf="@+id/vitAVal" />
+
+                                <TextView
+                                    android:id="@+id/textView19"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vit B1 (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/vitB1Progress"
+                                    app:layout_constraintStart_toStartOf="@+id/vitB1Progress"
+                                    app:layout_constraintTop_toBottomOf="@+id/fiberVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/vitB1Progress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#4CAF50"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/fiberVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/fiberVal"
+                                    app:trackColor="#804CAF50"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/vitB1Val"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/vitB1Progress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB1Progress" />
+
+                                <TextView
+                                    android:id="@+id/vitB1LimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/vitB1Val"
+                                    app:layout_constraintStart_toEndOf="@+id/vitB1Val" />
+
+                                <TextView
+                                    android:id="@+id/textView20"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vit B2 (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/vitB2Progress"
+                                    app:layout_constraintStart_toStartOf="@+id/vitB2Progress"
+                                    app:layout_constraintTop_toBottomOf="@+id/waterVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/vitB2Progress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#03A9F4"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/waterVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/waterVal"
+                                    app:trackColor="#8003A9F4"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/vitB2Val"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/vitB2Progress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB2Progress" />
+
+                                <TextView
+                                    android:id="@+id/vitB2LimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/vitB2Val"
+                                    app:layout_constraintStart_toEndOf="@+id/vitB2Val" />
+
+                                <TextView
+                                    android:id="@+id/textView21"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vitamin C (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/vitCProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/vitCProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitAVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/vitCProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#F436EB"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/vitAVal"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitAVal"
+                                    app:trackColor="#80F436EB"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/vitCVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/vitCProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitCProgress" />
+
+                                <TextView
+                                    android:id="@+id/vitCLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/vitCVal"
+                                    app:layout_constraintStart_toEndOf="@+id/vitCVal" />
+
+                                <TextView
+                                    android:id="@+id/textView22"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Calcium (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/calciumProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/calciumProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB1Val" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/calciumProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="#FF5722"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/vitB1Val"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB1Val"
+                                    app:trackColor="#80FF5722"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/calciumVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/calciumProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/calciumProgress" />
+
+                                <TextView
+                                    android:id="@+id/calciumLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/calciumVal"
+                                    app:layout_constraintStart_toEndOf="@+id/calciumVal" />
+
+                                <TextView
+                                    android:id="@+id/textView23"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Sodium (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/sodiumProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/sodiumProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB2Val" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/sodiumProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="@color/black"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="@id/vitB2Val"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitB2Val"
+                                    app:trackColor="#80000000"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/sodiumVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/sodiumProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/sodiumProgress" />
+
+                                <TextView
+                                    android:id="@+id/sodiumLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/sodiumVal"
+                                    app:layout_constraintStart_toEndOf="@+id/sodiumVal" />
+
+                                <TextView
+                                    android:id="@+id/textView24"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Iron (mg)"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/ironProgress"
+                                    app:layout_constraintStart_toStartOf="@+id/ironProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitCVal" />
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    android:id="@+id/ironProgress"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="32dp"
+                                    android:progress="50"
+                                    app:indicatorColor="@color/red"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/vitCVal"
+                                    app:trackColor="#80E91E63"
+                                    app:trackCornerRadius="8dp"
+                                    app:trackThickness="8dp" />
+
+                                <TextView
+                                    android:id="@+id/ironVal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="@+id/ironProgress"
+                                    app:layout_constraintTop_toBottomOf="@+id/ironProgress" />
+
+                                <TextView
+                                    android:id="@+id/ironLimitTotal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="of 3000"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBaseline_toBaselineOf="@+id/ironVal"
+                                    app:layout_constraintStart_toEndOf="@+id/ironVal" />
+
+
+                                <ImageView
+                                    android:id="@+id/expandLessMoreButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/baseline_expand_more_24"
+                                    android:backgroundTint="@color/gray"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/ironVal" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:padding="8dp">
 
-                    <TextView
-                        android:id="@+id/dateToday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text=" Today, Current Date"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <TextView
+                            android:id="@+id/dateToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text=" Today, Current Date"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.card.MaterialCardView
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -339,12 +813,12 @@
                         app:layout_constraintTop_toBottomOf="@id/homeCardView">
 
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="15dp">
 
-                        <ImageView
+                            <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/breakfast"
@@ -353,7 +827,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 android:id="@+id/imgBreakfast"/>
 
-                        <TextView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
@@ -367,96 +841,96 @@
                                 app:layout_constraintVertical_chainStyle="packed"
                                 />
 
-                        <TextView
-                            android:id="@+id/breakfastCal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 kcal"
-                            android:textColor="@color/green"
-                            android:textStyle="bold"
-                            app:layout_constraintBaseline_toBaselineOf="@+id/txtBreakfast"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                        <HorizontalScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:scrollbars="none"
-                            android:layout_marginStart="72dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toEndOf="@+id/imgBreakfast"
-                            app:layout_constraintTop_toBottomOf="@+id/txtBreakfast">
-
-                            <LinearLayout
+                            <TextView
+                                android:id="@+id/breakfastCal"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:text="0 kcal"
+                                android:textColor="@color/green"
+                                android:textStyle="bold"
+                                app:layout_constraintBaseline_toBaselineOf="@+id/txtBreakfast"
+                                app:layout_constraintEnd_toEndOf="parent" />
 
-                                <TextView
-                                    android:id="@+id/breakfastCarbsTotal"
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:scrollbars="none"
+                                android:layout_marginStart="72dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintStart_toEndOf="@+id/imgBreakfast"
+                                app:layout_constraintTop_toBottomOf="@+id/txtBreakfast">
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0g" />
+                                    android:layout_height="wrap_content">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:background="@drawable/bg_box_rounded"
-                                    android:backgroundTint="@color/light_orange"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="Carbs"
-                                    android:textColor="@color/white"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/breakfastCarbsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0g" />
 
-                                <TextView
-                                    android:id="@+id/breakfastProteinTotal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:text="0g" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/light_orange"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Carbs"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:background="@drawable/bg_box_rounded"
-                                    android:backgroundTint="@color/purple_500"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="Protein"
-                                    android:textColor="@color/white"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/breakfastProteinTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
 
-                                <TextView
-                                    android:id="@+id/breakfastFatsTotal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:text="0g" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/purple_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Protein"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:background="@drawable/bg_box_rounded"
-                                    android:backgroundTint="@color/teal_500"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="Fats"
-                                    android:textColor="@color/white"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/breakfastFatsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
 
-                            </LinearLayout>
-                        </HorizontalScrollView>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/teal_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Fats"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+                            </HorizontalScrollView>
 
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.card.MaterialCardView
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -466,12 +940,12 @@
                         app:layout_constraintTop_toBottomOf="@id/homeCardView">
 
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="15dp">
 
-                        <ImageView
+                            <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/lunch"
@@ -480,7 +954,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 android:id="@+id/imgLunch"/>
 
-                        <TextView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
@@ -494,98 +968,98 @@
                                 app:layout_constraintVertical_chainStyle="packed"
                                 />
 
-                        <TextView
-                            android:id="@+id/lunchCal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 kcal"
-                            android:textColor="@color/green"
-                            android:textStyle="bold"
-                            app:layout_constraintBaseline_toBaselineOf="@+id/txtLunch"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                        <HorizontalScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:scrollbars="none"
-                            android:layout_marginStart="72dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toEndOf="@+id/imgLunch"
-                            app:layout_constraintTop_toBottomOf="@id/txtLunch">
-
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
                             <TextView
-                                android:id="@+id/lunchCarbsTotal"
+                                android:id="@+id/lunchCal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0g" />
+                                android:text="0 kcal"
+                                android:textColor="@color/green"
+                                android:textStyle="bold"
+                                app:layout_constraintBaseline_toBaselineOf="@+id/txtLunch"
+                                app:layout_constraintEnd_toEndOf="parent" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/light_orange"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Carbs"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/lunchProteinTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="0g" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/purple_500"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Protein"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/lunchFatsTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="0g" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/teal_500"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Fats"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:scrollbars="none"
+                                android:layout_marginStart="72dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintStart_toEndOf="@+id/imgLunch"
+                                app:layout_constraintTop_toBottomOf="@id/txtLunch">
 
 
-                        </LinearLayout>
-                        </HorizontalScrollView>
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/lunchCarbsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0g" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/light_orange"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Carbs"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/lunchProteinTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/purple_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Protein"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/lunchFatsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/teal_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Fats"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
 
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
+                                </LinearLayout>
+                            </HorizontalScrollView>
 
-                <com.google.android.material.card.MaterialCardView
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -594,12 +1068,12 @@
                         app:cardCornerRadius="15dp"
                         app:layout_constraintTop_toBottomOf="@id/homeCardView">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="15dp">
 
-                        <ImageView
+                            <ImageView
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/dinner"
@@ -608,7 +1082,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 android:id="@+id/imgDinner"/>
 
-                        <TextView
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
@@ -622,96 +1096,94 @@
                                 app:layout_constraintVertical_chainStyle="packed"
                                 />
 
-                        <TextView
-                            android:id="@+id/dinnerCal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 kcal"
-                            android:textColor="@color/green"
-                            android:textStyle="bold"
-                            app:layout_constraintBaseline_toBaselineOf="@+id/txtDinner"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                        <HorizontalScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:scrollbars="none"
-                            android:layout_marginStart="72dp"
-                            android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toEndOf="@+id/imgDinner"
-                            app:layout_constraintTop_toBottomOf="@id/txtDinner">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
                             <TextView
-                                android:id="@+id/dinnerCarbsTotal"
+                                android:id="@+id/dinnerCal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0g" />
+                                android:text="0 kcal"
+                                android:textColor="@color/green"
+                                android:textStyle="bold"
+                                app:layout_constraintBaseline_toBaselineOf="@+id/txtDinner"
+                                app:layout_constraintEnd_toEndOf="parent" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/light_orange"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Carbs"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:scrollbars="none"
+                                android:layout_marginStart="72dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintStart_toEndOf="@+id/imgDinner"
+                                app:layout_constraintTop_toBottomOf="@id/txtDinner">
 
-                            <TextView
-                                android:id="@+id/dinnerProteinTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="0g" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/purple_500"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Protein"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/dinnerCarbsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0g" />
 
-                            <TextView
-                                android:id="@+id/dinnerFatsTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="0g" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/light_orange"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Carbs"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:background="@drawable/bg_box_rounded"
-                                android:backgroundTint="@color/teal_500"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="Fats"
-                                android:textColor="@color/white"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/dinnerProteinTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/purple_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Protein"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/dinnerFatsTotal"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:text="0g" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_box_rounded"
+                                        android:backgroundTint="@color/teal_500"
+                                        android:paddingHorizontal="6dp"
+                                        android:paddingVertical="2dp"
+                                        android:text="Fats"
+                                        android:textColor="@color/white"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
 
 
-                        </LinearLayout>
-                        </HorizontalScrollView>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-        </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+                                </LinearLayout>
+                            </HorizontalScrollView>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

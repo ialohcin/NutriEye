@@ -8,13 +8,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="grey">#808080</color>
+    <color name="gray">#808080</color>
     <color name="mainbg">#80EEF2F5</color>
     <color name="green">#8EBE26</color>
     <color name="green_50">#808EBE26</color>
     <color name="light_coral">#F4B187</color>
     <color name="light_orange">#E9935F</color>
     <color name="red">#E91E63</color>
-    <color name="light_grey">#D3D3D3</color>
+    <color name="light_gray">#D3D3D3</color>
     <color name="transparentColor">#80FFFFFF</color>
 </resources>

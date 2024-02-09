@@ -1,9 +1,16 @@
 package com.example.nutrieye;
 
+import static com.example.nutrieye.NavigationScreen.USER_UID_KEY;
+
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.nutrieye.databinding.ActivityEditProfileScreenBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,12 +47,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class EditProfileScreen extends AppCompatActivity {
     public String userUID;
-    private SharedPreferences sharedPreferences;
-
+    private DatePickerDialog.OnDateSetListener dobSetListener;
     ActivityEditProfileScreenBinding binding;
     private boolean[] foodAllergenCheckedItems;
     private boolean[] healthConditionCheckedItems;
@@ -54,8 +60,6 @@ public class EditProfileScreen extends AppCompatActivity {
         binding = ActivityEditProfileScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        userUID = getIntent().getStringExtra("USER_UID");
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -107,20 +111,31 @@ public class EditProfileScreen extends AppCompatActivity {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(binding.dobProfile.getWindowToken(), 0);
 
-            DatePickerDialog dobPickerDialog = new DatePickerDialog(EditProfileScreen.this, (datePicker, year1, month1, dayOfMonth) -> {
-                month1 = month1 + 1;
-                Calendar calendar1 = Calendar.getInstance();
-                calendar1.set(Calendar.YEAR, year1);
-                calendar1.set(Calendar.MONTH, month1 - 1);
-                calendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.US);
-                String date = dateFormat.format(calendar1.getTime());
-                binding.dobProfile.setText(date);
-            },year,month - 1,day);
+            // Create a new DatePickerDialog
+            DatePickerDialog dobPickerDialog = new DatePickerDialog(
+                    EditProfileScreen.this,
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    dobSetListener,
+                    year, month, day);
 
-
+            // Show the DatePickerDialog
+            dobPickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dobPickerDialog.show();
         });
+
+        dobSetListener = (view, year1, month1, dayOfMonth) -> {
+            month1 = month1 + 1;
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.set(Calendar.YEAR, year1);
+            calendar1.set(Calendar.MONTH, month1 - 1);
+            calendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.US);
+            String date = dateFormat.format(calendar1.getTime());
+
+            // Set the selected date to the TextView
+            binding.dobProfile.setText(date);
+        };
 
         binding.dobProfile.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -158,15 +173,31 @@ public class EditProfileScreen extends AppCompatActivity {
             public void afterTextChanged(Editable editable) { validateWeight(Objects.requireNonNull(binding.weightProfile.getText()).toString().trim()); }
         });
 
-        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                getResources().getStringArray(R.array.physical_activity_levels)); // R.array.physical_activity_levels should be the array resource for activity levels in your strings.xml file
-        binding.phyActivityLvlProfile.setAdapter(phyAdapter);
+        // Define arrays for main options and descriptors
+        String[] mainOptions = new String[]{"Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary"};
+        String[] descriptors = new String[]{"Professional athlete", "Exercise 6-7 times a week", "Exercise 3-5 times a week", "Exercise 2-3 times a week", "Exercise 1-2 times a week", "Little to no exercise"};
 
+        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, mainOptions);
+
+        binding.phyActivityLvlProfile.setAdapter(phyAdapter);
 
         binding.phyActivityLvlProfile.setOnClickListener(view -> hideKeyboard());
 
         binding.phyActivityLvlProfile.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedOption = parent.getItemAtPosition(position).toString();
+            String selectedOption = mainOptions[position]; // The main option
+            String descriptor = descriptors[position]; // The descriptor
+
+            // Set helper text to the descriptor regardless of the error state
+            binding.profilePhyActivityTextInput.setHelperTextEnabled(true);
+            binding.profilePhyActivityTextInput.setHelperText(descriptor);
+
+            // Get the green color from colors.xml
+            int greenColor = ContextCompat.getColor(this, R.color.green);
+
+            // Set helper text color to green
+            binding.profilePhyActivityTextInput.setHelperTextColor(ColorStateList.valueOf(greenColor));
+
+            // Validate the selected option (you can still validate the main option if needed)
             validatePhysicalActivityLevel(selectedOption);
         });
 
@@ -204,6 +235,7 @@ public class EditProfileScreen extends AppCompatActivity {
             String lastNameStr = Objects.requireNonNull(binding.lastNameProfile.getText()).toString().trim();
             String dobStr = Objects.requireNonNull(binding.dobProfile.getText()).toString().trim();
             String selectedSex = binding.selectSexProfile.getText().toString().trim();
+            String prefix = binding.profileContactNumTextInput.getPrefixText().toString().trim();
             String contactNumberStr = Objects.requireNonNull(binding.contactNumProfile.getText()).toString().trim();
             String selectedPhysicalActivityLevel = binding.phyActivityLvlProfile.getText().toString().trim();
             String healthConditionStr = binding.healthConditionsProfile.getText().toString().trim();
@@ -241,24 +273,34 @@ public class EditProfileScreen extends AppCompatActivity {
                 alertDialog.setPositiveButton("OK", (dialogInterface, option) -> dialogInterface.dismiss());
                 alertDialog.show();
             } else {
+                // Convert to Double only if not empty
+                Double height = Double.valueOf(heightStr);
+                Double weight = Double.valueOf(weightStr);
+                String finalFoodAllergensStr = foodAllergensStr;
+                String finalHealthConditionStr = healthConditionStr;
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null){
                     // Firebase integration for user details in Realtime Database
                     FirebaseDatabase db = FirebaseDatabase.getInstance();
-                    DatabaseReference reference = db.getReference("Users").child(userUID).child("Profile");
+                    DatabaseReference reference = db.getReference("Users").child(user.getUid()).child("Profile");
 
                     // Only modify the fields that are allowed to be updated
                     HashMap<String, Object> updatedUserData = new HashMap<>();
                     updatedUserData.put("firstName", firstNameStr);
                     updatedUserData.put("lastName", lastNameStr);
                     updatedUserData.put("password", passwordStr);
-                    updatedUserData.put("contactNum", contactNumberStr);
+                    updatedUserData.put("contactNum", prefix + contactNumberStr);
                     updatedUserData.put("confirmPass", confirmPasswordStr);
-                    updatedUserData.put("foodAllergens", foodAllergensStr);
-                    updatedUserData.put("healthConditions", healthConditionStr);
-                    updatedUserData.put("height", Double.parseDouble(heightStr));
-                    updatedUserData.put("weight", Double.parseDouble(weightStr));
+                    updatedUserData.put("foodAllergens", finalFoodAllergensStr);
+                    updatedUserData.put("healthConditions", finalHealthConditionStr);
+                    updatedUserData.put("height", height);
+                    updatedUserData.put("weight", weight);
                     updatedUserData.put("phyActivity", selectedPhysicalActivityLevel);
+
+                    // If password is changed, update it
+                    if (passwordStr.equals(confirmPasswordStr)) {
+                        updateFirebaseAuthenticationPassword(passwordStr, user.getUid());
+                    }
 
                     reference.updateChildren(updatedUserData).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -278,8 +320,48 @@ public class EditProfileScreen extends AppCompatActivity {
             }
         });
 
-        fetchUserDataFromFirebase();
+       loadUserData();
 
+    }
+
+    private void loadUserData() {
+        SharedPreferences preferences = EditProfileScreen.this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        userUID = preferences.getString(USER_UID_KEY, null);
+        if (userUID != null) {
+            fetchUserDataFromFirebase();
+        } else {
+            // Handle case where userUID is not available
+        }
+    }
+
+    private void updateFirebaseAuthenticationPassword(String newPassword, String userUID) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // Authentication password update successful, now update Realtime Database
+                        updateFirebaseRealtimeDatabasePassword(userUID, newPassword);
+
+                        // Clear Remember Me
+                        clearUserUIDfromSharedPreferences();
+
+                    } else {
+                        // Handle failure
+                        Toast.makeText(EditProfileScreen.this, "Failed to update password in Authentication", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+    }
+
+    private void updateFirebaseRealtimeDatabasePassword(String userUID, String newPassword) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userUID).child("Profile");
+        userRef.child("password").setValue(newPassword);
+        userRef.child("confirmPass").setValue(newPassword);
     }
 
     private void fetchUserDataFromFirebase() {
@@ -312,6 +394,9 @@ public class EditProfileScreen extends AppCompatActivity {
                     binding.lastNameProfile.setText(lastName);
                     binding.dobProfile.setText(dob);
                     binding.selectSexProfile.setText(sex);
+                    if (contactNumber != null && contactNumber.startsWith("+63")) {
+                        contactNumber = contactNumber.substring(3); // Remove "+63"
+                    }
                     binding.contactNumProfile.setText(contactNumber);
                     binding.weightProfile.setText(String.valueOf(weight));
                     binding.heightProfile.setText(String.valueOf(height));
@@ -349,27 +434,84 @@ public class EditProfileScreen extends AppCompatActivity {
         });
     }
 
+    private void clearUserUIDfromSharedPreferences() {
+        // Clear userUID from SharedPreferences
+        SharedPreferences preferences = EditProfileScreen.this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(USER_UID_KEY); // USER_UID_KEY is the key used to store userUID
+        editor.apply();
+
+        // Clear "Remember Me" preferences
+        editor.remove("isUserRemembered");
+        editor.remove("savedEmail");
+        editor.remove("savedPassword");
+        editor.apply();
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            // Navigate back to NavigationScreen with ProfileFragment active
-            navigateToProfileFragment();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                showDiscardChangesDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
 
     private void handleProfileUpdateSuccess() {
         Toast.makeText(EditProfileScreen.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        String currentDate = dateFormat.format(calendar.getTime());
+
+        // Create ActivityLogs structure
+        DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
+        DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
+
+        // Get current time
+        String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+
+        // Generate a unique ID for the log entry
+        String logID = "LogID_" + System.currentTimeMillis();
+
+        // Create the log entry structure for the activity logs
+        DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
+        logEntryRef.child("action").setValue("Updated Profile Details");
+        logEntryRef.child("category").setValue("Profile");
+        logEntryRef.child("timestamp").setValue(currentTime);
+
         navigateToProfileFragment();
     }
+
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        navigateToProfileFragment();
+        showDiscardChangesDialog();
     }
+
+    private void showDiscardChangesDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Discard Changes");
+        alertDialogBuilder.setMessage("Do you want to discard the changes?");
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                navigateToProfileFragment();
+                EditProfileScreen.super.onBackPressed();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Do nothing, just close the dialog
+            }
+        });
+        alertDialogBuilder.show();
+    }
+
 
     private void navigateToProfileFragment() {
         Intent intent = new Intent(EditProfileScreen.this, NavigationScreen.class);
@@ -575,8 +717,16 @@ public class EditProfileScreen extends AppCompatActivity {
     }
 
     private boolean isValidContactNumber(String contactNumber) {
-        String pattern = "^(09)[0-9]{9}$"; // 11-digit numeric format starting with "09"
-        return Pattern.matches(pattern, contactNumber);
+        // Ensure the contact number has exactly 10 digits, disregarding the prefix
+        String expectedFullContactNumber = "^[0-9]{10}$";
+
+        if (!contactNumber.matches(expectedFullContactNumber)) {
+            binding.profileContactNumTextInput.setError("Invalid contact number format");
+            return false;
+        } else {
+            binding.profileContactNumTextInput.setError(null);
+            return true;
+        }
     }
 
     private boolean validatePhysicalActivityLevel(String selectedOption) {
@@ -593,7 +743,7 @@ public class EditProfileScreen extends AppCompatActivity {
     }
 
     private boolean isValidPhysicalActivityLevel(String selectedOption) {
-        List<String> validOptions = Arrays.asList("Very Active", "Moderately Active", "Lightly Active", "Sedentary");
+        List<String> validOptions = Arrays.asList("Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary");
         return validOptions.contains(selectedOption);
     }
 

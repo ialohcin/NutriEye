@@ -48,9 +48,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FoodScreen extends AppCompatActivity {
 
@@ -59,6 +63,7 @@ public class FoodScreen extends AppCompatActivity {
     ProgressDialog progressDialog;
     String currentDate;
     String servingSizeText = "";
+    String rServingSizeTemp = "";
     String userUID;
     FoodData foodData;
     TextInputLayout mealPlanLayout, servingSizeLayout, quantityServingSizeLayout;
@@ -106,9 +111,9 @@ public class FoodScreen extends AppCompatActivity {
             public void onClick(View view) {
                 showAlertDialog();
                 disableMealOptions();
-                setupServingSizeAdapter(alertDialog,foodCategory.getText().toString(), foodNameText.getText().toString());
                 servingSizeText = ServingSize.calculateServingSize(foodNameText.getText().toString(), foodCategory.getText().toString());
                 servingSizeRecommend.setText(servingSizeText);
+                setupServingSizeAdapter(alertDialog, foodCategory.getText().toString(), foodNameText.getText().toString());
 
             }
         });
@@ -116,36 +121,31 @@ public class FoodScreen extends AppCompatActivity {
         addMeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allGoods){
+                if (allGoods) {
                     String imageUriString = imageUri.toString();
                     String foodName = foodNameText.getText().toString();
                     String category = foodCategory.getText().toString();
                     String mealTime = mealPlanSelection.getText().toString();
-                    String servingSize = sServingSize.getText().toString();
-                    double calories = extractNumericValue(sCaloriesVal.getText().toString());
+                    String servingSize = rServingSize.getText().toString();
+                    double calories = extractNumericValue(rCaloriesVal.getText().toString());
 
                     // Extract the numeric part from the text and then parse to double
-                    double carbs = extractNumericValue(sCarbsVal.getText().toString());
-                    double fats = extractNumericValue(sFatVal.getText().toString());
-                    double protein = extractNumericValue(sProteinVal.getText().toString());
-                    double fiber = extractNumericValue(sFiberVal.getText().toString());
-                    double sugar = extractNumericValue(sSugarVal.getText().toString());
-                    double water = extractNumericValue(sWaterVal.getText().toString());
-                    double vitA = extractNumericValue(sVitAVal.getText().toString());
-                    double vitB1 = extractNumericValue(sVitB1Val.getText().toString());
-                    double vitB2 = extractNumericValue(sVitB2Val.getText().toString());
-                    double vitC = extractNumericValue(sVitCVal.getText().toString());
-                    double calcium = extractNumericValue(sCalciumVal.getText().toString());
-                    double sodium = extractNumericValue(sSodiumVal.getText().toString());
-                    double iron = extractNumericValue(sIronVal.getText().toString());
+                    double carbs = extractNumericValue(rCarbsVal.getText().toString());
+                    double fats = extractNumericValue(rFatVal.getText().toString());
+                    double protein = extractNumericValue(rProteinVal.getText().toString());
+                    double fiber = extractNumericValue(rFiberVal.getText().toString());
+                    double sugar = extractNumericValue(rSugarVal.getText().toString());
+                    double water = extractNumericValue(rWaterVal.getText().toString());
+                    double vitA = extractNumericValue(rVitAVal.getText().toString());
+                    double vitB1 = extractNumericValue(rVitB1Val.getText().toString());
+                    double vitB2 = extractNumericValue(rVitB2Val.getText().toString());
+                    double vitC = extractNumericValue(rVitCVal.getText().toString());
+                    double calcium = extractNumericValue(rCalciumVal.getText().toString());
+                    double sodium = extractNumericValue(rSodiumVal.getText().toString());
+                    double iron = extractNumericValue(rIronVal.getText().toString());
 
                     if (userUID != null) {
                         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-
-                        Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy", Locale.US);
-                        currentDate = dateFormat.format(calendar.getTime());
-
                         DatabaseReference mealTimeRef = userRef.child("MealPlans").child(currentDate).child(mealTime);
 
                         mealTimeRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -189,26 +189,24 @@ public class FoodScreen extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                else {
+                } else {
                     // Show an AlertDialog indicating that there are validation errors
                     AlertDialog.Builder builder = new AlertDialog.Builder(FoodScreen.this);
-                    builder.setTitle("Edit Meal Plan")
-                            .setMessage("Please verify that all fields are valid and not empty.")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
+                    builder.setTitle("Edit Meal Plan").setMessage("Please verify that all fields are valid and not empty.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
                 }
             }
         });
 
-        foodNameText.setText("Chicken Thigh");
+        foodNameText.setText("Mandarin Orange");
 
         setNutrientValues(foodNameText.getText().toString());
+
+        showAllergensDialog(foodNameText.getText().toString());
 
         showRecognized.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +217,7 @@ public class FoodScreen extends AppCompatActivity {
 
                 recognizedLayout.setVisibility(View.VISIBLE);
                 standardLayout.setVisibility(View.GONE);
+
             }
         });
         showStandard.setOnClickListener(new View.OnClickListener() {
@@ -231,12 +230,14 @@ public class FoodScreen extends AppCompatActivity {
 
                 recognizedLayout.setVisibility(View.GONE);
                 standardLayout.setVisibility(View.VISIBLE);
+
             }
         });
 
+
     }
 
-    public void initComponents(){
+    public void initComponents() {
         foodNameText = findViewById(R.id.foodName);
         foodCategory = findViewById(R.id.foodCategory);
         addMeal = findViewById(R.id.addMealPlanButton);
@@ -287,6 +288,95 @@ public class FoodScreen extends AppCompatActivity {
 
         servingSizeRecommend = findViewById(R.id.recommendedServingSize);
 
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        currentDate = dateFormat.format(calendar.getTime());
+
+    }
+
+    private void showAllergensDialog(String foodName) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID).child("Profile").child("foodAllergens");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userAllergensString = dataSnapshot.getValue(String.class);
+                if (userAllergensString != null && !userAllergensString.isEmpty()) {
+                    List<String> userAllergens = Arrays.asList(userAllergensString.split(",\\s*"));
+
+                    Map<String, List<String>> foodAllergensMap = getFoodAllergensMap();
+                    if (foodAllergensMap.containsKey(foodName)) {
+                        List<String> allergensInFood = foodAllergensMap.get(foodName);
+                        List<String> matchingAllergens = new ArrayList<>();
+                        for (String allergen : allergensInFood) {
+                            if (userAllergens.contains(allergen)) {
+                                matchingAllergens.add(allergen);
+                            }
+                        }
+
+                        if (!matchingAllergens.isEmpty()) {
+                            StringBuilder message = new StringBuilder("The selected food item may contain the following allergens:\n");
+                            for (String allergen : matchingAllergens) {
+                                message.append("\n- ").append(allergen);
+                                // Additional descriptions for specific allergens (if needed)
+                                if (foodName.equals("Chicken Adobo") && allergen.equals("Wheat")) {
+                                    message.append("\n  (may be thickened with wheat flour)");
+                                } else if (foodName.equals("Milkfish") && allergen.equals("Dairy")) {
+                                    message.append("\n  (may contain milk proteins)");
+                                } else if (foodName.equals("Bulalo") && allergen.equals("Dairy")) {
+                                    message.append("\n  (may contain dairy in the broth)");
+                                } else if (foodName.equals("Chicken Eggs") && allergen.equals("Dairy")) {
+                                    message.append("\n  (may contain trace amounts of dairy proteins)");
+                                } else if (foodName.equals("White Bread") && (allergen.equals("Dairy") || allergen.equals("Wheat"))) {
+                                    message.append("\n  (may contain milk powder and/or wheat flour)");
+                                } else if (foodName.equals("White Rice") && allergen.equals("Dairy")) {
+                                    message.append("\n  (can contain milk components)");
+                                } else if (foodName.equals("Brown Rice") && allergen.equals("Wheat")) {
+                                    message.append("\n  (may contain wheat flour as a thickener)");
+                                }
+                            }
+
+                            message.append("\n\nDo you wish to continue?");
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(FoodScreen.this);
+                            builder.setTitle("Food Allergens").setMessage(message.toString()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    navigateToCameraScreen();
+                                }
+                            }).show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle database error
+            }
+        });
+    }
+
+    private Map<String, List<String>> getFoodAllergensMap() {
+        Map<String, List<String>> foodAllergensMap = new HashMap<>();
+        foodAllergensMap.put("Beef Kare-kare", Collections.singletonList("Peanuts"));
+        foodAllergensMap.put("Beef Ribs Sinigang", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("Bulalo", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("Chicken Adobo", Collections.singletonList("Wheat"));
+        foodAllergensMap.put("Chicken Afritada", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("Pork Menudo", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("Chicken Eggs", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("White Rice", Collections.singletonList("Dairy"));
+        foodAllergensMap.put("Brown Rice", Collections.singletonList("Wheat"));
+        foodAllergensMap.put("White Bread", Arrays.asList("Dairy", "Wheat"));
+        foodAllergensMap.put("Blue Crab", Collections.singletonList("Shellfish"));
+        foodAllergensMap.put("Squid", Collections.singletonList("Shellfish"));
+        foodAllergensMap.put("Milkfish", Collections.singletonList("Dairy"));
+        return foodAllergensMap;
     }
 
     // Method to generate unique meal item IDs
@@ -316,20 +406,20 @@ public class FoodScreen extends AppCompatActivity {
         return 0.0; // Default value if extraction fails
     }
 
-private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> mealItemMap, DatabaseReference mealItemRef) {
-    // Create and show a ProgressDialog
-    progressDialog = new ProgressDialog(FoodScreen.this);
-    progressDialog.setTitle("Creating Meal Plan");
-    progressDialog.setMessage("Verifying meal information. Please wait patiently..."); // Updated message
-    progressDialog.setCancelable(false);
-    progressDialog.show();
+    private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> mealItemMap, DatabaseReference mealItemRef) {
+        // Create and show a ProgressDialog
+        progressDialog = new ProgressDialog(FoodScreen.this);
+        progressDialog.setTitle("Creating Meal Plan");
+        progressDialog.setMessage("Verifying meal information. Please wait patiently..."); // Updated message
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-    StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("food_images");
-    final String filename = userUID + "_foodImage.jpg";
+        StorageReference imageRef = FirebaseStorage.getInstance().getReference().child("food_images");
+        final String filename = userUID + "_foodImage.jpg";
 
-    // Call the method to upload with incremented filenames
-    uploadWithIncrementedFilename(imageRef, userUID, 0, imageUri, mealItemMap, mealItemRef);
-}
+        // Call the method to upload with incremented filenames
+        uploadWithIncrementedFilename(imageRef, userUID, 0, imageUri, mealItemMap, mealItemRef);
+    }
 
     private void uploadWithIncrementedFilename(StorageReference imageRef, String userUID, int index, Uri imageUri, HashMap<String, Object> mealItemMap, DatabaseReference mealItemRef) {
         final String filename = userUID + "_foodImage_" + index + ".jpg";
@@ -339,55 +429,52 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
             uploadWithIncrementedFilename(imageRef, userUID, index + 1, imageUri, mealItemMap, mealItemRef);
         }).addOnFailureListener(e -> {
             // File doesn't exist, upload with current filename
-            imageRef.child(filename).putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        // Image uploaded successfully, get download URL
-                        imageRef.child(filename).getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                            String imageUrl = downloadUri.toString();
-                            // Update the mealItemMap with the Firebase Storage URL
-                            mealItemMap.put("foodImage", imageUrl);
+            imageRef.child(filename).putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                // Image uploaded successfully, get download URL
+                imageRef.child(filename).getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                    String imageUrl = downloadUri.toString();
+                    // Update the mealItemMap with the Firebase Storage URL
+                    mealItemMap.put("foodImage", imageUrl);
 
-                            // Set the updated mealItemMap to the Firebase Database
-                            mealItemRef.setValue(mealItemMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    progressDialog.dismiss(); // Dismiss the ProgressDialog
-                                    if (task.isSuccessful()) {
-                                        // Meal item added successfully
-                                        Toast.makeText(FoodScreen.this, "A Meal item has been successfully added", Toast.LENGTH_SHORT).show();
+                    // Set the updated mealItemMap to the Firebase Database
+                    mealItemRef.setValue(mealItemMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            progressDialog.dismiss(); // Dismiss the ProgressDialog
+                            if (task.isSuccessful()) {
+                                // Meal item added successfully
+                                Toast.makeText(FoodScreen.this, "A Meal item has been successfully added", Toast.LENGTH_LONG).show();
 
-                                        // Create ActivityLogs structure
-                                        DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-                                        DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
+                                // Create ActivityLogs structure
+                                DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
+                                DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
-                                        // Get current date and time
-                                        String currentTime = new SimpleDateFormat("HH:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
-                                        String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
+                                // Get current date and time
+                                String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
 
-                                        // Generate a unique ID for the log entry
-                                        String logID = "LogID_" + System.currentTimeMillis();
+                                // Generate a unique ID for the log entry
+                                String logID = "LogID_" + System.currentTimeMillis();
 
-                                        // Create the log entry structure
-                                        DatabaseReference logEntryRef = activityLogsRef.child(currentDay).child(logID);
-                                        logEntryRef.child("action").setValue("Added " + foodNameText.getText().toString());
-                                        logEntryRef.child("category").setValue("Meal Plan");
-                                        logEntryRef.child("timestamp").setValue(currentDay + " " + currentTime);
+                                // Create the log entry structure
+                                DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
+                                logEntryRef.child("action").setValue("Added " + foodNameText.getText().toString());
+                                logEntryRef.child("category").setValue("Meal Plan");
+                                logEntryRef.child("timestamp").setValue(currentTime);
 
-                                        // Navigate back to NavigationScreen
-                                        Intent intent = new Intent(FoodScreen.this, NavigationScreen.class);
-                                        intent.putExtra("activeFragment", "MealPlanFragment");
-                                        startActivity(intent);
-                                        finish(); // Close the current activity after navigating back
-                                    } else {
-                                        Toast.makeText(FoodScreen.this, "Failed to add meal item. Please check information.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        });
-                    })
-                    .addOnFailureListener(e1 -> {
-                        // Handle failure to upload image
+                                // Navigate back to NavigationScreen
+                                Intent intent = new Intent(FoodScreen.this, NavigationScreen.class);
+                                intent.putExtra("activeFragment", "MealPlanFragment");
+                                startActivity(intent);
+                                finish(); // Close the current activity after navigating back
+                            } else {
+                                Toast.makeText(FoodScreen.this, "Failed to add meal item. Please check information.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     });
+                });
+            }).addOnFailureListener(e1 -> {
+                // Handle failure to upload image
+            });
         });
     }
 
@@ -395,16 +482,39 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         foodData = FoodDataRepository.getFoodData(foodName);
 
         if (foodData != null) {
+
+            rServingSize.setText("1 small orange (150g)");
+            rServingSizeTemp = rServingSize.getText().toString().trim();
+
+            // Extract serving size from the text
+            String servingSizeText = rServingSizeTemp;
+            double servingSizeAmount = extractAmount(servingSizeText);
+
+            rCaloriesVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getCalories()) + " kcal");
+            rCarbsVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getCarbohydrates()) + "g");
+            rFatVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getTotalFat()) + "g");
+            rProteinVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getProtein()) + "g");
+            rSugarVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getSugar()) + "g");
+            rFiberVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getFiber()) + "g");
+            rWaterVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getWater()) + "mL");
+            rVitAVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getVitaminA()) + "mcg");
+            rVitB1Val.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getVitaminB1()) + "mg");
+            rVitB2Val.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getVitaminB2()) + "mg");
+            rVitCVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getVitaminC()) + "mg");
+            rCalciumVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getCalcium()) + "mg");
+            rSodiumVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getSodium()) + "mg");
+            rIronVal.setText(calculateNutrientValue((servingSizeAmount / 100.0) * foodData.getIron()) + "mg");
+
             // Set standard layout values
             foodCategory.setText(String.valueOf(foodData.getCategory()));
             sServingSize.setText(foodData.getServings() + "g");
-            sCaloriesVal.setText(foodData.getCalories() + "g");
+            sCaloriesVal.setText(foodData.getCalories() + " kcal");
             sCarbsVal.setText(foodData.getCarbohydrates() + "g");
             sFatVal.setText(foodData.getTotalFat() + "g");
             sProteinVal.setText(foodData.getProtein() + "g");
             sSugarVal.setText(foodData.getSugar() + "g");
             sFiberVal.setText(foodData.getFiber() + "g");
-            sWaterVal.setText(foodData.getWater() + "g");
+            sWaterVal.setText(foodData.getWater() + "mL");
             sVitAVal.setText(foodData.getVitaminA() + "mcg");
             sVitB1Val.setText(foodData.getVitaminB1() + "mg");
             sVitB2Val.setText(foodData.getVitaminB2() + "mg");
@@ -433,7 +543,7 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
 //            rProteinVal.setText(getIntent().getDoubleExtra("passedProtein", 0) + "g");
 //            rSugarVal.setText(getIntent().getDoubleExtra("passedSugar", 0) + "g");
 //            rFiberVal.setText(getIntent().getDoubleExtra("passedFiber", 0) + "g");
-//            rWaterVal.setText(getIntent().getDoubleExtra("passedWater", 0) + "g");
+//            rWaterVal.setText(getIntent().getDoubleExtra("passedWater", 0) + "mL");
 //            rVitAVal.setText(getIntent().getDoubleExtra("passedVitA", 0) + "mcg");
 //            rVitB1Val.setText(getIntent().getDoubleExtra("passedVitB1", 0) + "mg");
 //            rVitB2Val.setText(getIntent().getDoubleExtra("passedVitB2", 0) + "mg");
@@ -457,13 +567,13 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY); // 24-hour format
 
         // Determine which meal options to disable based on the current time
-        if (currentHour >= 20) { // After 8 PM, disable Dinner
+        if (currentHour >= 24) { // After 8 PM, disable Dinner
             mealOptions.remove("Dinner");
         }
-        if (currentHour >= 14) { // After 2 PM, disable Lunch
+        if (currentHour >= 15) { // After 2 PM, disable Lunch
             mealOptions.remove("Lunch");
         }
-        if (currentHour >= 10) { // After 10 AM, disable Breakfast
+        if (currentHour >= 11) { // After 10 AM, disable Breakfast
             mealOptions.remove("Breakfast");
         }
 
@@ -476,48 +586,44 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         }
     }
 
-    public void calculateNutrients(double quantity, String selectedServingSize) {
-        int servingSizeValue = extractServingSize(selectedServingSize);
+    public void calculateNutrients(String selectedServingSize) {
+        rServingSize.setText(selectedServingSize); // Update the standard serving size TextView
 
-        // Calculate total serving size and update the text
-        double totalServingSize = quantity * servingSizeValue;
-        String totalServingText = String.format("%.1f", totalServingSize) + "g";
+        // Extract serving size value from the selected serving size string
+        double totalServingSize = extractAmount(selectedServingSize);
 
-        // Extract the descriptive part of the serving size
-        String descriptivePart = selectedServingSize.replaceFirst("^\\d+\\s*", ""); // Remove the initial number and space
+        // Calculate nutrient values based on the total serving size
+        double calories = (totalServingSize / 100) * foodData.getCalories();
+        double carbs = (totalServingSize / 100) * foodData.getCarbohydrates();
+        double fat = (totalServingSize / 100) * foodData.getTotalFat();
+        double protein = (totalServingSize / 100) * foodData.getProtein();
+        double sugar = (totalServingSize / 100) * foodData.getSugar();
+        double fiber = (totalServingSize / 100) * foodData.getFiber();
+        double water = (totalServingSize / 100) * foodData.getWater();
+        double vitA = (totalServingSize / 100) * foodData.getVitaminA();
+        double vitB1 = (totalServingSize / 100) * foodData.getVitaminB1();
+        double vitB2 = (totalServingSize / 100) * foodData.getVitaminB2();
+        double vitC = (totalServingSize / 100) * foodData.getVitaminC();
+        double calcium = (totalServingSize / 100) * foodData.getCalcium();
+        double sodium = (totalServingSize / 100) * foodData.getSodium();
+        double iron = (totalServingSize / 100) * foodData.getIron();
 
-        // Remove any numeric part followed by "g" in parentheses
-        descriptivePart = descriptivePart.replaceAll("\\(\\d+\\.?\\d*g\\)", "").trim();
-
-        // Construct the complete serving text, including descriptive parts
-        String servingText;
-        if (isWholeNumber(quantity)) {
-            servingText = (int) quantity + " " + descriptivePart + " (" + totalServingText + ")";
-        } else {
-            servingText = String.format("%.1f", quantity) + " " + descriptivePart + " (" + totalServingText + ")";
-        }
-        sServingSize.setText(servingText); // Update the standard serving size TextView
-
-        // Update nutrient values based on the calculated serving size
-        updateNutrientValue(sCaloriesVal, calculateNutrientValue(quantity * foodData.getCalories()), "g");
-        updateNutrientValue(sCarbsVal, calculateNutrientValue(quantity * foodData.getCarbohydrates()), "g");
-        updateNutrientValue(sFatVal, calculateNutrientValue(quantity * foodData.getTotalFat()), "g");
-        updateNutrientValue(sProteinVal, calculateNutrientValue(quantity * foodData.getProtein()), "g");
-        updateNutrientValue(sSugarVal, calculateNutrientValue(quantity * foodData.getSugar()), "g");
-        updateNutrientValue(sFiberVal, calculateNutrientValue(quantity * foodData.getFiber()), "g");
-        updateNutrientValue(sWaterVal, calculateNutrientValue(quantity * foodData.getWater()), "g");
-        updateNutrientValue(sVitAVal, calculateNutrientValue(quantity * foodData.getVitaminA()), "mcg");
-        updateNutrientValue(sVitB1Val, calculateNutrientValue(quantity * foodData.getVitaminB1()), "mg");
-        updateNutrientValue(sVitB2Val, calculateNutrientValue(quantity * foodData.getVitaminB2()), "mg");
-        updateNutrientValue(sVitCVal, calculateNutrientValue(quantity * foodData.getVitaminC()), "mg");
-        updateNutrientValue(sCalciumVal, calculateNutrientValue(quantity * foodData.getCalcium()), "mg");
-        updateNutrientValue(sSodiumVal, calculateNutrientValue(quantity * foodData.getSodium()), "mg");
-        updateNutrientValue(sIronVal, calculateNutrientValue(quantity * foodData.getIron()), "mg");
+        // Update nutrient values with appropriate units
+        updateNutrientValue(rCaloriesVal, calculateNutrientValue(calories), " kcal");
+        updateNutrientValue(rCarbsVal, calculateNutrientValue(carbs), "g");
+        updateNutrientValue(rFatVal, calculateNutrientValue(fat), "g");
+        updateNutrientValue(rProteinVal, calculateNutrientValue(protein), "g");
+        updateNutrientValue(rSugarVal, calculateNutrientValue(sugar), "g");
+        updateNutrientValue(rFiberVal, calculateNutrientValue(fiber), "g");
+        updateNutrientValue(rWaterVal, calculateNutrientValue(water), "mL");
+        updateNutrientValue(rVitAVal, calculateNutrientValue(vitA), "mcg");
+        updateNutrientValue(rVitB1Val, calculateNutrientValue(vitB1), "mg");
+        updateNutrientValue(rVitB2Val, calculateNutrientValue(vitB2), "mg");
+        updateNutrientValue(rVitCVal, calculateNutrientValue(vitC), "mg");
+        updateNutrientValue(rCalciumVal, calculateNutrientValue(calcium), "mg");
+        updateNutrientValue(rSodiumVal, calculateNutrientValue(sodium), "mg");
+        updateNutrientValue(rIronVal, calculateNutrientValue(iron), "mg");
         // Update other nutrient values similarly
-    }
-
-    private boolean isWholeNumber(double number) {
-        return number % 1 == 0;
     }
 
     private double calculateNutrientValue(double value) {
@@ -525,13 +631,6 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         return Math.round(value * 10.0) / 10.0;
     }
 
-    private int extractServingSize(String str) {
-    String[] parts = str.split("\\D+");
-    if (parts.length > 0) {
-        return Integer.parseInt(parts[parts.length - 1]); // Extract the last numeric part
-    }
-    return 0;
-    }
 
     // Helper method to update nutrient values
     private void updateNutrientValue(TextView view, double value, String unit) {
@@ -546,86 +645,161 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         // Create an ArrayList to hold the serving sizes
         ArrayList<String> servingSizeList = new ArrayList<>();
 
-        // Add serving sizes based on food category
-        switch (foodCategory) {
-            case "Fruits":
-                servingSizeList.add("1 Piece (150g)");
-                servingSizeList.add("1 Handful (100g)");
-                servingSizeList.add("1 Medium-sized Fruit (150g)");
-                servingSizeList.add("1 Portion (200g)");
-                break;
-            case "Vegetables":
-                servingSizeList.add("1 Bunch (200g)");
-                servingSizeList.add("1 Head (500g)");
-                servingSizeList.add("1 Stalk (50g)");
-                servingSizeList.add("1 Handful (50g)");
-                break;
-            case "Grains":
-                switch (foodName) {
-                    case "White Bread":
-                    case "Sweet Corn":
-                        servingSizeList.add("1 Slice (30g)");
-                        break;
-                    case "Brown Rice":
-                    case "Rolled Oats":
-                        servingSizeList.add("1 Cup Cooked (200g)");
-                        break;
-                    default:
-                        servingSizeList.add("1 Bowl (250g)");
-                        servingSizeList.add("1 Packet (50g)");
-                        break;
-                }
-                break;
-            case "Meat and Poultry":
-                switch (foodName) {
-                    case "Chicken Eggs":
-                        servingSizeList.add("1 Large Egg (50g)");
-                        servingSizeList.add("1 Medium Egg (25g)");
-                        servingSizeList.add("1 Serving (100g)");
-                        break;
-                    case "Chicken Thigh":
-                        servingSizeList.add("1 Serving (150g)");
-                        servingSizeList.add("1 Thigh, Skinless, Big (90g)");
-                        break;
-                    case "Chicken Drumstick":
-                        servingSizeList.add("1 Serving (150g)");
-                        break;
-                    default:
-                        servingSizeList.add("1 Piece (100g)");
-                        servingSizeList.add("1 Serving (150g)");
-                        break;
-                }
-                break;
-            case "Seafood Products":
-                if (foodName.equals("Blue Crab")) {
-                    servingSizeList.add("1 Crab (200g)");
-                    servingSizeList.add("1 Whole (300g)");
-                    servingSizeList.add("1 Portion (200g)");
-                } else {
-                    servingSizeList.add("1 Whole (300g)");
-                    servingSizeList.add("1 Fillet (150g)");
-                    servingSizeList.add("1 Portion (200g)");
-                }
-                break;
-            case "Filipino Cooked Dishes":
-                if (foodName.equals("Pork Barbeque")) {
-                    servingSizeList.add("1 Skewer (100g)");
-                } else {
-                    servingSizeList.add("1 Plateful (300g)");
-                    servingSizeList.add("1 Bowl (200g)");
-                    servingSizeList.add("1 Dish (300g)");
-                }
+        // Calculate and add serving sizes based on recognized serving size
+        if (rServingSize != null && !rServingSize.getText().toString().isEmpty()) {
+            String recognizedServingSize = rServingSizeTemp;
+            double recognizedAmount = extractAmount(recognizedServingSize);
+            String recognizedUnit = extractUnit(recognizedServingSize);
 
-                break;
-            default:
-                servingSizeList.addAll(Arrays.asList("1 Cup", "1 Bowl", "1 Plate", "1 Slice"));
-                break;
+            // Extract the size descriptor from the recognized serving size
+            String sizeDescriptor = recognizedServingSize.substring(recognizedServingSize.indexOf(" ") + 1, recognizedServingSize.lastIndexOf(" ("));
+
+            // Capitalize each word in the size descriptor
+            String[] descriptorWords = sizeDescriptor.split(" ");
+            StringBuilder capitalizedDescriptor = new StringBuilder();
+            for (String word : descriptorWords) {
+                capitalizedDescriptor.append(word.substring(0, 1).toUpperCase()).append(word.substring(1)).append(" ");
+            }
+            sizeDescriptor = capitalizedDescriptor.toString().trim();
+
+            // Format the recognized amount with one decimal place
+            String formattedAmount = String.format("%.1f", recognizedAmount);
+
+            // Construct the serving size description with the formatted amount and extracted size descriptor
+            String servingSizeDescription = "1 " + sizeDescriptor + " (" + formattedAmount + recognizedUnit + ")";
+
+            // Add serving sizes based on food category
+            switch (foodCategory) {
+                case "Fruits":
+                    servingSizeList.add("1 Handful (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                    servingSizeList.add(servingSizeDescription);
+                    servingSizeList.add("1 Portion (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                    servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    break;
+                case "Vegetables":
+                    servingSizeList.add("1 Stalk (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                    servingSizeList.add(servingSizeDescription);
+                    servingSizeList.add("1 Head (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                    servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    break;
+                case "Grains":
+                    switch (foodName) {
+                        case "White Bread":
+                            servingSizeList.add("1 Slice (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add("2 Slices (" + recognizedAmount * 2 + recognizedUnit + ")");
+                            servingSizeList.add("3 Slices (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        case "White Rice":
+                        case "Brown Rice":
+                            servingSizeList.add("1 Cup Cooked (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add("1 Bowl (" + recognizedAmount + recognizedUnit + ")");
+                            servingSizeList.add("1 Plate (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        default:
+                            servingSizeList.add("1 Bowl (" + recognizedAmount + recognizedUnit + ")");
+                            servingSizeList.add("1 Packet (" + recognizedAmount + recognizedUnit + ")");
+                            break;
+                    }
+                    break;
+                case "Meat and Poultry":
+                    switch (foodName) {
+                        case "Chicken Eggs":
+                            servingSizeList.add("1 Medium Egg (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add("1 Large Egg (" + recognizedAmount + recognizedUnit + ")");
+                            servingSizeList.add("1 Serving (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        case "Chicken Breast":
+                        case "Beef Ground":
+                            servingSizeList.add("Small Portion (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeDescription);
+                            servingSizeList.add("Large Portion (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        case "Chicken Drumstick":
+                            servingSizeList.add("1 Drumstick, Skinless (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeDescription);
+                            servingSizeList.add("2 Drumsticks, Skinless (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        case "Pork Chop":
+                            servingSizeList.add("Small Cut (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeDescription);
+                            servingSizeList.add("Large Cut (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                            break;
+                        default:
+                            servingSizeList.add("1 Piece (" + recognizedAmount + recognizedUnit + ")");
+                            servingSizeList.add("1 Serving (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                            break;
+                    }
+                    break;
+                case "Seafood Products":
+                    if (foodName.equals("Blue Crab")) {
+                        servingSizeList.add("1 Portion (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeDescription);
+                        servingSizeList.add("1 Whole (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    } else {
+                        servingSizeList.add("1 Fillet (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeDescription);
+                        servingSizeList.add("1 Whole (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    }
+                    break;
+                case "Filipino Cooked Dishes":
+                    if (foodName.equals("Pork Barbeque")) {
+                        servingSizeList.add("1 Skewer (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeDescription);
+                        servingSizeList.add("1 Plate (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    } else {
+                        servingSizeList.add("1 Serving (" + calculateNutrientValue(recognizedAmount * 0.7) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeDescription);
+                        servingSizeList.add("1 Dish (" + calculateNutrientValue(recognizedAmount * 1.3) + recognizedUnit + ")");
+                        servingSizeList.add(servingSizeRecommend.getText().toString().trim());
+                    }
+                    break;
+                default:
+                    servingSizeList.addAll(Arrays.asList("1 Cup", "1 Bowl", "1 Plate", "1 Slice"));
+                    break;
+            }
         }
-
 
         // Create the adapter and set it to the AutoCompleteTextView
         ArrayAdapter<String> servingSizeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, servingSizeList);
         servingSizeSelection.setAdapter(servingSizeAdapter);
+
+    }
+
+    // Helper method to extract amount from recognized serving size string
+    private double extractAmount(String servingSize) {
+        // Use regular expression to find the number within parentheses followed by "g"
+        Pattern pattern = Pattern.compile("\\((\\d+\\.?\\d*)\\s*g\\)");
+        Matcher matcher = pattern.matcher(servingSize);
+
+        // Check if the pattern is found
+        if (matcher.find()) {
+            // Extract the matched group (the number within parentheses)
+            String numberStr = matcher.group(1);
+            try {
+                // Try parsing the extracted number to a double
+                return Double.parseDouble(numberStr);
+            } catch (NumberFormatException ignored) {
+                // Handle parsing error (if any)
+            }
+        }
+
+        // Return a default value if no number is found
+        return 0.0;
+    }
+
+    // Helper method to extract unit from recognized serving size string
+    private String extractUnit(String servingSize) {
+        // Unit is assumed to be "g" (grams)
+        return "g";
     }
 
     public void showAlertDialog() {
@@ -634,12 +808,10 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
 
         mealPlanLayout = alertDialogView.findViewById(R.id.mealPlanLayout);
         servingSizeLayout = alertDialogView.findViewById(R.id.servingSizeLayout);
-        quantityServingSizeLayout = alertDialogView.findViewById(R.id.quantityServingSizeLayout);
 
         // Find views within the pop up
         mealPlanSelection = alertDialogView.findViewById(R.id.mealPlanSelection);
         servingSizeSelection = alertDialogView.findViewById(R.id.servingSizeSelection);
-        quantityServingSize = alertDialogView.findViewById(R.id.quantityServingSize);
 
         TextView servingSizeLabel = alertDialogView.findViewById(R.id.recommendedLabel);
         servingSizeRecommend = alertDialogView.findViewById(R.id.recommendedServingSize);
@@ -654,26 +826,6 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
         builder.setView(alertDialogView);
 
         alertDialog = builder.create();
-
-        // Define a TextWatcher for Quantity field
-        quantityServingSize.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Not needed, but must be implemented
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Not needed, but must be implemented
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(editable)) {
-                    quantityServingSizeLayout.setError(null); // Clear error when text is entered
-                }
-            }
-        });
 
         // Define a TextWatcher for Serving Size Selection field
         servingSizeSelection.addTextChangedListener(new TextWatcher() {
@@ -720,6 +872,7 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
             public void onClick(View v) {
                 // Dismiss the bottom sheet dialog
                 alertDialog.dismiss();
+
             }
         });
 
@@ -728,24 +881,25 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
             public void onClick(View v) {
                 // Dismiss the bottom sheet dialog
                 alertDialog.dismiss();
+
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isQuantityValid = isQuantityValid();
                 boolean isServingSizeValid = isServingSizeValid();
                 boolean isMealPlanValid = isMealPlanValid();
 
                 // Set the value of allGoods based on conditions
-                allGoods = isQuantityValid && isServingSizeValid && isMealPlanValid;
+                allGoods = isServingSizeValid && isMealPlanValid;
 
                 if (allGoods) {
                     // Fields are valid, proceed with calculations
-                    calculateNutrients(Double.parseDouble(quantityServingSize.getText().toString()), servingSizeSelection.getText().toString());
+                    calculateNutrients(servingSizeSelection.getText().toString());
                     alertDialog.dismiss();
                 }
+
             }
         });
 
@@ -753,14 +907,6 @@ private void uploadImageToFirebaseStorage(Uri imageUri, HashMap<String, Object> 
 
     }
 
-    private boolean isQuantityValid() {
-        String quantity = quantityServingSize.getText().toString().trim();
-        if (TextUtils.isEmpty(quantity)) {
-            quantityServingSizeLayout.setError("*Required");
-            return false;
-        }
-        return true;
-    }
 
     private boolean isServingSizeValid() {
         String servingSize = servingSizeSelection.getText().toString().trim();

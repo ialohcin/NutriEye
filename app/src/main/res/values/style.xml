@@ -14,5 +14,7 @@
 <!--        <item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
-
+    <style name="PrefixTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item> <!-- Set the desired text size here -->
+    </style>
 </resources>

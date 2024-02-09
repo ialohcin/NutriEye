@@ -12,7 +12,7 @@
         android:layout_centerInParent="true"
         android:alpha=".6"
         android:background="@drawable/food_empty"
-        android:backgroundTint="@color/grey" />
+        android:backgroundTint="@color/gray" />
 
     <TextView
         android:id="@+id/emptyText"

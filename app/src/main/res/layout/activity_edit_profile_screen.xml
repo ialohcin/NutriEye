@@ -54,6 +54,7 @@
                              android:id="@+id/emailAddProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="textEmailAddress"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -72,6 +73,7 @@
                              android:id="@+id/passwordProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="textPassword"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -91,6 +93,7 @@
                              android:id="@+id/confirmPassProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="textPassword"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -117,6 +120,7 @@
                              android:id="@+id/firstNameProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="textPersonName"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -135,6 +139,7 @@
                              android:id="@+id/lastNameProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="textPersonName"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -161,6 +166,7 @@
                                  android:layout_width="match_parent"
                                  android:layout_height="wrap_content"
                                  android:inputType="none"
+                                 android:textSize="14sp"
                                  android:editable="false"/>
 
                      </com.google.android.material.textfield.TextInputLayout>
@@ -180,6 +186,7 @@
                                  android:id="@+id/selectSexProfile"
                                  android:layout_width="match_parent"
                                  android:layout_height="wrap_content"
+                                 android:textSize="14sp"
                                  android:inputType="none"/>
 
                      </com.google.android.material.textfield.TextInputLayout>
@@ -193,8 +200,10 @@
                          android:hint="Contact Number"
                          app:endIconMode="clear_text"
                          app:counterEnabled="true"
-                         app:counterMaxLength="11"
+                         app:counterMaxLength="10"
                          app:errorEnabled="true"
+                         app:prefixText="+63"
+                         app:prefixTextAppearance="@style/PrefixTextAppearance"
                          app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
                      <com.google.android.material.textfield.TextInputEditText
@@ -202,7 +211,8 @@
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
                              android:inputType="phone"
-                             android:maxLength="11"/>
+                             android:textSize="14sp"
+                             android:maxLength="10"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
 
@@ -236,6 +246,7 @@
                                  android:id="@+id/heightProfile"
                                  android:layout_width="match_parent"
                                  android:layout_height="wrap_content"
+                                 android:textSize="14sp"
                                  android:inputType="numberDecimal"/>
 
                      </com.google.android.material.textfield.TextInputLayout>
@@ -256,6 +267,7 @@
                                  android:id="@+id/weightProfile"
                                  android:layout_width="match_parent"
                                  android:layout_height="wrap_content"
+                                 android:textSize="14sp"
                                  android:inputType="numberDecimal"/>
 
                      </com.google.android.material.textfield.TextInputLayout>
@@ -268,6 +280,8 @@
                          android:layout_height="wrap_content"
                          app:endIconMode="dropdown_menu"
                          android:hint="Physical Activity Level"
+                         app:helperTextEnabled="true"
+                         app:helperTextTextAppearance="@style/ErrorHelperTextAppearance"
                          app:errorEnabled="true"
                          app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
@@ -275,6 +289,7 @@
                              android:id="@+id/phyActivityLvlProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="none"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -292,6 +307,7 @@
                              android:id="@+id/foodAllergensProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="none"/>
 
                  </com.google.android.material.textfield.TextInputLayout>
@@ -309,6 +325,7 @@
                              android:id="@+id/healthConditionsProfile"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
+                             android:textSize="14sp"
                              android:inputType="none"/>
 
                  </com.google.android.material.textfield.TextInputLayout>

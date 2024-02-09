@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.nutrieye.databinding.ActivitySignUpScreenBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,16 +47,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class SignUpScreen extends AppCompatActivity {
     ActivitySignUpScreenBinding binding;
     ProgressDialog signUpProgress;
+    private DatePickerDialog.OnDateSetListener dobSetListener;
     private boolean[] foodAllergenCheckedItems;
     private boolean[] healthConditionCheckedItems;
     FirebaseAuth auth;
     FirebaseDatabase db;
     DatabaseReference reference;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,63 +80,113 @@ public class SignUpScreen extends AppCompatActivity {
         binding.signUpContainer.setBackgroundResource(R.drawable.cardview);
 
         binding.emailAddSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateEmail(Objects.requireNonNull(binding.emailAddSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateEmail(Objects.requireNonNull(binding.emailAddSignUp.getText()).toString().trim());
+            }
         });
 
         binding.passwordSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validatePassword(Objects.requireNonNull(binding.passwordSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validatePassword(Objects.requireNonNull(binding.passwordSignUp.getText()).toString().trim());
+            }
         });
 
         binding.confirmPassSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateConfirmPassword(Objects.requireNonNull(binding.confirmPassSignUp.getText()).toString().trim(), Objects.requireNonNull(binding.passwordSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateConfirmPassword(Objects.requireNonNull(binding.confirmPassSignUp.getText()).toString().trim(), Objects.requireNonNull(binding.passwordSignUp.getText()).toString().trim());
+            }
         });
 
         binding.goToPersonalButton.setOnClickListener(view -> {
-            Toast.makeText(SignUpScreen.this, "", Toast.LENGTH_SHORT).show();
             binding.personalDetails.setVisibility(View.VISIBLE);
             binding.accountDetails.setVisibility(View.INVISIBLE);
             binding.healthDetails.setVisibility(View.INVISIBLE);
         });
 
         binding.firstNameSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateFirstName(Objects.requireNonNull(binding.firstNameSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateFirstName(Objects.requireNonNull(binding.firstNameSignUp.getText()).toString().trim());
+            }
         });
 
         binding.lastNameSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateLastName(Objects.requireNonNull(binding.lastNameSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateLastName(Objects.requireNonNull(binding.lastNameSignUp.getText()).toString().trim());
+            }
         });
+
 
         binding.dobSignUp.setFocusable(false);
         binding.dobSignUp.setOnClickListener(view -> {
             binding.dobSignUp.setFocusableInTouchMode(true);
             binding.dobSignUp.requestFocus();
-            DatePickerDialog dobPickerDialog = new DatePickerDialog(SignUpScreen.this, (datePicker, year1, month1, dayOfMonth) -> {
-                month1 = month1 + 1;
-                Calendar calendar1 = Calendar.getInstance();
-                calendar1.set(Calendar.YEAR, year1);
-                calendar1.set(Calendar.MONTH, month1 - 1);
-                calendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.US);
-                String date = dateFormat.format(calendar1.getTime());
-                binding.dobSignUp.setText(date);
-            },year,month - 1,day);
+
+            // Create a new DatePickerDialog
+            DatePickerDialog dobPickerDialog = new DatePickerDialog(
+                    SignUpScreen.this,
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    dobSetListener,
+                    year, month, day);
+
+            // Show the DatePickerDialog
+            dobPickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dobPickerDialog.show();
         });
 
+        dobSetListener = (view, year1, month1, dayOfMonth) -> {
+            month1 = month1 + 1;
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.set(Calendar.YEAR, year1);
+            calendar1.set(Calendar.MONTH, month1 - 1);
+            calendar1.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            String date = dateFormat.format(calendar1.getTime());
+
+            // Set the selected date to the TextView
+            binding.dobSignUp.setText(date);
+        };
+
         binding.dobSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateDOB(Objects.requireNonNull(binding.dobSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateDOB(Objects.requireNonNull(binding.dobSignUp.getText()).toString().trim());
+            }
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
@@ -147,9 +202,15 @@ public class SignUpScreen extends AppCompatActivity {
         });
 
         binding.contactNumSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateContactNumber(Objects.requireNonNull(binding.contactNumSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateContactNumber(Objects.requireNonNull(binding.contactNumSignUp.getText()).toString().trim());
+            }
         });
 
         binding.goToAccountButton.setOnClickListener(view -> {
@@ -158,7 +219,6 @@ public class SignUpScreen extends AppCompatActivity {
             binding.healthDetails.setVisibility(View.INVISIBLE);
         });
 
-
         binding.goToHealthButton.setOnClickListener(view -> {
             binding.personalDetails.setVisibility(View.INVISIBLE);
             binding.accountDetails.setVisibility(View.INVISIBLE);
@@ -166,32 +226,63 @@ public class SignUpScreen extends AppCompatActivity {
         });
 
         binding.heightSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
-            public void afterTextChanged(Editable editable) { validateHeight(Objects.requireNonNull(binding.heightSignUp.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateHeight(Objects.requireNonNull(binding.heightSignUp.getText()).toString().trim());
+            }
         });
 
         binding.weightSignUp.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
-            public void afterTextChanged(Editable editable) { validateWeight(Objects.requireNonNull(binding.weightSignUp.getText()).toString().trim()); }
-        });
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
 
-        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                new String[]{"Very Active", "Moderately Active", "Lightly Active", "Sedentary"});
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateWeight(Objects.requireNonNull(binding.weightSignUp.getText()).toString().trim());
+            }
+        });
+        //                //new String[]{"Very Active", "Moderately Active", "Lightly Active", "Sedentary"});
+
+//        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
+//                new String[]{"Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary"});
+
+        // Define arrays for main options and descriptors
+        String[] mainOptions = new String[]{"Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary"};
+        String[] descriptors = new String[]{"Professional athlete", "Exercise 6-7 times a week", "Exercise 3-5 times a week", "Exercise 2-3 times a week", "Exercise 1-2 times a week", "Little to no exercise"};
+
+        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, mainOptions);
+
         binding.phyActivityLvlSignUp.setAdapter(phyAdapter);
 
         binding.phyActivityLvlSignUp.setOnClickListener(view -> hideKeyboard());
 
         binding.phyActivityLvlSignUp.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedOption = parent.getItemAtPosition(position).toString();
+            String selectedOption = mainOptions[position]; // The main option
+            String descriptor = descriptors[position]; // The descriptor
+
+            // Set helper text to the descriptor regardless of the error state
+            binding.phyActivityTextInput.setHelperTextEnabled(true);
+            binding.phyActivityTextInput.setHelperText(descriptor);
+
+            // Get the green color from colors.xml
+            int greenColor = ContextCompat.getColor(this, R.color.green);
+
+            // Set helper text color to green
+            binding.phyActivityTextInput.setHelperTextColor(ColorStateList.valueOf(greenColor));
+
+            // Validate the selected option (you can still validate the main option if needed)
             validatePhysicalActivityLevel(selectedOption);
         });
 
         foodAllergenCheckedItems = new boolean[]{false, false, false, false};
         healthConditionCheckedItems = new boolean[]{false, false, false, false};
-
-
 
         binding.foodAllergensSignUp.setOnClickListener(view -> {
             hideKeyboard();
@@ -235,10 +326,14 @@ public class SignUpScreen extends AppCompatActivity {
             String lastNameStr = binding.lastNameSignUp.getText().toString().trim();
             String dobStr = binding.dobSignUp.getText().toString().trim();
             String selectedSex = binding.selectSexSignUp.getText().toString().trim();
+            String prefix = binding.contactNumTextInput.getPrefixText().toString().trim();
             String contactNumberStr = binding.contactNumSignUp.getText().toString().trim();
             String physicalActivityLvlStr = binding.phyActivityLvlSignUp.getText().toString().trim();
-            Double heightStr = Double.valueOf(binding.heightSignUp.getText().toString().trim());
-            Double weightStr = Double.valueOf(binding.weightSignUp.getText().toString().trim());
+//            Double heightStr = Double.valueOf(binding.heightSignUp.getText().toString().trim());
+//            Double weightStr = Double.valueOf(binding.weightSignUp.getText().toString().trim());
+
+            String heightStr = binding.heightSignUp.getText().toString().trim();
+            String weightStr = binding.weightSignUp.getText().toString().trim();
             String healthConditionStr = binding.healthConditionsSignUp.getText().toString().trim();
             String foodAllergensStr = binding.foodAllergensSignUp.getText().toString().trim();
 
@@ -262,16 +357,20 @@ public class SignUpScreen extends AppCompatActivity {
             if (!validateSex(selectedSex)) hasError = true;
             if (!validateContactNumber(contactNumberStr)) hasError = true;
             if (!validatePhysicalActivityLevel(physicalActivityLvlStr)) hasError = true;
-            if (!validateHeight(String.valueOf(heightStr))) hasError = true;
-            if (!validateWeight(String.valueOf(weightStr))) hasError = true;
+            if (!validateHeight(heightStr)) hasError = true;
+            if (!validateWeight(weightStr)) hasError = true;
 
             if (hasError) {
+                signUpProgress.dismiss();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(SignUpScreen.this);
                 alertDialog.setTitle("Validation Error");
                 alertDialog.setMessage("Please check the form for errors and complete all fields.");
                 alertDialog.setPositiveButton("OK", (dialogInterface, option) -> dialogInterface.dismiss());
                 alertDialog.show();
             } else {
+                // Convert to Double only if not empty
+                Double height = Double.valueOf(heightStr);
+                Double weight = Double.valueOf(weightStr);
                 String finalFoodAllergensStr = foodAllergensStr;
                 String finalHealthConditionStr = healthConditionStr;
                 auth.createUserWithEmailAndPassword(emailStr, passwordStr)
@@ -303,19 +402,19 @@ public class SignUpScreen extends AppCompatActivity {
                                                     // Create a nested "Profile" node under each userUID
                                                     HashMap<String, Object> userMap = new HashMap<>();
                                                     userMap.put("confirmPass", confirmPasswordStr);
-                                                    userMap.put("contactNum", contactNumberStr);
+                                                    userMap.put("contactNum", prefix + contactNumberStr);
                                                     userMap.put("dob", dobStr);
                                                     userMap.put("email", emailStr);
                                                     userMap.put("firstName", firstNameStr);
                                                     userMap.put("foodAllergens", finalFoodAllergensStr);
                                                     userMap.put("healthConditions", finalHealthConditionStr);
-                                                    userMap.put("height", heightStr);
+                                                    userMap.put("height", height);
                                                     userMap.put("lastName", lastNameStr);
                                                     userMap.put("password", passwordStr);
                                                     userMap.put("phyActivity", physicalActivityLvlStr);
                                                     userMap.put("profilePhoto", "null");
                                                     userMap.put("sex", selectedSex);
-                                                    userMap.put("weight", weightStr);
+                                                    userMap.put("weight", weight);
 
                                                     HashMap<String, Object> userWithProfile = new HashMap<>();
                                                     userWithProfile.put("Profile", userMap);
@@ -327,7 +426,10 @@ public class SignUpScreen extends AppCompatActivity {
 
                                                             if (task.isSuccessful()) {
                                                                 Toast.makeText(SignUpScreen.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                                                                // Optionally, navigate to another screen
+
+                                                                Intent intent = new Intent(SignUpScreen.this, LoginScreen.class);
+                                                                startActivity(intent);
+                                                                finish();
                                                             } else {
                                                                 Toast.makeText(SignUpScreen.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                                                             }
@@ -370,12 +472,12 @@ public class SignUpScreen extends AppCompatActivity {
             @Override
             public void updateDrawState(@NonNull TextPaint ds) {
                 super.updateDrawState(ds);
-                ds.setColor(Color.rgb(142, 190 , 38));
+                ds.setColor(Color.rgb(142, 190, 38));
                 ds.setUnderlineText(false);
             }
         };
 
-        spanString.setSpan(clickable, 25,30, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanString.setSpan(clickable, 25, 30, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spanString;
     }
 
@@ -570,7 +672,7 @@ public class SignUpScreen extends AppCompatActivity {
 
     private boolean validateContactNumber(String contactNumber) {
         if (TextUtils.isEmpty(contactNumber)) {
-            binding.contactNumTextInput.setError("Contact number is required");
+            binding.contactNumTextInput.setError("Contact Number is required.");
             return false;
         } else if (!isValidContactNumber(contactNumber)) {
             binding.contactNumTextInput.setError("Invalid contact number format");
@@ -581,9 +683,23 @@ public class SignUpScreen extends AppCompatActivity {
         }
     }
 
+
+//    private boolean isValidContactNumber(String contactNumber) {
+//        String pattern = "^(09)[0-9]{9}$"; // 11-digit numeric format starting with "09"
+//        return Pattern.matches(pattern, contactNumber);
+//    }
+
     private boolean isValidContactNumber(String contactNumber) {
-        String pattern = "^(09)[0-9]{9}$"; // 11-digit numeric format starting with "09"
-        return Pattern.matches(pattern, contactNumber);
+        // Ensure the contact number has exactly 10 digits, disregarding the prefix
+        String expectedFullContactNumber = "^[0-9]{10}$";
+
+        if (!contactNumber.matches(expectedFullContactNumber)) {
+            binding.contactNumTextInput.setError("Invalid contact number format");
+            return false;
+        } else {
+            binding.contactNumTextInput.setError(null);
+            return true;
+        }
     }
 
     private boolean validatePhysicalActivityLevel(String selectedOption) {
@@ -599,8 +715,9 @@ public class SignUpScreen extends AppCompatActivity {
         }
     }
 
+
     private boolean isValidPhysicalActivityLevel(String selectedOption) {
-        List<String> validOptions = Arrays.asList("Very Active", "Moderately Active", "Lightly Active", "Sedentary");
+        List<String> validOptions = Arrays.asList("Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary");
         return validOptions.contains(selectedOption);
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/search_off"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="@color/gray"
         android:alpha=".6"/>
 
     <TextView

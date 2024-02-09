@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:padding="14dp">
 
     <androidx.cardview.widget.CardView
@@ -20,22 +20,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/green"
-                android:textColor="@color/white"
+                android:padding="16dp"
                 android:text="Add to Meal Plan"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:padding="16dp"/>
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/closeDialog"
                 android:layout_width="40dp"
-                android:src="@drawable/close"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:scaleType="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="center"
+                android:src="@drawable/close"
                 app:tint="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -43,95 +43,69 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"
                 android:layout_below="@id/textView00"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
                 android:hint="Meal Time"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
                 <AutoCompleteTextView
                     android:id="@+id/mealPlanSelection"
+                    android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"/>
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:id="@+id/wow"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/servingSizeLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_below="@+id/mealPlanLayout">
+                android:layout_below="@id/mealPlanLayout"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:hint="Serving Size"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/quantityServingSizeLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="225dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:hint="Quantity"
-                    app:errorEnabled="true"
-                    app:errorTextAppearance="@style/ErrorHelperTextAppearance">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/quantityServingSize"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/servingSizeLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                <AutoCompleteTextView
+                    android:id="@+id/servingSizeSelection"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="12dp"
-                    android:hint="Serving Size"
-                    app:errorEnabled="true"
-                    app:errorTextAppearance="@style/ErrorHelperTextAppearance">
+                    android:textSize="14sp"
+                    android:inputType="none" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/servingSizeSelection"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-            
             <TextView
                 android:id="@+id/recommendedLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/wow"
+                android:layout_below="@id/servingSizeLayout"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
+                android:alpha=".7"
                 android:gravity="right"
                 android:text="Recommended serving size based on your dietary requirements:"
                 android:textColor="@color/black"
-                android:alpha=".7"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/recommendedServingSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/recommendedLabel"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="12dp"
-                android:layout_below="@id/recommendedLabel"
                 android:text="1 Cup"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="20sp"/>
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,11 +118,11 @@
                     android:id="@+id/cancelMeal"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
                     android:layout_marginLeft="12dp"
-                    app:cornerRadius="32dp"
+                    android:layout_weight="1"
                     android:backgroundTint="@color/light_orange"
-                    android:text="Cancel"/>
+                    android:text="Cancel"
+                    app:cornerRadius="32dp" />
 
                 <View
                     android:layout_width="30dp"
@@ -158,10 +132,10 @@
                     android:id="@+id/saveMeal"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
                     android:layout_marginRight="12dp"
-                    app:cornerRadius="32dp"
-                    android:text="Save"/>
+                    android:layout_weight="1"
+                    android:text="Save"
+                    app:cornerRadius="32dp" />
             </LinearLayout>
 
         </RelativeLayout>

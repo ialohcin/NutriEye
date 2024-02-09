@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,102 +59,121 @@ public class MealPlanFragment extends Fragment {
     RecyclerView recyclerView;
     List<Item> itemList;
     MealAdapter mealAdapter;
-
+    String currentDate;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meal_plan, container, false);
 
+        NavigationScreen navigationScreen = (NavigationScreen) getActivity();
 
-        breakfastFilter = view.findViewById(R.id.breakfastButton);
-        lunchFilter = view.findViewById(R.id.lunchButton);
-        dinnerFilter = view.findViewById(R.id.dinnerButton);
-        allFilter = view.findViewById(R.id.allButton);
+        if (savedInstanceState == null){
 
-        searchView = view.findViewById(R.id.mealSearchView);
+            swipeRefreshLayout = view.findViewById(R.id.meal_plan_refresh);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                loadUserData();
+                swipeRefreshLayout.setRefreshing(false);
+                navigationScreen.replaceOrPopFragment(new MealPlanFragment(), true);
+            });
 
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        BottomMarginPercentageDecoration marginDecoration = new BottomMarginPercentageDecoration(requireContext(), 0.06f);
-        recyclerView.addItemDecoration(marginDecoration);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        itemList = new ArrayList<>();
-        mealAdapter = new MealAdapter(itemList);
-        recyclerView.setAdapter(mealAdapter);
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+            currentDate = dateFormat.format(calendar.getTime());
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callbackMethod);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+            breakfastFilter = view.findViewById(R.id.breakfastButton);
+            lunchFilter = view.findViewById(R.id.lunchButton);
+            dinnerFilter = view.findViewById(R.id.dinnerButton);
+            allFilter = view.findViewById(R.id.allButton);
 
-        // Set the hint text color
-        int hintTextColor = ContextCompat.getColor(requireContext(), R.color.grey);
-        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setHintTextColor(hintTextColor);
+            searchView = view.findViewById(R.id.mealSearchView);
 
-        setupRecyclerView(); // Initialize RecyclerView
+            recyclerView = view.findViewById(R.id.recyclerView);
+            recyclerView.setHasFixedSize(true);
+            BottomMarginPercentageDecoration marginDecoration = new BottomMarginPercentageDecoration(requireContext(), 0.06f);
+            recyclerView.addItemDecoration(marginDecoration);
+            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+            itemList = new ArrayList<>();
+            mealAdapter = new MealAdapter(itemList);
+            recyclerView.setAdapter(mealAdapter);
 
-        selectMealType("All");
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callbackMethod);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
 
+            // Set the hint text color
+            int hintTextColor = ContextCompat.getColor(requireContext(), R.color.gray);
+            EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+            searchEditText.setHintTextColor(hintTextColor);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
+            setupRecyclerView(); // Initialize RecyclerView
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                handleQueryText(newText);
-                return true;
-            }
+            selectMealType("All");
 
-            private void handleQueryText(String query) {
-                query = query.toLowerCase();
-
-                List<Item> filteredList = new ArrayList<>();
-
-                for (Item item : itemList) {
-                    String foodName = item.getFoodName().toLowerCase();
-                    // Check if the foodName starts with the query
-                    if (foodName.startsWith(query)) {
-                        filteredList.add(item);
-                    }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return true;
                 }
 
-                updateRecyclerView(filteredList);
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    handleQueryText(newText);
+                    return true;
+                }
 
-            }
+                private void handleQueryText(String query) {
+                    query = query.toLowerCase();
 
-        });
+                    List<Item> filteredList = new ArrayList<>();
 
-        allFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectMealType("All");
-            }
-        });
+                    for (Item item : itemList) {
+                        String foodName = item.getFoodName().toLowerCase();
+                        // Check if the foodName starts with the query
+                        if (foodName.startsWith(query)) {
+                            filteredList.add(item);
+                        }
+                    }
 
-        breakfastFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectMealType("Breakfast");
-            }
-        });
+                    updateRecyclerView(filteredList);
 
-        lunchFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectMealType("Lunch");
-            }
-        });
+                }
 
-        dinnerFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectMealType("Dinner");
-            }
-        });
+            });
 
-        loadUserData();
+            allFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectMealType("All");
+
+                }
+            });
+
+            breakfastFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectMealType("Breakfast");
+
+                }
+            });
+
+            lunchFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectMealType("Lunch");
+
+                }
+            });
+
+            dinnerFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectMealType("Dinner");
+
+                }
+            });
+
+            loadUserData();
+        }
 
         return view;
     }
@@ -171,10 +191,6 @@ public class MealPlanFragment extends Fragment {
 
     private void fetchMealPlanDataFromFirebase() {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy", Locale.US);
-        String currentDate = dateFormat.format(calendar.getTime());
-
         DatabaseReference mealPlanRef = userRef.child("MealPlans").child(currentDate);
 
         mealPlanRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -337,9 +353,6 @@ public class MealPlanFragment extends Fragment {
     }
 
     ItemTouchHelper.SimpleCallback callbackMethod = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy", Locale.US);
-        String currentDate = dateFormat.format(calendar.getTime());
 
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -457,6 +470,10 @@ public class MealPlanFragment extends Fragment {
 
     };
 
+    public void refreshContent(){
+        loadUserData();
+    }
+
     private void showDiscardMealDialog(Item item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Discard Meal");
@@ -470,12 +487,29 @@ public class MealPlanFragment extends Fragment {
                 // Remove the item from itemList
                 itemList.remove(position);
                 recyclerView.getAdapter().notifyItemRemoved(position);
+
+                // Create ActivityLogs structure
+                DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
+                DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
+
+                // Get current time
+                String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+
+                // Generate a unique ID for the log entry
+                String logID = "LogID_" + System.currentTimeMillis();
+
+                // Create the log entry structure
+                DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
+                logEntryRef.child("action").setValue("Discarded " + item.getFoodName());
+                logEntryRef.child("category").setValue("Meal Plan");
+                logEntryRef.child("timestamp").setValue(currentTime);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User clicked "No", do nothing
+                // User clicked "No", reset the item's position
+                recyclerView.getAdapter().notifyItemChanged(position);
             }
         });
         builder.show();
@@ -486,11 +520,6 @@ public class MealPlanFragment extends Fragment {
         builder.setTitle("Consume Meal");
         builder.setMessage("Are you sure you want to consume this meal?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy", Locale.US);
-            String currentDate = dateFormat.format(calendar.getTime());
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Set the item as consumed
@@ -505,7 +534,7 @@ public class MealPlanFragment extends Fragment {
                 DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
                 // Get current time
-                String currentTime = new SimpleDateFormat("HH:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+                String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
 
                 // Generate a unique ID for the log entry
                 String logID = "LogID_" + System.currentTimeMillis();
@@ -514,24 +543,24 @@ public class MealPlanFragment extends Fragment {
                 DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
                 logEntryRef.child("action").setValue("Consumed " + item.getFoodName());
                 logEntryRef.child("category").setValue("Meal Plan");
-                logEntryRef.child("timestamp").setValue(currentDate + " " + currentTime);
+                logEntryRef.child("timestamp").setValue(currentTime);
+
+                // Check if refresh is needed for any fragment and show/hide the badge accordingly
+                //updateBadgeVisibility();
 
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User clicked "No", do nothing
+                // User clicked "No", reset the item's position
+                recyclerView.getAdapter().notifyItemChanged(position);
             }
         });
         builder.show();
     }
 
     private void removeFromFirebase(Item item, int position) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy", Locale.US);
-        String currentDate = dateFormat.format(calendar.getTime());
-
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
         DatabaseReference mealPlansRef = userRef.child("MealPlans").child(currentDate).child(item.getMealTime());
 
@@ -549,17 +578,16 @@ public class MealPlanFragment extends Fragment {
                         DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
                         // Get current date and time
-                        String currentTime = new SimpleDateFormat("HH:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
-                        String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
+                        String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
 
                         // Generate a unique ID for the log entry
                         String logID = "LogID_" + System.currentTimeMillis();
 
                         // Create the log entry structure
-                        DatabaseReference logEntryRef = activityLogsRef.child(currentDay).child(logID);
+                        DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
                         logEntryRef.child("action").setValue("Discarded " + item.getFoodName());
                         logEntryRef.child("category").setValue("Meal Plan");
-                        logEntryRef.child("timestamp").setValue(currentDay + " " + currentTime);
+                        logEntryRef.child("timestamp").setValue(currentTime);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

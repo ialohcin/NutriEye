@@ -25,17 +25,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class RecentLogsScreen extends AppCompatActivity {
     RecyclerView recyclerView;
     String userUID;
     List<RecentLogs> logsList;
     RecentLogsAdapter logsAdapter;
-    CircleImageView logsIcon;
-    String currentDate;
-    SimpleDateFormat dateFormat;
-    Calendar calendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +38,13 @@ public class RecentLogsScreen extends AppCompatActivity {
 
         initComponents();
 
-        //logsList.add(new RecentLogs(R.drawable.baseline_dining_24,"Added Chicken Eggs","Meal Plan",currentDate));
+        //logsList.add(new RecentLogs(awdawd,"Added Chicken Eggs","Meal Plan",currentDate));
 
         loadUserData();
 
     }
 
-    public void initComponents(){
+    public void initComponents() {
         recyclerView = findViewById(R.id.recyclerViewRecentLogs);
         recyclerView.setHasFixedSize(true);
         BottomMarginPercentageDecoration marginDecoration = new BottomMarginPercentageDecoration(this, 0.06f);
@@ -59,11 +53,6 @@ public class RecentLogsScreen extends AppCompatActivity {
         logsList = new ArrayList<>();
         logsAdapter = new RecentLogsAdapter(logsList);
         recyclerView.setAdapter(logsAdapter);
-
-        calendar = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("MMM dd yyyy hh:mm:ss a", Locale.getDefault());
-        currentDate = dateFormat.format(calendar.getTime());
-
     }
 
     private void loadUserData() {
@@ -85,6 +74,7 @@ public class RecentLogsScreen extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -99,36 +89,50 @@ public class RecentLogsScreen extends AppCompatActivity {
     }
 
     private void fetchActivityLogsDataFromFirebase() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        String currentDate = dateFormat.format(calendar.getTime());
+
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-        DatabaseReference activityLogsRef = userRef.child("ActivityLogs");
+        DatabaseReference activityLogsRef = userRef.child("ActivityLogs").child(currentDate);
 
-        activityLogsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        final String[] userProfilePhoto = new String[1];
+        DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID).child("Profile");
+
+        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                logsList.clear(); // Clear the existing list
+            public void onDataChange(@NonNull DataSnapshot profileSnapshot) {
+                if (profileSnapshot.exists()) {
+                    userProfilePhoto[0] = profileSnapshot.child("profilePhoto").getValue(String.class);
+                    // Assuming 'sex' is a property in the profile data
+                    String sex = profileSnapshot.child("sex").getValue(String.class);
 
-                // Fetch the user's profile photo URL outside the loop
-                final String[] userProfilePhoto = {""}; // Initialize the variable to store the profile photo URL
-                DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID).child("Profile");
+                    if (userProfilePhoto[0] == null || userProfilePhoto[0].isEmpty() || userProfilePhoto[0].equals("null")) {
+                        // If the profile photo URL is empty or null, assign the default image based on gender
+                        int defaultImageResource = "male".equalsIgnoreCase(sex) ? R.drawable.malepic : R.drawable.femalepic;
+                        userProfilePhoto[0] = Integer.toString(defaultImageResource);
+                    }
 
-                profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // Update existing items in logsList with the new userProfilePhoto
+                    for (RecentLogs recentLog : logsList) {
+                        recentLog.setLogsIcon(userProfilePhoto[0]);
+                    }
+                }
+
+                activityLogsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot profileSnapshot) {
-                        if (profileSnapshot.exists()) {
-                            userProfilePhoto[0] = profileSnapshot.child("profilePhoto").getValue(String.class);
-                        }
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        logsList.clear(); // Clear the existing list
 
-                        for (DataSnapshot daySnapshot : dataSnapshot.getChildren()) {
-                            for (DataSnapshot logSnapshot : daySnapshot.getChildren()) {
-                                // Extract data and create RecentLogs objects
-                                String action = logSnapshot.child("action").getValue(String.class);
-                                String category = logSnapshot.child("category").getValue(String.class);
-                                String timestamp = logSnapshot.child("timestamp").getValue(String.class);
+                        for (DataSnapshot logSnapshot : dataSnapshot.getChildren()) {
+                            // Extract data and create RecentLogs objects for each log entry
+                            String action = logSnapshot.child("action").getValue(String.class);
+                            String category = logSnapshot.child("category").getValue(String.class);
+                            String timestamp = logSnapshot.child("timestamp").getValue(String.class);
 
-                                // Create the RecentLogs object
-                                RecentLogs recentLog = new RecentLogs(userProfilePhoto[0], action, category, timestamp);
-                                logsList.add(recentLog);
-                            }
+                            // Create the RecentLogs object
+                            RecentLogs recentLog = new RecentLogs(userProfilePhoto[0], action, category, timestamp);
+                            logsList.add(recentLog);
                         }
 
                         // Update the RecyclerView with the fetched data
@@ -136,22 +140,22 @@ public class RecentLogsScreen extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError profileError) {
-                        // Handle errors in fetching the profile data
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle errors in fetching activity logs
                     }
                 });
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors if any
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle errors in fetching profile data
             }
         });
     }
-
 
     private void updateRecyclerView(List<RecentLogs> logsList) {
         logsAdapter.setData(logsList);
         logsAdapter.notifyDataSetChanged();
     }
+
 }

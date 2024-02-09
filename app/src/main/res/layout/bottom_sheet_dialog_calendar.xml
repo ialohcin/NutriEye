@@ -76,7 +76,7 @@
                 android:id="@+id/caloriesTotalSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0g"
+                android:text="0.0 kcal"
                 android:textColor="@color/black" />
 
             <TextView
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0g"
+                android:text="0.0g"
                 android:textColor="@color/black" />
 
             <TextView
@@ -118,7 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0g"
+                android:text="0.0g"
                 android:textColor="@color/black" />
 
             <TextView
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0g"
+                android:text="0.0g"
                 android:textColor="@color/black" />
 
             <TextView
@@ -160,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0g"
+                android:text="0.0g"
                 android:textColor="@color/black" />
 
             <TextView
@@ -229,7 +229,7 @@
                 android:id="@+id/vitATotalSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0mcg"
+                android:text="0.0mcg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -250,7 +250,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -271,7 +271,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -292,7 +292,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -357,7 +357,7 @@
                 android:id="@+id/calciumTotalSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -378,7 +378,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -399,7 +399,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0mg"
+                android:text="0.0mg"
                 android:textColor="@color/black" />
 
             <TextView
@@ -486,7 +486,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="0g"
+                android:text="0mL"
                 android:textColor="@color/black" />
 
             <TextView

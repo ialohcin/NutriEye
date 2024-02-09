@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.SmsManager;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -46,6 +48,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class LoginScreen extends AppCompatActivity {
@@ -57,7 +60,9 @@ public class LoginScreen extends AppCompatActivity {
     private CardView loginContainer;
     private ProgressDialog loginProgress;
     private CheckBox rememberUser;
+    String newPassword, contactNum;
 
+    private static final int SMS_PERMISSION_REQUEST_CODE = 123; // Replace with your desired integer value
     FirebaseAuth auth;
 
     @Override
@@ -81,6 +86,7 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 handleLoginButtonClick();
+
             }
         });
 
@@ -88,6 +94,7 @@ public class LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPasswordRecoveryDialog();
+
             }
         });
     }
@@ -125,11 +132,21 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void autoLogin(String email, String password) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loginProgress.setTitle("Auto-Logging In");
+                loginProgress.setMessage("Retrieving Saved Credentials...");
+                loginProgress.setCancelable(false);
+                loginProgress.show();
+            }
+        }, 500); // Introduce a delay of 200 milliseconds before showing the progress dialog
+
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        loginProgress.dismiss(); // Dismiss any existing progress dialog
+                        loginProgress.dismiss();
 
                         if (task.isSuccessful()) {
                             // Successful login
@@ -144,7 +161,7 @@ public class LoginScreen extends AppCompatActivity {
 
                                 // Get current time
                                 String currentTime = new SimpleDateFormat("HH:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
-                                String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
+                                String currentDay = new SimpleDateFormat("MMM d yyyy", Locale.US).format(new Date());
 
                                 // Generate a unique ID for the log entry
                                 String logID = "LogID_" + System.currentTimeMillis();
@@ -220,12 +237,10 @@ public class LoginScreen extends AppCompatActivity {
 
         TextInputLayout recoveryEmailLayout = alertDialogView.findViewById(R.id.recoveryEmailLayout);
         TextInputEditText recoveryEmailEditText = alertDialogView.findViewById(R.id.recoveryEmailEditText);
-
         TextInputLayout newPasswordLayout = alertDialogView.findViewById(R.id.newPasswordLayout);
         TextInputEditText newPasswordEditText = alertDialogView.findViewById(R.id.newPasswordEditText);
-
-        newConfirmPasswordLayout = alertDialogView.findViewById(R.id.newConfirmPasswordLayout);
-        newConfirmPasswordEditText = alertDialogView.findViewById(R.id.newConfirmPasswordEditText);
+        newConfirmPasswordLayout = alertDialogView.findViewById(R.id.newConfirmPassLayout);
+        newConfirmPasswordEditText = alertDialogView.findViewById(R.id.newConfirmPassEditText);
 
         Button cancelButton = alertDialogView.findViewById(R.id.cancelRecovery);
         Button confirmButton = alertDialogView.findViewById(R.id.confirmRecovery);
@@ -288,6 +303,7 @@ public class LoginScreen extends AppCompatActivity {
             public void onClick(View v) {
                 // Dismiss the bottom sheet dialog
                 alertDialog.dismiss();
+
             }
         });
 
@@ -296,6 +312,7 @@ public class LoginScreen extends AppCompatActivity {
             public void onClick(View v) {
                 // Dismiss the bottom sheet dialog
                 alertDialog.dismiss();
+
             }
         });
 
@@ -304,12 +321,14 @@ public class LoginScreen extends AppCompatActivity {
             public void onClick(View v) {
                 String recoveryEmail = recoveryEmailEditText.getText().toString().trim();
                 String newPassword = newPasswordEditText.getText().toString().trim();
-                String newConfirmPassword = newConfirmPasswordEditText.getText().toString().trim();
+                String confirmNewPassword = newConfirmPasswordEditText.getText().toString().trim();
 
-                if (validateEmail(recoveryEmail, recoveryEmailLayout) && validatePassword(newPassword, newPasswordLayout) && validateConfirmPassword(newConfirmPassword, newPassword)) {
+
+                if (validateEmail(recoveryEmail, recoveryEmailLayout) && validatePassword(newPassword, newPasswordLayout) && validateConfirmPassword(confirmNewPassword, newPassword)) {
                     // Perform Firebase operations for password recovery
-                    recoverPassword(recoveryEmail, newPassword, newConfirmPassword);
+                    recoverPassword(recoveryEmail, newPassword,confirmNewPassword);
                 }
+
             }
         });
 
@@ -327,26 +346,16 @@ public class LoginScreen extends AppCompatActivity {
                     // Email exists in the database, proceed with password recovery
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String userUID = snapshot.getKey(); // Retrieve userUID
-                        // Assume the 'contactNum' field is present in the database
-                        String contactNum = snapshot.child("Profile/contactNum").getValue(String.class);
 
                         if (newPassword.equals(newConfirmPassword)) {
-                            // Generate a new password (replace with your logic)
-                            generateNewPassword(newPassword);
+                            // Update password in Firebase Authentication
+                            updateFirebaseAuthenticationPassword(newPassword, userUID);
 
-                            if (contactNum != null && !contactNum.isEmpty()) {
-                                // Use SmsManager to send the new password via SMS
-                                sendSms(contactNum, newPassword);
+                            // Display a Toast message indicating success
+                            Toast.makeText(LoginScreen.this, "Password updated successfully", Toast.LENGTH_SHORT).show();
 
-                                // After sending the message, you can notify the user
-                                Toast.makeText(LoginScreen.this, "Password sent to your contact number", Toast.LENGTH_SHORT).show();
-
-                                // Dismiss the recovery dialog
-                                alertDialog.dismiss();
-                            } else {
-                                // Handle the case where the contact number is not available
-                                Toast.makeText(LoginScreen.this, "Contact number not available", Toast.LENGTH_SHORT).show();
-                            }
+                            // Dismiss the recovery dialog
+                            alertDialog.dismiss();
                         } else {
                             // Passwords do not match, show an error message
                             Toast.makeText(LoginScreen.this, "Passwords do not match. Please enter matching passwords.", Toast.LENGTH_SHORT).show();
@@ -366,28 +375,53 @@ public class LoginScreen extends AppCompatActivity {
         });
     }
 
-    private void sendSms(String phoneNumber, String newPassword) {
-        try {
-            // Create the SMS manager
-            SmsManager smsManager = SmsManager.getDefault();
+    private void updateFirebaseAuthenticationPassword(String newPassword, String userUID) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            // Define the message to be sent
-            String message = "Hello!\n\nYour password has been reset. If you didn't request this change, please secure your account and contact support immediately.\n\nYour new password is: " + newPassword + "\n\nHave a great day!\n\nFrom,\n\n- NutriEye Team";
+        if (user != null) {
+            user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // Authentication password update successful, now update Realtime Database
+                        updateFirebaseRealtimeDatabasePassword(userUID, newPassword);
 
-            // Send the SMS
-            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Handle the exception or show an error message
-            Toast.makeText(LoginScreen.this, "Failed to send SMS. Please try again.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Handle failure
+                        Toast.makeText(LoginScreen.this, "Failed to update password in Authentication", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
-    private String generateNewPassword(String newPassword) {
-        // Add your logic to generate a new password
-        return newPassword;
+    private void updateFirebaseRealtimeDatabasePassword(String userUID, String newPassword) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userUID).child("Profile");
+        userRef.child("password").setValue(newPassword);
+        userRef.child("confirmPass").setValue(newPassword);
     }
 
+    private void sendSms(String phoneNumber, String newPassword) {
+        // Format the phone number to include the country code
+        phoneNumber = formatPhoneNumber(phoneNumber);
+
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+        smsIntent.setData(Uri.parse("smsto:" + phoneNumber));
+        smsIntent.putExtra("sms_body", "Hello!\n\nYour password has been reset. If you didn't request this change, please secure your account and contact support immediately.\n\nYour new password is: " + newPassword + "\n\nHave a great day!\n\nFrom,\n\n- NutriEye Team");
+        startActivity(smsIntent);
+
+        // Dismiss the recovery dialog
+        alertDialog.dismiss();
+    }
+
+    private String formatPhoneNumber(String phoneNumber) {
+        // Assuming the input is in the format "09165436412"
+        // Add the country code if not present
+        if (!phoneNumber.startsWith("+")) {
+            phoneNumber = "+63" + phoneNumber.substring(1);
+        }
+        return phoneNumber;
+    }
 
     private void setupClickableSpan() {
         String text = "Don't Have an Account? Sign Up";
@@ -412,6 +446,21 @@ public class LoginScreen extends AppCompatActivity {
 
         toSignUp.setText(spanString);
         toSignUp.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            // Check if the permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can now call the method that requires this permission
+                //sendSms(contactNum, newPassword);
+            } else {
+                // Permission denied, handle accordingly
+                Toast.makeText(this, "SMS permission denied. Cannot send SMS.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private TextWatcher createTextWatcher(final TextInputEditText editText) {
@@ -498,7 +547,7 @@ public class LoginScreen extends AppCompatActivity {
                                                 DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
                                                 // Get current time
-                                                String currentTime = new SimpleDateFormat("HH:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+                                                String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
                                                 String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
 
                                                 // Generate a unique ID for the log entry
@@ -508,9 +557,7 @@ public class LoginScreen extends AppCompatActivity {
                                                 DatabaseReference logEntryRef = activityLogsRef.child(currentDay).child(logID);
                                                 logEntryRef.child("action").setValue("Logged In");
                                                 logEntryRef.child("category").setValue("Authentication");
-                                                logEntryRef.child("timestamp").setValue(currentDay + " " + currentTime);
-
-                                                // Successful login
+                                                logEntryRef.child("timestamp").setValue(currentTime);
 
                                                 // Save user's login state in SharedPreferences if rememberUser is checked
                                                 saveUserLoginState(email,password);
