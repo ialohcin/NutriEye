@@ -1,0 +1,50 @@
+0 Green Apple
+1 Lakatan Banana
+2 Red Grapes
+3 Strawberry
+4 Pomelo
+5 Rambutan
+6 Mandarin Orange
+7 Guyabano
+8 Carabao Mango
+9 Mangosteen
+10 Bitter Gourd
+11 Broccoli
+12 Carrot
+13 Cauliflower
+14 Cucumber
+15 Eggplant
+16 Okra
+17 Red Bell Pepper
+18 Roma Tomato
+19 Winged Bean
+20 Brown Rice
+21 Rolled Oats
+22 Sweet Corn
+23 White Bread
+24 White Rice
+25 Beef Ground
+26 Chicken Breast
+27 Chicken Drumstick
+28 Chicken Eggs
+29 Chicken Thigh
+30 Chicken Wings
+31 Pork Belly
+32 Pork Chop
+33 Blue Crab
+34 Milkfish
+35 Squid
+36 Tilapia
+37 Beef Kaldereta
+38 Beef Kare-Kare
+39 Beef Ribs Sinigang
+40 Bulalo
+41 Chicken Adobo
+42 Chicken Afritada
+43 Chicken Inasal
+44 Chicken Tinola
+45 Crispy Pata
+46 Pork Barbeque
+47 Pancit Canton
+48 Pork Menudo
+49 Shrimp Sinigang

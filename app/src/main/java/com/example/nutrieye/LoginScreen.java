@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -69,6 +70,7 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         initComponents();
 
@@ -244,7 +246,7 @@ public class LoginScreen extends AppCompatActivity {
 
         Button cancelButton = alertDialogView.findViewById(R.id.cancelRecovery);
         Button confirmButton = alertDialogView.findViewById(R.id.confirmRecovery);
-        ImageButton closeDialog = alertDialogView.findViewById(R.id.closeDialog);
+        ImageButton closeDialog = alertDialogView.findViewById(R.id.closeServingDialog);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.TransparentAlertDialog);
         builder.setView(alertDialogView);

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -64,6 +65,7 @@ public class SignUpScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -339,11 +341,11 @@ public class SignUpScreen extends AppCompatActivity {
 
             // Set default values if the strings are empty
             if (healthConditionStr.isEmpty()) {
-                healthConditionStr = "N/A"; // Setting default value for health conditions
+                healthConditionStr = ""; // Setting default value for health conditions
             }
 
             if (foodAllergensStr.isEmpty()) {
-                foodAllergensStr = "N/A"; // Setting default value for food allergens
+                foodAllergensStr = ""; // Setting default value for food allergens
             }
 
             boolean hasError = false;
@@ -408,13 +410,13 @@ public class SignUpScreen extends AppCompatActivity {
                                                     userMap.put("firstName", firstNameStr);
                                                     userMap.put("foodAllergens", finalFoodAllergensStr);
                                                     userMap.put("healthConditions", finalHealthConditionStr);
-                                                    userMap.put("height", height);
+                                                    userMap.put("height", calculateWeightHeightValue(height));
                                                     userMap.put("lastName", lastNameStr);
                                                     userMap.put("password", passwordStr);
                                                     userMap.put("phyActivity", physicalActivityLvlStr);
                                                     userMap.put("profilePhoto", "null");
                                                     userMap.put("sex", selectedSex);
-                                                    userMap.put("weight", weight);
+                                                    userMap.put("weight", calculateWeightHeightValue(weight));
 
                                                     HashMap<String, Object> userWithProfile = new HashMap<>();
                                                     userWithProfile.put("Profile", userMap);
@@ -481,6 +483,11 @@ public class SignUpScreen extends AppCompatActivity {
         return spanString;
     }
 
+    private double calculateWeightHeightValue(double value) {
+        // Rounds to one decimal place
+        return Math.round(value * 10.0) / 10.0;
+    }
+
     private boolean isValidEmail(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
@@ -494,7 +501,7 @@ public class SignUpScreen extends AppCompatActivity {
             if (binding.selectSexSignUp.getText().toString().trim().equals("Male")) {
                 items = new String[]{"Kidney Disease", "Diabetes", "Hypertension", "Heart Disease"};
             } else {
-                items = new String[]{"Pregnancy", "Diabetes", "Hypertension", "Heart Disease"};
+                items = new String[]{"Pregnancy", "Lactating", "Kidney Disease", "Diabetes", "Hypertension", "Heart Disease"};
             }
         } else {
             items = new String[0];

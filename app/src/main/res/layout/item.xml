@@ -25,19 +25,20 @@
                 android:id="@+id/mealPhoto"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="fitXY"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/mealName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="6dp"
                 android:layout_toRightOf="@id/mealPhoto"
                 android:text="Food Name"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -47,7 +48,8 @@
                 android:layout_below="@id/mealName"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/mealPhoto"
-                android:text="Category"/>
+                android:text="Category"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/mealTime"
@@ -59,17 +61,18 @@
                 android:layout_toLeftOf="@id/foodIndicator"
                 android:text="Meal Time"
                 android:textAlignment="viewEnd"
-                android:textStyle="italic"/>
+                android:textSize="13sp"
+                android:textStyle="italic" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/foodIndicator"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
                 android:clickable="false"
                 android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:background="@android:color/transparent"/>
+                android:focusableInTouchMode="false" />
 
             <TextView
                 android:id="@+id/mealServingSize"
@@ -82,16 +85,14 @@
                 android:layout_marginEnd="0dp"
                 android:text="1 Thigh/Drumstick (0g)"
                 android:textAlignment="viewEnd"
-                android:textSize="11sp"
                 android:textColor="@color/black"
-                />
+                android:textSize="12sp" />
 
 
         </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

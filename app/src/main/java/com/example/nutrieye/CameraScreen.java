@@ -4,11 +4,12 @@ package com.example.nutrieye;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
@@ -31,7 +31,6 @@ import com.example.nutrieye.databinding.ActivityCameraScreenBinding;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -54,6 +53,7 @@ public class CameraScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCameraScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         cameraProgress = new ProgressDialog(this);
         cameraProgress.setCancelable(false);
@@ -99,13 +99,16 @@ public class CameraScreen extends AppCompatActivity {
         finish();
     }
 
-    public void startCamera(int cameraFacing){
-        int aspectRatio = aspectRatio(binding.cameraPreview.getWidth(), binding.cameraPreview.getHeight());
+    public void startCamera(int cameraFacing) {
         ListenableFuture<ProcessCameraProvider> listenableFuture = ProcessCameraProvider.getInstance(this);
 
         listenableFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
+                ProcessCameraProvider cameraProvider = listenableFuture.get();
+
+                // Calculate aspect ratio based on camera preview dimensions
+                int aspectRatio = aspectRatio(binding.cameraPreview.getWidth(), binding.cameraPreview.getHeight());
+                //int aspectRatio = AspectRatio.RATIO_DEFAULT;
 
                 Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
 
@@ -118,22 +121,13 @@ public class CameraScreen extends AppCompatActivity {
 
                 Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 
-                binding.cameraShot.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                       takePicture(imageCapture);
-                    }
-                });
+                binding.cameraShot.setOnClickListener(view -> takePicture(imageCapture));
 
-                binding.flashToggle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        setFlashIcon(camera);
-                    }
-                });
+                binding.flashToggle.setOnClickListener(view -> setFlashIcon(camera));
+
+                binding.cameraGallery.setOnClickListener(view -> openGallery());
 
                 preview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
-
 
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -141,7 +135,41 @@ public class CameraScreen extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
-    // ... (existing code)
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            String selectedImagePath = getPathFromUri(selectedImageUri);
+            if (selectedImagePath != null) {
+                // Pass the selected image URI to the next activity
+                Intent intent = new Intent(CameraScreen.this, FoodScreen.class);
+                intent.putExtra("selected_image_uri", selectedImageUri.toString());
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Failed to get the image from gallery.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private String getPathFromUri(Uri selectedImageUri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(selectedImageUri, projection, null, null, null);
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(columnIndex);
+            cursor.close();
+            return path;
+        }
+        return null;
+    }
 
     public void takePicture(ImageCapture imageCapture) {
         // Create a file to store the captured image
@@ -157,8 +185,6 @@ public class CameraScreen extends AppCompatActivity {
         imageCapture.takePicture(outputFileOptions, Executors.newCachedThreadPool(), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                cameraProgress.dismiss();
-
                 // Pass the URI of the captured image to the next activity
                 Uri imageUri = Uri.fromFile(file);
                 Intent intent = new Intent(CameraScreen.this, FoodScreen.class);
@@ -166,6 +192,8 @@ public class CameraScreen extends AppCompatActivity {
                 startActivity(intent);
                 // Finish the current activity
                 finish();
+
+                cameraProgress.dismiss();
             }
 
             @Override

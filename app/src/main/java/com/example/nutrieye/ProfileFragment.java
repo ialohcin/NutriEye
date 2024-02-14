@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.example.nutrieye.NavigationScreen.USER_UID_KEY;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +35,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
@@ -58,19 +64,47 @@ public class ProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int CROP_IMAGE_REQUEST = 2;
     CircleImageView profilePic;
-    TextView profileGender, profileName, profileEmail, profileAge, profileWeight, profileHeight, profileContactNumber, profileHealthCond, profileFoodAllergens, profileActivityLvl;
-
+    TextView profileGender, profileName, profileEmail, profileAge, profileWeight, profileHeight, profileHealthCond, profileFoodAllergens, profileActivityLvl;
     private static final int TAKE_PHOTO_REQUEST = 3;
-
+    SwipeRefreshLayout swipeRefreshLayout;
+    ProfileFragment.FragmentInteractionListener interactionListener;
+    Bundle args;
+    String profileModified;
+    boolean hasModified;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        if (savedInstanceState == null){
+            bindViews(view);
+            refreshContent();
+        }
+
+        return view;
+
+    }
+
+    public void bindViews (View view){
         MaterialButton logout = view.findViewById(R.id.logoutButton);
         MaterialButton editProfie = view.findViewById(R.id.editProfileButton);
         MaterialButton activityLogs = view.findViewById(R.id.activityLogsButton);
+
+        swipeRefreshLayout = view.findViewById(R.id.refresh_profile);
+
+        ScrollView scrollView = view.findViewById(R.id.scrollView2);
+
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (scrollView.getScrollY() == 0){
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
 
         profilePic = view.findViewById(R.id.pictureProfile);
         profileName = view.findViewById(R.id.profileName);
@@ -147,8 +181,10 @@ public class ProfileFragment extends Fragment {
 
         editProfie.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), EditProfileScreen.class);
+            intent.putExtra("USER_UID", userUID);
             startActivity(intent);
         });
+
 
         profilePic.setOnClickListener(v -> {
             selectImage();
@@ -160,9 +196,6 @@ public class ProfileFragment extends Fragment {
         });
 
         loadUserData();
-
-        return view;
-
     }
 
     private void clearUserUIDfromSharedPreferences() {
@@ -327,6 +360,19 @@ public class ProfileFragment extends Fragment {
         // Calculate the difference in years
         return Period.between(dateOfBirth, currentDate).getYears();
     }
+
+//    private int calculateAgeFromDOB(String dob) {
+//        // Parse the date string from DOB
+//        DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+//        LocalDate dateOfBirth = formatter.parseLocalDate(dob);
+//
+//        // Get current date
+//        LocalDate currentDate = new LocalDate();
+//
+//        // Calculate the difference in years
+//        Period period = new Period(dateOfBirth, currentDate);
+//        return period.getYears();
+//    }
 
     private void selectImage() {
         DatabaseReference profileRef = FirebaseDatabase.getInstance().getReference()
@@ -559,7 +605,34 @@ public class ProfileFragment extends Fragment {
     }
 
     public void refreshContent() {
-        loadUserData();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (interactionListener != null) {
+                            loadUserData();
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
+    }
+
+    public interface FragmentInteractionListener {
+        void replaceOrPopFragment(Fragment fragment, boolean triggeredBySwipeRefresh);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentInteractionListener) {
+            interactionListener = (ProfileFragment.FragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement FragmentInteractionListener");
+        }
     }
 }
 

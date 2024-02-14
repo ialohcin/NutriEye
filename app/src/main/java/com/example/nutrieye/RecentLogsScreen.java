@@ -5,8 +5,10 @@ import static com.example.nutrieye.NavigationScreen.USER_UID_KEY;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,10 +37,10 @@ public class RecentLogsScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_logs);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
         initComponents();
-
-        //logsList.add(new RecentLogs(awdawd,"Added Chicken Eggs","Meal Plan",currentDate));
 
         loadUserData();
 
@@ -56,14 +58,22 @@ public class RecentLogsScreen extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        SharedPreferences preferences = RecentLogsScreen.this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        userUID = preferences.getString(USER_UID_KEY, null);
-        if (userUID != null) {
-            fetchActivityLogsDataFromFirebase();
-        } else {
-            // Handle case where userUID is not available
+        try {
+            SharedPreferences preferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            userUID = preferences.getString(USER_UID_KEY, null);
+            if (userUID != null) {
+                fetchActivityLogsDataFromFirebase();
+            } else {
+                // Handle case where userUID is not available
+                Toast.makeText(RecentLogsScreen.this, "User data not found", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            // Handle any exception that occurs during data loading
+            e.printStackTrace();
+            Toast.makeText(RecentLogsScreen.this, "Error loading user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -85,7 +95,7 @@ public class RecentLogsScreen extends AppCompatActivity {
         Intent intent = new Intent(this, NavigationScreen.class);
         intent.putExtra("activeFragment", "ProfileFragment");
         startActivity(intent);
-        finish(); // Finish the EditProfileScreen activity
+        finish(); // Finish the RecentLogsScreen activity
     }
 
     private void fetchActivityLogsDataFromFirebase() {
@@ -102,46 +112,56 @@ public class RecentLogsScreen extends AppCompatActivity {
         profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot profileSnapshot) {
-                if (profileSnapshot.exists()) {
-                    userProfilePhoto[0] = profileSnapshot.child("profilePhoto").getValue(String.class);
-                    // Assuming 'sex' is a property in the profile data
-                    String sex = profileSnapshot.child("sex").getValue(String.class);
+                try {
+                    if (profileSnapshot.exists()) {
+                        userProfilePhoto[0] = profileSnapshot.child("profilePhoto").getValue(String.class);
+                        // Assuming 'sex' is a property in the profile data
+                        String sex = profileSnapshot.child("sex").getValue(String.class);
 
-                    if (userProfilePhoto[0] == null || userProfilePhoto[0].isEmpty() || userProfilePhoto[0].equals("null")) {
-                        // If the profile photo URL is empty or null, assign the default image based on gender
-                        int defaultImageResource = "male".equalsIgnoreCase(sex) ? R.drawable.malepic : R.drawable.femalepic;
-                        userProfilePhoto[0] = Integer.toString(defaultImageResource);
-                    }
+                        if (userProfilePhoto[0] == null || userProfilePhoto[0].isEmpty() || userProfilePhoto[0].equals("null")) {
+                            // If the profile photo URL is empty or null, assign the default image based on gender
+                            int defaultImageResource = "male".equalsIgnoreCase(sex) ? R.drawable.malepic : R.drawable.femalepic;
+                            userProfilePhoto[0] = Integer.toString(defaultImageResource);
+                        }
 
-                    // Update existing items in logsList with the new userProfilePhoto
-                    for (RecentLogs recentLog : logsList) {
-                        recentLog.setLogsIcon(userProfilePhoto[0]);
+                        // Update existing items in logsList with the new userProfilePhoto
+                        for (RecentLogs recentLog : logsList) {
+                            recentLog.setLogsIcon(userProfilePhoto[0]);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 activityLogsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        logsList.clear(); // Clear the existing list
+                        try {
+                            logsList.clear(); // Clear the existing list
 
-                        for (DataSnapshot logSnapshot : dataSnapshot.getChildren()) {
-                            // Extract data and create RecentLogs objects for each log entry
-                            String action = logSnapshot.child("action").getValue(String.class);
-                            String category = logSnapshot.child("category").getValue(String.class);
-                            String timestamp = logSnapshot.child("timestamp").getValue(String.class);
+                            for (DataSnapshot logSnapshot : dataSnapshot.getChildren()) {
+                                // Extract data and create RecentLogs objects for each log entry
+                                String action = logSnapshot.child("action").getValue(String.class);
+                                String category = logSnapshot.child("category").getValue(String.class);
+                                String timestamp = logSnapshot.child("timestamp").getValue(String.class);
 
-                            // Create the RecentLogs object
-                            RecentLogs recentLog = new RecentLogs(userProfilePhoto[0], action, category, timestamp);
-                            logsList.add(recentLog);
+                                // Create the RecentLogs object
+                                RecentLogs recentLog = new RecentLogs(userProfilePhoto[0], action, category, timestamp);
+                                logsList.add(recentLog);
+                            }
+
+                            // Update the RecyclerView with the fetched data
+                            updateRecyclerView(logsList);
+                        } catch (Exception e) {
+                           e.printStackTrace();
                         }
-
-                        // Update the RecyclerView with the fetched data
-                        updateRecyclerView(logsList);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         // Handle errors in fetching activity logs
+                        Toast.makeText(RecentLogsScreen.this, "Error fetching activity logs: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }
@@ -149,6 +169,7 @@ public class RecentLogsScreen extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle errors in fetching profile data
+                Toast.makeText(RecentLogsScreen.this, "Error fetching profile data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

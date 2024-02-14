@@ -5,6 +5,8 @@ import static com.example.nutrieye.NavigationScreen.USER_UID_KEY;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -53,22 +58,40 @@ public class HomeFragment extends Fragment {
     String formattedDate;
     DayScrollDatePicker dayScrollDatePicker;
     CircularProgressIndicator caloriesProgress;
-    LinearProgressIndicator carbsProgress, proteinProgress, fatsProgress, sugarProgress, fiberProgress, waterProgress, vitAProgress, vitB1Progress, vitB2Progress, vitCProgress, calciumProgress, sodiumProgress, ironProgress;
+    LinearProgressIndicator carbsProgress, proteinProgress, fatsProgress, fiberProgress, waterProgress, vitAProgress, vitB1Progress, vitB2Progress, vitCProgress, calciumProgress, sodiumProgress, ironProgress;
     CircleImageView profilePic;
     ImageView expandLessMore;
     TextView displayName;
-    TextView sugarLabel, hSugar, hSugarLimit, fiberLabel, hFiber, hFiberLimit, waterLabel, hWater, hWaterLimit, vitALabel, hVitA, hVitALimit, vitB1Label, hVitB1, hVitb1Limit, vitB2Label, hVitB2, hVitB2Limit, vitCLabel, hVitC, hVitCLimit, calciumLabel, hCalcium, hCalciumLimit, sodiumLabel, hSodium, hSodiumLimit, ironLabel, hIron, hIronLimit;
+    TextView fiberLabel, hFiber, hFiberLimit, waterLabel, hWater, hWaterLimit, vitALabel, hVitA, hVitALimit, vitB1Label, hVitB1, hVitb1Limit, vitB2Label, hVitB2, hVitB2Limit, vitCLabel, hVitC, hVitCLimit, calciumLabel, hCalcium, hCalciumLimit, sodiumLabel, hSodium, hSodiumLimit, ironLabel, hIron, hIronLimit;
     TextView hCalories, hCarbs, hProtein, hFats, hCaloriesLimit, hCarbsLimit, hProteinLimit, hFatsLimit;
     TextView bCarbsTotal, bProTotal, bFatTotal, bCalTotal, lCarbsTotal, lProTotal, lFatTotal, lCalTotal, dCarbsTotal, dProTotal, dFatTotal, dCalTotal;
-    TextView tCaloriesTotal, tCarbohydratesTotal, tProteinTotal, tFatsTotal, tFiberTotal, tVitATotal, tVitB1Total, tVitB2Total, tVitCTotal, tCalciumTotal, tSodiumTotal, tIronTotal, tSugarTotal, tWaterTotal;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    TextView tCaloriesTotal, tCarbohydratesTotal, tProteinTotal, tFatsTotal, tFiberTotal, tVitATotal, tVitB1Total, tVitB2Total, tVitCTotal, tCalciumTotal, tSodiumTotal, tIronTotal, tWaterTotal;
+    SwipeRefreshLayout swipeRefreshLayout;
+    View rootView;
+
+    HomeFragment.FragmentInteractionListener interactionListener;
+
+    Python python;
+    PyObject pyObjectDRNI;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        swipeRefreshLayout = rootView.findViewById(R.id.home_refresh);
+
+        if (savedInstanceState == null) {
+            bindViews(rootView);
+            refreshContent();
+        }
+
+        return rootView;
+
+    }
+
+    public void bindViews(View view) {
         profilePic = view.findViewById(R.id.pictureProfile);
         displayName = view.findViewById(R.id.userText);
 
@@ -79,7 +102,6 @@ public class HomeFragment extends Fragment {
         hCarbs = view.findViewById(R.id.carbsVal);
         hProtein = view.findViewById(R.id.proteinVal);
         hFats = view.findViewById(R.id.fatsVal);
-        hSugar = view.findViewById(R.id.sugarVal);
         hFiber = view.findViewById(R.id.fiberVal);
         hWater = view.findViewById(R.id.waterVal);
         hVitA = view.findViewById(R.id.vitAVal);
@@ -90,7 +112,6 @@ public class HomeFragment extends Fragment {
         hSodium = view.findViewById(R.id.sodiumVal);
         hIron = view.findViewById(R.id.ironVal);
 
-        sugarLabel = view.findViewById(R.id.textView15);
         fiberLabel = view.findViewById(R.id.textView16);
         waterLabel = view.findViewById(R.id.textView17);
         vitALabel = view.findViewById(R.id.textView18);
@@ -104,7 +125,6 @@ public class HomeFragment extends Fragment {
         hCaloriesLimit = view.findViewById(R.id.caloriesLimitTotal);
         hCarbsLimit = view.findViewById(R.id.carbsLimitTotal);
         hProteinLimit = view.findViewById(R.id.proteinLimitTotal);
-        hSugarLimit = view.findViewById(R.id.sugarLimitTotal);
         hFatsLimit = view.findViewById(R.id.fatsLimitTotal);
         hFiberLimit = view.findViewById(R.id.fiberLimitTotal);
         hWaterLimit = view.findViewById(R.id.waterLimitTotal);
@@ -119,7 +139,6 @@ public class HomeFragment extends Fragment {
         caloriesProgress = view.findViewById(R.id.caloriesProgress);
         carbsProgress = view.findViewById(R.id.carbsProgress);
         proteinProgress = view.findViewById(R.id.proteinProgress);
-        sugarProgress = view.findViewById(R.id.sugarProgress);
         fatsProgress = view.findViewById(R.id.fatsProgress);
         fiberProgress = view.findViewById(R.id.fiberProgress);
         waterProgress = view.findViewById(R.id.waterProgress);
@@ -149,90 +168,52 @@ public class HomeFragment extends Fragment {
         dFatTotal = view.findViewById(R.id.dinnerFatsTotal);
         dCalTotal = view.findViewById(R.id.dinnerCal);
 
-        // Add a TouchListener to the ScrollView
-//            scrollView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    switch (event.getAction()) {
-//                        case MotionEvent.ACTION_MOVE:
-//                            // Disable SwipeRefreshLayout when scrolling
-//                            swipeRefreshLayout.setEnabled(false);
-//                            break;
-//                        case MotionEvent.ACTION_UP:
-//                        case MotionEvent.ACTION_CANCEL:
-//                            // Re-enable SwipeRefreshLayout when scrolling stops
-//                            swipeRefreshLayout.setEnabled(true);
-//                            break;
-//                    }
-//                    return false;
-//                }
-//            });
+        ScrollView scrollView = view.findViewById(R.id.home_scroll);
 
-        if (savedInstanceState == null) {
-
-            swipeRefreshLayout = view.findViewById(R.id.home_refresh);
-
-            ScrollView scrollView = view.findViewById(R.id.home_scroll);
-            // Set up refresh listener
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    loadUserData();
-                    swipeRefreshLayout.setRefreshing(false);
+        // Set up scroll listener
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                // Check if the ScrollView is at the top
+                if (scrollView.getScrollY() == 0) {
+                    // Enable SwipeRefreshLayout
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    // Disable SwipeRefreshLayout
+                    swipeRefreshLayout.setEnabled(false);
                 }
-            });
+            }
+        });
 
-            // Set up scroll listener
-            scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                @Override
-                public void onScrollChanged() {
-                    // Check if the ScrollView is at the top
-                    if (scrollView.getScrollY() == 0) {
-                        // Enable SwipeRefreshLayout
-                        swipeRefreshLayout.setEnabled(true);
-                    } else {
-                        // Disable SwipeRefreshLayout
-                        swipeRefreshLayout.setEnabled(false);
-                    }
-                }
-            });
+        MaterialCardView cardView = view.findViewById(R.id.homeCardView);
 
-            MaterialCardView cardView = view.findViewById(R.id.homeCardView);
+        TextView dateToday = view.findViewById(R.id.dateToday);
 
-            TextView dateToday = view.findViewById(R.id.dateToday);
+        LocalDate today = LocalDate.now();
+        formattedDate = today.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
+        dateToday.setText("Today, " + formattedDate);
 
-            LocalDate today = LocalDate.now();
-            formattedDate = today.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
-            dateToday.setText("Today, " + formattedDate);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        currentDate = dateFormat.format(calendar.getTime());
 
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-            currentDate = dateFormat.format(calendar.getTime());
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleCardView();
+            }
+        });
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleCardView();
-                }
-            });
+        cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showBottomSheetDialog();
+                return true;
+            }
+        });
 
-            cardView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showBottomSheetDialog();
-                    return true;
-                }
-            });
-
-            loadUserData();
-            shrinkCardView();
-
-        } else {
-
-        }
-
-        return view;
-
+        loadUserData();
+        shrinkCardView();
     }
 
     private void toggleCardView() {
@@ -249,7 +230,6 @@ public class HomeFragment extends Fragment {
 
     private void shrinkCardView() {
         setViewsVisibility(View.GONE,
-                sugarLabel, hSugar, hSugarLimit, sugarProgress,
                 fiberLabel, hFiber, hFiberLimit, fiberProgress,
                 waterLabel, hWater, hWaterLimit, waterProgress,
                 vitALabel, hVitA, hVitALimit, vitAProgress,
@@ -263,7 +243,6 @@ public class HomeFragment extends Fragment {
 
     private void expandCardView() {
         setViewsVisibility(View.VISIBLE,
-                sugarLabel, hSugar, hSugarLimit, sugarProgress,
                 fiberLabel, hFiber, hFiberLimit, fiberProgress,
                 waterLabel, hWater, hWaterLimit, waterProgress,
                 vitALabel, hVitA, hVitALimit, vitAProgress,
@@ -287,8 +266,6 @@ public class HomeFragment extends Fragment {
         if (userUID != null) {
             fetchUserDataFromFirebase();
             fetchUserNutrients(userUID);
-
-            swipeRefreshLayout.setRefreshing(false);
         } else {
             // Handle case where userUID is not available
         }
@@ -310,43 +287,86 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String sex = snapshot.child("sex").getValue(String.class);
                     String dob = snapshot.child("dob").getValue(String.class);
                     int age = calculateAgeFromDOB(dob);
+                    String sexString = snapshot.child("sex").getValue(String.class);
+                    char sex = sexString.charAt(0); // Extract first letter
+
+                    Double height = snapshot.child("height").getValue(Double.class);
+                    Double weight = snapshot.child("weight").getValue(Double.class);
+                    boolean isPregnant = false;
+                    boolean isLactating = false;
+
                     String healthConditions = snapshot.child("healthConditions").getValue(String.class);
 
-                    // Get the optimal nutrients for the user based on age, sex, and health conditions
-                    NutrientInfo.populateOptimalNutrients();
-                    NutrientInfo optimalNutrients = NutrientInfo.computeOptimalNutrients(age, sex, healthConditions);
-
-                    if (optimalNutrients != null) {
-                        // Set nutrient limits in TextViews
-                        hCaloriesLimit.setText(String.valueOf("of " + optimalNutrients.calories + " kcal"));
-                        hCarbsLimit.setText(String.valueOf("of " + optimalNutrients.carbohydrates));
-                        hProteinLimit.setText(String.valueOf("of " + optimalNutrients.protein));
-                        hSugarLimit.setText(String.valueOf("of " + optimalNutrients.sugar));
-                        hFatsLimit.setText(String.valueOf("of " + optimalNutrients.fats));
-                        hFiberLimit.setText(String.valueOf("of " + optimalNutrients.fiber));
-                        hWaterLimit.setText(String.valueOf("of " + optimalNutrients.water));
-                        hVitALimit.setText(String.valueOf("of " + optimalNutrients.vitaminA));
-                        hVitb1Limit.setText(String.valueOf("of " + optimalNutrients.vitaminB1));
-                        hVitB2Limit.setText(String.valueOf("of " + optimalNutrients.vitaminB2));
-                        hVitCLimit.setText(String.valueOf("of " + optimalNutrients.vitaminC));
-                        hCalciumLimit.setText(String.valueOf("of " + optimalNutrients.calcium));
-                        hSodiumLimit.setText(String.valueOf("of " + optimalNutrients.sodium));
-                        hIronLimit.setText(String.valueOf("of " + optimalNutrients.iron));
-
-                        fetchNutrientsFromFirebase();
-                    } else {
-                        // Handle case where optimal nutrients are not available for the user
-                        Toast.makeText(requireContext(), "Optimal nutrients not available for this user", Toast.LENGTH_SHORT).show();
+                    if (healthConditions != null) {
+                        isPregnant = healthConditions.contains("Pregnant");
+                        isLactating = healthConditions.contains("Lactating");
                     }
+
+                    String phyActivity = snapshot.child("phyActivity").getValue(String.class);
+
+                    // Call the Python script and retrieve the calculated values
+                    if (!Python.isStarted()) {
+                        Python.start(new AndroidPlatform(requireActivity()));
+                    }
+
+                    // Generate Daily Recommended Nutrient Intakes
+                    python = Python.getInstance();
+                    pyObjectDRNI = python.getModule("drniCalculator");
+
+                    // Assuming age, sex, weight, height, and activityLevel are available variables in your context
+                    PyObject resultDRNI = pyObjectDRNI.callAttr("calculateDRNI", age, sex, weight, height, PyObject.fromJava(isPregnant), PyObject.fromJava(isLactating), phyActivity);
+                    Object[] resultArray = resultDRNI.toJava(Object[].class);
+
+                    // Convert each element to the appropriate type
+                    double dcn = (Double) resultArray[0];
+                    double water = (Double) resultArray[1];
+                    double carbohydrates_ll = (Double) resultArray[2];
+                    double carbohydrates_ul = (Double) resultArray[3];
+                    double protein_ll = (Double) resultArray[4];
+                    double protein_ul = (Double) resultArray[5];
+                    double fats_ll = (Double) resultArray[6];
+                    double fats_ul = (Double) resultArray[7];
+                    double fiber = (Double) resultArray[8];
+                    double vitaminA = (Double) resultArray[9];
+                    double vitaminB1 = (Double) resultArray[10];
+                    double vitaminB2 = (Double) resultArray[11];
+                    double vitaminC = (Double) resultArray[12];
+                    double calcium = (Double) resultArray[13];
+                    double sodium = (Double) resultArray[14];
+                    double iron = (Double) resultArray[15];
+
+                    // Create an instance of DailyNutrientValues with the calculated values
+                    DailyNutrientValues dailyNutrientValues = new DailyNutrientValues(dcn, water, carbohydrates_ll, carbohydrates_ul, protein_ll, protein_ul,
+                            fats_ll, fats_ul, fiber, vitaminA, vitaminB1, vitaminB2,
+                            vitaminC, calcium, sodium, iron);
+
+                    // Set text for TextViews using the retrieved nutrient values
+                    hCaloriesLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getDcn()) + " kcal"));
+                    hCarbsLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getCarbohydrates_ul()) + "g"));
+                    hProteinLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getProtein_ul()) + "g"));
+                    hFatsLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getFats_ul()) + "g"));
+                    hFiberLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getFiber()) + "g"));
+                    hWaterLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getWater()) + "mL"));
+                    hVitALimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getVitaminA()) + "mcg"));
+                    hVitb1Limit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getVitaminB1()) + "mg"));
+                    hVitB2Limit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getVitaminB2()) + "mg"));
+                    hVitCLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getVitaminC()) + " mg"));
+                    hCalciumLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getCalcium()) + "mg"));
+                    hSodiumLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getSodium()) + "mg"));
+                    hIronLimit.setText(String.valueOf("of " + calculateNutrientValue(dailyNutrientValues.getIron()) + "mg"));
+
+                    fetchNutrientsFromFirebase();
+                } else {
+                    // Handle case where optimal nutrients are not available for the user
+                    Toast.makeText(requireContext(), "Optimal nutrients not available for this user", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle onCancelled event if needed
+
             }
         });
     }
@@ -384,6 +404,12 @@ public class HomeFragment extends Fragment {
                         Picasso.get().load("Male".equalsIgnoreCase(sex) ? R.drawable.malepic : R.drawable.femalepic)
                                 .into(profilePic);
                     }
+
+                    // Call updateBadgeVisibility method to hide badge
+                    if (getActivity() instanceof NavigationScreen) {
+                        ((NavigationScreen) getActivity()).updateBadgeVisibility(false, "HomeFragment");
+                    }
+
                 } else {
                     // Handle the case where the data doesn't exist
                 }
@@ -397,8 +423,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchNutrientsFromFirebase() {
-
-
         DatabaseReference nutrientsTrackingRef = FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(userUID).child("NutrientsTracking").child(currentDate).child("TotalNutrients");
 
@@ -445,7 +469,6 @@ public class HomeFragment extends Fragment {
         double totalCalories = 0.0;
         double totalCarbs = 0.0;
         double totalProtein = 0.0;
-        double totalSugar = 0.0;
         double totalFats = 0.0;
         double totalFiber = 0.0;
         double totalWater = 0.0;
@@ -463,7 +486,6 @@ public class HomeFragment extends Fragment {
             double calories = calculateNutrientValue(getNutrientValue(mealSnapshot, "kcalTotal"));
             double carbs = calculateNutrientValue(getNutrientValue(mealSnapshot, "carbohydratesTotal"));
             double protein = calculateNutrientValue(getNutrientValue(mealSnapshot, "proteinTotal"));
-            double sugar = calculateNutrientValue(getNutrientValue(mealSnapshot, "sugarTotal"));
             double fats = calculateNutrientValue(getNutrientValue(mealSnapshot, "fatsTotal"));
             double fiber = calculateNutrientValue(getNutrientValue(mealSnapshot, "fiberTotal"));
             double water = calculateNutrientValue(getNutrientValue(mealSnapshot, "waterTotal"));
@@ -480,7 +502,6 @@ public class HomeFragment extends Fragment {
             totalCarbs += carbs;
             totalProtein += protein;
             totalFats += fats;
-            totalSugar += sugar;
             totalFiber += fiber;
             totalWater += water;
             totalVitA += vita;
@@ -494,7 +515,7 @@ public class HomeFragment extends Fragment {
 
         // Now you have the total nutrient values, you can use them as needed
         // For example, you can update TextViews or perform other operations
-        updateTotalNutrientTextViews(totalCalories, totalCarbs, totalProtein, totalFats, totalSugar, totalFiber, totalWater,
+        updateTotalNutrientTextViews(totalCalories, totalCarbs, totalProtein, totalFats, totalFiber, totalWater,
                 totalVitA, totalVitB1, totalVitB2, totalVitC, totalCalcium, totalSodium, totalIron);
 
 
@@ -503,7 +524,6 @@ public class HomeFragment extends Fragment {
         double carbsLimit = extractDoubleFromString(hCarbsLimit.getText().toString());
         double proteinLimit = extractDoubleFromString(hProteinLimit.getText().toString());
         double fatsLimit = extractDoubleFromString(hFatsLimit.getText().toString());
-        double sugarLimit = extractDoubleFromString(hSugarLimit.getText().toString());
         double fiberLimit = extractDoubleFromString(hFiberLimit.getText().toString());
         double waterLimit = extractDoubleFromString(hWaterLimit.getText().toString());
         double vitALimit = extractDoubleFromString(hVitALimit.getText().toString());
@@ -517,7 +537,6 @@ public class HomeFragment extends Fragment {
         int caloriesPercentage = (int) ((totalCalories / caloriesLimit) * 100);
         int carbsPercentage = (int) ((totalCarbs / carbsLimit) * 100);
         int proteinPercentage = (int) ((totalProtein / proteinLimit) * 100);
-        int sugarPercentage = (int) ((totalSugar / sugarLimit) * 100);
         int fatsPercentage = (int) ((totalFats / fatsLimit) * 100);
         int fiberPercentage = (int) ((totalFiber / fiberLimit) * 100);
         int waterPercentage = (int) ((totalWater / waterLimit) * 100);
@@ -532,7 +551,6 @@ public class HomeFragment extends Fragment {
         caloriesProgress.setProgress(caloriesPercentage);
         carbsProgress.setProgress(carbsPercentage);
         proteinProgress.setProgress(proteinPercentage);
-        sugarProgress.setProgress(sugarPercentage);
         fatsProgress.setProgress(fatsPercentage);
         fiberProgress.setProgress(fiberPercentage);
         waterProgress.setProgress(waterPercentage);
@@ -546,25 +564,24 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void updateTotalNutrientTextViews(double totalCalories, double totalCarbs, double totalProtein, double totalFats, double totalSugar,
+    private void updateTotalNutrientTextViews(double totalCalories, double totalCarbs, double totalProtein, double totalFats,
                                               double totalFiber, double totalWater, double totalVitA, double totalVitB1,
                                               double totalVitB2, double totalVitC, double totalCalcium, double totalSodium,
                                               double totalIron) {
         // Update the TextViews with the total nutrient values
-        hCalories.setText(String.valueOf(totalCalories));
-        hCarbs.setText(String.valueOf(totalCarbs));
-        hProtein.setText(String.valueOf(totalProtein));
-        hSugar.setText(String.valueOf(totalSugar));
-        hFats.setText(String.valueOf(totalFats));
-        hFiber.setText(String.valueOf(totalFiber));
-        hWater.setText(String.valueOf(totalWater));
-        hVitA.setText(String.valueOf(totalVitA));
-        hVitB1.setText(String.valueOf(totalVitB1));
-        hVitB2.setText(String.valueOf(totalVitB2));
-        hVitC.setText(String.valueOf(totalVitC));
-        hCalcium.setText(String.valueOf(totalCalcium));
-        hSodium.setText(String.valueOf(totalSodium));
-        hIron.setText(String.valueOf(totalIron));
+        hCalories.setText(String.valueOf(calculateNutrientValue(totalCalories)));
+        hCarbs.setText(String.valueOf(calculateNutrientValue(totalCarbs)));
+        hProtein.setText(String.valueOf(calculateNutrientValue(totalProtein)));
+        hFats.setText(String.valueOf(calculateNutrientValue(totalFats)));
+        hFiber.setText(String.valueOf(calculateNutrientValue(totalFiber)));
+        hWater.setText(String.valueOf(calculateNutrientValue(totalWater)));
+        hVitA.setText(String.valueOf(calculateNutrientValue(totalVitA)));
+        hVitB1.setText(String.valueOf(calculateNutrientValue(totalVitB1)));
+        hVitB2.setText(String.valueOf(calculateNutrientValue(totalVitB2)));
+        hVitC.setText(String.valueOf(calculateNutrientValue(totalVitC)));
+        hCalcium.setText(String.valueOf(calculateNutrientValue(totalCalcium)));
+        hSodium.setText(String.valueOf(calculateNutrientValue(totalSodium)));
+        hIron.setText(String.valueOf(calculateNutrientValue(totalIron)));
     }
 
 
@@ -628,7 +645,6 @@ public class HomeFragment extends Fragment {
         tSodiumTotal = bottomSheetView.findViewById(R.id.sodiumTotalSummary);
         tIronTotal = bottomSheetView.findViewById(R.id.ironTotalSummary);
 
-        tSugarTotal = bottomSheetView.findViewById(R.id.sugarTotalSummary);
         tWaterTotal = bottomSheetView.findViewById(R.id.waterTotalSummary);
 
         // Show the dialog
@@ -748,7 +764,6 @@ public class HomeFragment extends Fragment {
         double totalSodium = 0.0;
         double totalIron = 0.0;
 
-        double totalSugar = 0.0;
         double totalWater = 0.0;
 
         // Iterate through all meal types
@@ -769,7 +784,6 @@ public class HomeFragment extends Fragment {
             double sodium = calculateNutrientValueForSelectedDate(getNutrientValue(mealSnapshot, "sodiumTotal"));
             double iron = calculateNutrientValueForSelectedDate(getNutrientValue(mealSnapshot, "ironTotal"));
 
-            double sugar = calculateNutrientValueForSelectedDate(getNutrientValue(mealSnapshot, "sugarTotal"));
             double water = calculateNutrientValueForSelectedDate(getNutrientValue(mealSnapshot, "waterTotal"));
 
             // Update total nutrient values
@@ -788,7 +802,6 @@ public class HomeFragment extends Fragment {
             totalSodium += sodium;
             totalIron += iron;
 
-            totalSugar += sugar;
             totalWater += water;
         }
 
@@ -796,7 +809,7 @@ public class HomeFragment extends Fragment {
         // For example, you can update TextViews or perform other operations
         updateTotalNutrientTextViewsForSelectedDate(totalCalories, totalCarbs, totalProtein, totalFats,
                 totalFiber, totalVitA, totalVitB1, totalVitB2, totalVitC, totalCalcium, totalSodium, totalIron,
-                totalSugar, totalWater);
+                totalWater);
     }
 
     private double calculateNutrientValueForSelectedDate(double value) {
@@ -806,27 +819,25 @@ public class HomeFragment extends Fragment {
         return bd.doubleValue();
     }
 
-    private void updateTotalNutrientTextViewsForSelectedDate(double totalCalories, double totalCarbs, double totalProtein, double totalFats, double totalFiber, double totalVitA, double totalVitB1, double totalVitB2, double totalVitC, double totalCalcium, double totalSodium, double totalIron, double totalSugar, double totalWater) {
+    private void updateTotalNutrientTextViewsForSelectedDate(double totalCalories, double totalCarbs, double totalProtein, double totalFats, double totalFiber, double totalVitA, double totalVitB1, double totalVitB2, double totalVitC, double totalCalcium, double totalSodium, double totalIron, double totalWater) {
         // Update the TextViews with the total nutrient values for the selected date
-        tCaloriesTotal.setText(String.valueOf(totalCalories) + " kcal");
-        tCarbohydratesTotal.setText(String.valueOf(totalCarbs) + "g");
-        tProteinTotal.setText(String.valueOf(totalProtein) + "g");
-        tFatsTotal.setText(String.valueOf(totalFats) + "g");
-        tFiberTotal.setText(String.valueOf(totalFiber) + "g");
+        tCaloriesTotal.setText(String.valueOf(calculateNutrientValue(totalCalories)) + " kcal");
+        tCarbohydratesTotal.setText(String.valueOf(calculateNutrientValue(totalCarbs)) + "g");
+        tProteinTotal.setText(String.valueOf(calculateNutrientValue(totalProtein)) + "g");
+        tFatsTotal.setText(String.valueOf(calculateNutrientValue(totalFats)) + "g");
+        tFiberTotal.setText(String.valueOf(calculateNutrientValue(totalFiber)) + "g");
 
-        tVitATotal.setText(String.valueOf(totalVitA) + "mcg");
-        tVitB1Total.setText(String.valueOf(totalVitB1) + "mg");
-        tVitB2Total.setText(String.valueOf(totalVitB2) + "mg");
-        tVitCTotal.setText(String.valueOf(totalVitC) + "mg");
+        tVitATotal.setText(String.valueOf(calculateNutrientValue(totalVitA)) + "mcg");
+        tVitB1Total.setText(String.valueOf(calculateNutrientValue(totalVitB1)) + "mg");
+        tVitB2Total.setText(String.valueOf(calculateNutrientValue(totalVitB2)) + "mg");
+        tVitCTotal.setText(String.valueOf(calculateNutrientValue(totalVitC)) + "mg");
 
-        tCalciumTotal.setText(String.valueOf(totalCalcium) + "mg");
-        tSodiumTotal.setText(String.valueOf(totalSodium) + "mg");
-        tIronTotal.setText(String.valueOf(totalIron) + "mg");
+        tCalciumTotal.setText(String.valueOf(calculateNutrientValue(totalCalcium)) + "mg");
+        tSodiumTotal.setText(String.valueOf(calculateNutrientValue(totalSodium)) + "mg");
+        tIronTotal.setText(String.valueOf(calculateNutrientValue(totalIron)) + "mg");
 
-        tSugarTotal.setText(String.valueOf(totalSugar) + "g");
-        tWaterTotal.setText(String.valueOf(totalWater) + "mL");
+        tWaterTotal.setText(String.valueOf(calculateNutrientValue(totalWater)) + "mL");
 
-        // You can update other nutrient TextViews here as needed
     }
 
     private void clearNutrientTextViews() {
@@ -843,13 +854,44 @@ public class HomeFragment extends Fragment {
         tCalciumTotal.setText("0.0mg");
         tSodiumTotal.setText("0.0mg");
         tIronTotal.setText("0.0mg");
-        tSugarTotal.setText("0.0g");
         tWaterTotal.setText("0.0mL");
 
         // Clear other nutrient TextViews here as needed
     }
 
     public void refreshContent() {
-        loadUserData();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (interactionListener != null) {
+                            loadUserData();
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        // Call updateBadgeVisibility method to hide badge
+                        if (getActivity() instanceof NavigationScreen) {
+                            ((NavigationScreen) getActivity()).updateBadgeVisibility(false, "HomeFragment");
+                        }
+                    }
+                }, 2000);
+            }
+        });
+    }
+
+    public interface FragmentInteractionListener {
+        void replaceOrPopFragment(Fragment fragment, boolean triggeredBySwipeRefresh);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentInteractionListener) {
+            interactionListener = (HomeFragment.FragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement FragmentInteractionListener");
+        }
     }
 }

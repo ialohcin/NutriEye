@@ -14,6 +14,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,122 +62,124 @@ public class MealPlanFragment extends Fragment {
     List<Item> itemList;
     MealAdapter mealAdapter;
     String currentDate;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
+    NavigationScreen navigationScreen;
+    MealPlanFragment.FragmentInteractionListener interactionListener;
+    View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_meal_plan, container, false);
+        rootView = inflater.inflate(R.layout.fragment_meal_plan, container, false);
 
-        NavigationScreen navigationScreen = (NavigationScreen) getActivity();
+        // Initialize navigationScreen
+        navigationScreen = (NavigationScreen) requireActivity();
+        swipeRefreshLayout = rootView.findViewById(R.id.meal_plan_refresh);
 
         if (savedInstanceState == null){
-
-            swipeRefreshLayout = view.findViewById(R.id.meal_plan_refresh);
-            swipeRefreshLayout.setOnRefreshListener(() -> {
-                loadUserData();
-                swipeRefreshLayout.setRefreshing(false);
-                navigationScreen.replaceOrPopFragment(new MealPlanFragment(), true);
-            });
-
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-            currentDate = dateFormat.format(calendar.getTime());
-
-            breakfastFilter = view.findViewById(R.id.breakfastButton);
-            lunchFilter = view.findViewById(R.id.lunchButton);
-            dinnerFilter = view.findViewById(R.id.dinnerButton);
-            allFilter = view.findViewById(R.id.allButton);
-
-            searchView = view.findViewById(R.id.mealSearchView);
-
-            recyclerView = view.findViewById(R.id.recyclerView);
-            recyclerView.setHasFixedSize(true);
-            BottomMarginPercentageDecoration marginDecoration = new BottomMarginPercentageDecoration(requireContext(), 0.06f);
-            recyclerView.addItemDecoration(marginDecoration);
-            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-            itemList = new ArrayList<>();
-            mealAdapter = new MealAdapter(itemList);
-            recyclerView.setAdapter(mealAdapter);
-
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callbackMethod);
-            itemTouchHelper.attachToRecyclerView(recyclerView);
-
-            // Set the hint text color
-            int hintTextColor = ContextCompat.getColor(requireContext(), R.color.gray);
-            EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-            searchEditText.setHintTextColor(hintTextColor);
-
-            setupRecyclerView(); // Initialize RecyclerView
-
-            selectMealType("All");
-
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    handleQueryText(newText);
-                    return true;
-                }
-
-                private void handleQueryText(String query) {
-                    query = query.toLowerCase();
-
-                    List<Item> filteredList = new ArrayList<>();
-
-                    for (Item item : itemList) {
-                        String foodName = item.getFoodName().toLowerCase();
-                        // Check if the foodName starts with the query
-                        if (foodName.startsWith(query)) {
-                            filteredList.add(item);
-                        }
-                    }
-
-                    updateRecyclerView(filteredList);
-
-                }
-
-            });
-
-            allFilter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectMealType("All");
-
-                }
-            });
-
-            breakfastFilter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectMealType("Breakfast");
-
-                }
-            });
-
-            lunchFilter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectMealType("Lunch");
-
-                }
-            });
-
-            dinnerFilter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectMealType("Dinner");
-
-                }
-            });
-
-            loadUserData();
+            bindViews(rootView);
+            refreshContent();
         }
 
-        return view;
+        return rootView;
+    }
+
+    public void bindViews (View view){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+        currentDate = dateFormat.format(calendar.getTime());
+
+        breakfastFilter = view.findViewById(R.id.breakfastButton);
+        lunchFilter = view.findViewById(R.id.lunchButton);
+        dinnerFilter = view.findViewById(R.id.dinnerButton);
+        allFilter = view.findViewById(R.id.allButton);
+
+        searchView = view.findViewById(R.id.mealSearchView);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        BottomMarginPercentageDecoration marginDecoration = new BottomMarginPercentageDecoration(requireContext(), 0.06f);
+        recyclerView.addItemDecoration(marginDecoration);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        itemList = new ArrayList<>();
+        mealAdapter = new MealAdapter(itemList);
+        recyclerView.setAdapter(mealAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callbackMethod);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        // Set the hint text color
+        int hintTextColor = ContextCompat.getColor(requireContext(), R.color.gray);
+        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setHintTextColor(hintTextColor);
+
+        setupRecyclerView(); // Initialize RecyclerView
+
+        selectMealType("All");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                handleQueryText(newText);
+                return true;
+            }
+
+            private void handleQueryText(String query) {
+                query = query.toLowerCase();
+
+                List<Item> filteredList = new ArrayList<>();
+
+                for (Item item : itemList) {
+                    String foodName = item.getFoodName().toLowerCase();
+                    // Check if the foodName starts with the query
+                    if (foodName.startsWith(query)) {
+                        filteredList.add(item);
+                    }
+                }
+
+                updateRecyclerView(filteredList);
+
+            }
+
+        });
+
+        allFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectMealType("All");
+
+            }
+        });
+
+        breakfastFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectMealType("Breakfast");
+
+            }
+        });
+
+        lunchFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectMealType("Lunch");
+
+            }
+        });
+
+        dinnerFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectMealType("Dinner");
+
+            }
+        });
+
+        loadUserData();
     }
 
     //Fetching userUID
@@ -193,6 +197,8 @@ public class MealPlanFragment extends Fragment {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
         DatabaseReference mealPlanRef = userRef.child("MealPlans").child(currentDate);
 
+        final int MAX_SERVING_SIZE_LENGTH = 10; // Maximum length for foodServingSize before truncation
+
         mealPlanRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -205,12 +211,17 @@ public class MealPlanFragment extends Fragment {
                         String foodName = itemSnapshot.child("foodName").getValue(String.class);
                         String foodCategory = itemSnapshot.child("foodCategory").getValue(String.class);
                         String foodServingSize = itemSnapshot.child("foodServingSize").getValue(String.class);
+//
+//                        // Truncate foodServingSize if it exceeds a certain length
+//                        if (foodServingSize != null && foodServingSize.length() > MAX_SERVING_SIZE_LENGTH) {
+//                            foodServingSize = foodServingSize.substring(0, MAX_SERVING_SIZE_LENGTH - 3) + "...";
+//                        }
+
                         String mealTime = itemSnapshot.child("foodMealTime").getValue(String.class);
                         Double foodCalories = itemSnapshot.child("foodCalories").getValue(Double.class);
                         Double foodCarbs = itemSnapshot.child("foodCarbs").getValue(Double.class);
                         Double foodFats = itemSnapshot.child("foodFats").getValue(Double.class);
                         Double foodProtein = itemSnapshot.child("foodProtein").getValue(Double.class);
-                        Double foodSugar = itemSnapshot.child("foodSugar").getValue(Double.class);
                         Double foodFiber = itemSnapshot.child("foodFiber").getValue(Double.class);
                         Double foodWater = itemSnapshot.child("foodWater").getValue(Double.class);
                         Double foodVitA = itemSnapshot.child("foodVitA").getValue(Double.class);
@@ -224,7 +235,7 @@ public class MealPlanFragment extends Fragment {
 
                         // Update the Item object with the fetched isDone status
                         Item item = new Item(foodImage, foodName, foodCategory, mealTime, foodServingSize, foodCalories,
-                                foodCarbs, foodFats, foodProtein, foodSugar, foodFiber,
+                                foodCarbs, foodFats, foodProtein, foodFiber,
                                 foodWater, foodVitA, foodVitB1, foodVitB2, foodVitC, foodCalcium, foodSodium, foodIron, foodIsDone, itemCount);
 
                         itemList.add(item);
@@ -255,7 +266,6 @@ public class MealPlanFragment extends Fragment {
         nutrientValues.put("proteinTotal", ServerValue.increment(item.getProtein()));
         nutrientValues.put("fatsTotal", ServerValue.increment(item.getFat()));
         nutrientValues.put("carbohydratesTotal", ServerValue.increment(item.getCarbs()));
-        nutrientValues.put("sugarTotal", ServerValue.increment(item.getSugar()));
         nutrientValues.put("fiberTotal", ServerValue.increment(item.getFiber()));
         nutrientValues.put("waterTotal", ServerValue.increment(item.getWater()));
         nutrientValues.put("vitATotal", ServerValue.increment(item.getVitaminA()));
@@ -332,7 +342,6 @@ public class MealPlanFragment extends Fragment {
         double sodium = calculateNutrientValue(getNutrientValue(dataSnapshot, "sodiumTotal"));
         double iron = calculateNutrientValue(getNutrientValue(dataSnapshot, "ironTotal"));
 
-        double sugar = calculateNutrientValue(getNutrientValue(dataSnapshot, "sugarTotal"));
         double water = calculateNutrientValue(getNutrientValue(dataSnapshot, "waterTotal"));
 
     }
@@ -470,10 +479,6 @@ public class MealPlanFragment extends Fragment {
 
     };
 
-    public void refreshContent(){
-        loadUserData();
-    }
-
     private void showDiscardMealDialog(Item item, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Discard Meal");
@@ -546,7 +551,7 @@ public class MealPlanFragment extends Fragment {
                 logEntryRef.child("timestamp").setValue(currentTime);
 
                 // Check if refresh is needed for any fragment and show/hide the badge accordingly
-                //updateBadgeVisibility();
+                navigationScreen.updateBadgeVisibility(true, "HomeFragment");
 
             }
         });
@@ -704,6 +709,8 @@ public class MealPlanFragment extends Fragment {
         bottomSheetDialog.setContentView(bottomSheetView);
 
         // Populate the BottomSheetDialog with additional details
+        TextView foodServingSize = bottomSheetView.findViewById(R.id.textServingSize);
+
         TextView caloriesTextView = bottomSheetView.findViewById(R.id.mealCalories);
         TextView carbsTextView = bottomSheetView.findViewById(R.id.mealCarbohydrate);
         TextView proteinTextView = bottomSheetView.findViewById(R.id.mealProtein);
@@ -719,10 +726,10 @@ public class MealPlanFragment extends Fragment {
         TextView sodiumTextView = bottomSheetView.findViewById(R.id.mealSodium);
         TextView ironTextView = bottomSheetView.findViewById(R.id.mealIron);
 
-        TextView sugarTextView = bottomSheetView.findViewById(R.id.mealSugar);
         TextView waterTextView = bottomSheetView.findViewById(R.id.mealWater);
 
         // Set the additional details
+        foodServingSize.setText(item.getServingSize());
         caloriesTextView.setText(item.getCalories() + "kcal");
         carbsTextView.setText(item.getCarbs() + "g");
         proteinTextView.setText(item.getProtein() + "g");
@@ -738,10 +745,10 @@ public class MealPlanFragment extends Fragment {
         sodiumTextView.setText(item.getSodium() + "mg");
         ironTextView.setText(item.getIron() + "mg");
 
-        sugarTextView.setText(item.getSugar() + "g");
         waterTextView.setText(item.getWater() + "g");
 
         // Show the additional details in the BottomSheetDialog
+        foodServingSize.setVisibility(View.VISIBLE);
         caloriesTextView.setVisibility(View.VISIBLE);
         carbsTextView.setVisibility(View.VISIBLE);
         proteinTextView.setVisibility(View.VISIBLE);
@@ -757,9 +764,34 @@ public class MealPlanFragment extends Fragment {
         sodiumTextView.setVisibility(View.VISIBLE);
         ironTextView.setVisibility(View.VISIBLE);
 
-        sugarTextView.setVisibility(View.VISIBLE);
         waterTextView.setVisibility(View.VISIBLE);
 
         bottomSheetDialog.show();
+    }
+
+    public void refreshContent(){
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (interactionListener != null){
+                    loadUserData();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        },2000);
+    }
+
+    public interface FragmentInteractionListener {
+        void replaceOrPopFragment(Fragment fragment, boolean triggeredBySwipeRefresh);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentInteractionListener) {
+            interactionListener = (MealPlanFragment.FragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement FragmentInteractionListener");
+        }
     }
 }

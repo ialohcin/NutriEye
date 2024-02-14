@@ -462,30 +462,9 @@
             app:layout_constraintTop_toBottomOf="@+id/otherLabel">
 
             <TextView
-                android:id="@+id/sugarTotalSummary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0g"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_box_rounded"
-                android:backgroundTint="@color/purple_200"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="2dp"
-                android:text="Sugar"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/waterTotalSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:text="0mL"
                 android:textColor="@color/black" />
 

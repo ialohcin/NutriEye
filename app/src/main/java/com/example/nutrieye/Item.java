@@ -11,7 +11,6 @@ public class Item {
     private double carbs;
     private double fat;
     private double protein;
-    private double sugar;
     private double fiber;
     private double water;
     private double vitaminA;
@@ -27,7 +26,7 @@ public class Item {
     public Item() {
     }
 
-    public Item(String imageResource, String foodName, String category, String mealTime, String servingSize, double calories, double carbs, double fat, double protein, double sugar, double fiber, double water, double vitaminA, double vitaminB1, double vitaminB2, double vitaminC, double calcium, double sodium, double iron, boolean isDone, long itemCount) {
+    public Item(String imageResource, String foodName, String category, String mealTime, String servingSize, double calories, double carbs, double fat, double protein, double fiber, double water, double vitaminA, double vitaminB1, double vitaminB2, double vitaminC, double calcium, double sodium, double iron, boolean isDone, long itemCount) {
         this.imageResource = imageResource;
         this.foodName = foodName;
         this.category = category;
@@ -37,7 +36,6 @@ public class Item {
         this.carbs = carbs;
         this.fat = fat;
         this.protein = protein;
-        this.sugar = sugar;
         this.fiber = fiber;
         this.water = water;
         this.vitaminA = vitaminA;
@@ -121,14 +119,6 @@ public class Item {
 
     public void setProtein(double protein) {
         this.protein = protein;
-    }
-
-    public double getSugar() {
-        return sugar;
-    }
-
-    public void setSugar(double sugar) {
-        this.sugar = sugar;
     }
 
     public double getFiber() {

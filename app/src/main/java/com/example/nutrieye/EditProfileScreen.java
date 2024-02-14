@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -54,12 +55,14 @@ public class EditProfileScreen extends AppCompatActivity {
     ActivityEditProfileScreenBinding binding;
     private boolean[] foodAllergenCheckedItems;
     private boolean[] healthConditionCheckedItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityEditProfileScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -72,35 +75,65 @@ public class EditProfileScreen extends AppCompatActivity {
 
         binding.emailAddProfile.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
             @Override
-            public void afterTextChanged(Editable editable) { validateEmail(Objects.requireNonNull(binding.emailAddProfile.getText().toString().trim()));}
+            public void afterTextChanged(Editable editable) {
+                validateEmail(Objects.requireNonNull(binding.emailAddProfile.getText().toString().trim()));
+            }
         });
 
         binding.passwordProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validatePassword(Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validatePassword(Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim());
+            }
         });
 
         binding.confirmPassProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateConfirmPassword(Objects.requireNonNull(binding.confirmPassProfile.getText()).toString().trim(), Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateConfirmPassword(Objects.requireNonNull(binding.confirmPassProfile.getText()).toString().trim(), Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim());
+            }
         });
 
         binding.firstNameProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateFirstName(Objects.requireNonNull(binding.firstNameProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateFirstName(Objects.requireNonNull(binding.firstNameProfile.getText()).toString().trim());
+            }
         });
 
         binding.lastNameProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateLastName(Objects.requireNonNull(binding.lastNameProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateLastName(Objects.requireNonNull(binding.lastNameProfile.getText()).toString().trim());
+            }
         });
 
         binding.dobProfile.setFocusable(false);
@@ -138,9 +171,15 @@ public class EditProfileScreen extends AppCompatActivity {
         };
 
         binding.dobProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateDOB(Objects.requireNonNull(binding.dobProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateDOB(Objects.requireNonNull(binding.dobProfile.getText()).toString().trim());
+            }
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
@@ -156,21 +195,39 @@ public class EditProfileScreen extends AppCompatActivity {
         });
 
         binding.contactNumProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            public void afterTextChanged(Editable editable) { validateContactNumber(Objects.requireNonNull(binding.contactNumProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateContactNumber(Objects.requireNonNull(binding.contactNumProfile.getText()).toString().trim());
+            }
         });
 
         binding.heightProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
-            public void afterTextChanged(Editable editable) { validateHeight(Objects.requireNonNull(binding.heightProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateHeight(Objects.requireNonNull(binding.heightProfile.getText()).toString().trim());
+            }
         });
 
         binding.weightProfile.addTextChangedListener(new TextWatcher() {
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {}
-            public void afterTextChanged(Editable editable) { validateWeight(Objects.requireNonNull(binding.weightProfile.getText()).toString().trim()); }
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            public void afterTextChanged(Editable editable) {
+                validateWeight(Objects.requireNonNull(binding.weightProfile.getText()).toString().trim());
+            }
         });
 
         // Define arrays for main options and descriptors
@@ -206,7 +263,7 @@ public class EditProfileScreen extends AppCompatActivity {
 
         binding.foodAllergensProfile.setOnClickListener(view -> {
             hideKeyboard();
-            showMultiChoiceDialog(  "Select Food Allergens", foodAllergenCheckedItems);
+            showMultiChoiceDialog("Select Food Allergens", foodAllergenCheckedItems);
         });
         binding.profileFoodAllergensTextInput.setEndIconOnClickListener(view -> {
             hideKeyboard();
@@ -228,224 +285,300 @@ public class EditProfileScreen extends AppCompatActivity {
                 currentFocus.clearFocus();
             }
 
-            String emailStr = Objects.requireNonNull(binding.emailAddProfile.getText()).toString().trim();
-            String passwordStr = Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim();
-            String confirmPasswordStr = Objects.requireNonNull(binding.confirmPassProfile.getText()).toString().trim();
-            String firstNameStr = Objects.requireNonNull(binding.firstNameProfile.getText()).toString().trim();
-            String lastNameStr = Objects.requireNonNull(binding.lastNameProfile.getText()).toString().trim();
-            String dobStr = Objects.requireNonNull(binding.dobProfile.getText()).toString().trim();
-            String selectedSex = binding.selectSexProfile.getText().toString().trim();
-            String prefix = binding.profileContactNumTextInput.getPrefixText().toString().trim();
-            String contactNumberStr = Objects.requireNonNull(binding.contactNumProfile.getText()).toString().trim();
-            String selectedPhysicalActivityLevel = binding.phyActivityLvlProfile.getText().toString().trim();
-            String healthConditionStr = binding.healthConditionsProfile.getText().toString().trim();
-            String foodAllergensStr = binding.foodAllergensProfile.getText().toString().trim();
-            String heightStr = Objects.requireNonNull(binding.heightProfile.getText()).toString().trim();
-            String weightStr = Objects.requireNonNull(binding.weightProfile.getText()).toString().trim();
+            try {
+                String emailStr = Objects.requireNonNull(binding.emailAddProfile.getText()).toString().trim();
+                String passwordStr = Objects.requireNonNull(binding.passwordProfile.getText()).toString().trim();
+                String confirmPasswordStr = Objects.requireNonNull(binding.confirmPassProfile.getText()).toString().trim();
+                String firstNameStr = Objects.requireNonNull(binding.firstNameProfile.getText()).toString().trim();
+                String lastNameStr = Objects.requireNonNull(binding.lastNameProfile.getText()).toString().trim();
+                String dobStr = Objects.requireNonNull(binding.dobProfile.getText()).toString().trim();
+                String selectedSex = binding.selectSexProfile.getText().toString().trim();
+                String prefix = binding.profileContactNumTextInput.getPrefixText().toString().trim();
+                String contactNumberStr = Objects.requireNonNull(binding.contactNumProfile.getText()).toString().trim();
+                String selectedPhysicalActivityLevel = binding.phyActivityLvlProfile.getText().toString().trim();
+                String healthConditionStr = binding.healthConditionsProfile.getText().toString().trim();
+                String foodAllergensStr = binding.foodAllergensProfile.getText().toString().trim();
+                String heightStr = Objects.requireNonNull(binding.heightProfile.getText()).toString().trim();
+                String weightStr = Objects.requireNonNull(binding.weightProfile.getText()).toString().trim();
 
-            // Set default values if the strings are empty
-            if (healthConditionStr.isEmpty()) {
-                healthConditionStr = "N/A"; // Setting default value for health conditions
-            }
+                // Set default values if the strings are empty
+                if (healthConditionStr.isEmpty()) {
+                    healthConditionStr = ""; // Setting default value for health conditions
+                }
 
-            if (foodAllergensStr.isEmpty()) {
-                foodAllergensStr = "N/A"; // Setting default value for food allergens
-            }
+                if (foodAllergensStr.isEmpty()) {
+                    foodAllergensStr = ""; // Setting default value for food allergens
+                }
 
-            boolean hasError = false;
+                boolean hasError = false;
 
-            if (!validateEmail(emailStr)) hasError = true;
-            if (!validatePassword(passwordStr)) hasError = true;
-            if (!validateConfirmPassword(confirmPasswordStr, passwordStr)) hasError = true;
-            if (!validateFirstName(firstNameStr)) hasError = true;
-            if (!validateLastName(lastNameStr)) hasError = true;
-            if (!validateDOB(dobStr)) hasError = true;
-            if (!validateSex(selectedSex)) hasError = true;
-            if (!validateContactNumber(contactNumberStr)) hasError = true;
-            if (!validatePhysicalActivityLevel(selectedPhysicalActivityLevel)) hasError = true;
-            if (!validateHeight(heightStr)) hasError = true;
-            if (!validateWeight(weightStr)) hasError = true;
+                if (!validateEmail(emailStr)) hasError = true;
+                if (!validatePassword(passwordStr)) hasError = true;
+                if (!validateConfirmPassword(confirmPasswordStr, passwordStr)) hasError = true;
+                if (!validateFirstName(firstNameStr)) hasError = true;
+                if (!validateLastName(lastNameStr)) hasError = true;
+                if (!validateDOB(dobStr)) hasError = true;
+                if (!validateSex(selectedSex)) hasError = true;
+                if (!validateContactNumber(contactNumberStr)) hasError = true;
+                if (!validatePhysicalActivityLevel(selectedPhysicalActivityLevel)) hasError = true;
+                if (!validateHeight(heightStr)) hasError = true;
+                if (!validateWeight(weightStr)) hasError = true;
 
-            if (hasError) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditProfileScreen.this);
-                alertDialog.setTitle("Validation Error");
-                alertDialog.setMessage("Please check the form for errors and complete all fields.");
-                alertDialog.setPositiveButton("OK", (dialogInterface, option) -> dialogInterface.dismiss());
-                alertDialog.show();
-            } else {
-                // Convert to Double only if not empty
-                Double height = Double.valueOf(heightStr);
-                Double weight = Double.valueOf(weightStr);
-                String finalFoodAllergensStr = foodAllergensStr;
-                String finalHealthConditionStr = healthConditionStr;
-                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null){
-                    // Firebase integration for user details in Realtime Database
-                    FirebaseDatabase db = FirebaseDatabase.getInstance();
-                    DatabaseReference reference = db.getReference("Users").child(user.getUid()).child("Profile");
+                if (hasError) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(EditProfileScreen.this);
+                    alertDialog.setTitle("Validation Error");
+                    alertDialog.setMessage("Please check the form for errors and complete all fields.");
+                    alertDialog.setPositiveButton("OK", (dialogInterface, option) -> dialogInterface.dismiss());
+                    alertDialog.show();
+                } else {
+                    // Convert to Double only if not empty
+                    Double height = Double.valueOf(heightStr);
+                    Double weight = Double.valueOf(weightStr);
+                    String finalFoodAllergensStr = foodAllergensStr;
+                    String finalHealthConditionStr = healthConditionStr;
+                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        // Firebase integration for user details in Realtime Database
+                        FirebaseDatabase db = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = db.getReference("Users").child(user.getUid()).child("Profile");
 
-                    // Only modify the fields that are allowed to be updated
-                    HashMap<String, Object> updatedUserData = new HashMap<>();
-                    updatedUserData.put("firstName", firstNameStr);
-                    updatedUserData.put("lastName", lastNameStr);
-                    updatedUserData.put("password", passwordStr);
-                    updatedUserData.put("contactNum", prefix + contactNumberStr);
-                    updatedUserData.put("confirmPass", confirmPasswordStr);
-                    updatedUserData.put("foodAllergens", finalFoodAllergensStr);
-                    updatedUserData.put("healthConditions", finalHealthConditionStr);
-                    updatedUserData.put("height", height);
-                    updatedUserData.put("weight", weight);
-                    updatedUserData.put("phyActivity", selectedPhysicalActivityLevel);
+                        // Only modify the fields that are allowed to be updated
+                        HashMap<String, Object> updatedUserData = new HashMap<>();
+                        updatedUserData.put("firstName", firstNameStr);
+                        updatedUserData.put("lastName", lastNameStr);
+                        updatedUserData.put("password", passwordStr);
+                        updatedUserData.put("contactNum", prefix + contactNumberStr);
+                        updatedUserData.put("confirmPass", confirmPasswordStr);
+                        updatedUserData.put("foodAllergens", finalFoodAllergensStr);
+                        updatedUserData.put("healthConditions", finalHealthConditionStr);
+                        updatedUserData.put("height", calculateWeightHeightValue(height));
+                        updatedUserData.put("weight", calculateWeightHeightValue(weight));
+                        updatedUserData.put("phyActivity", selectedPhysicalActivityLevel);
 
-                    // If password is changed, update it
-                    if (passwordStr.equals(confirmPasswordStr)) {
-                        updateFirebaseAuthenticationPassword(passwordStr, user.getUid());
-                    }
+                        // If password is changed, update it
+                        if (passwordStr.equals(confirmPasswordStr)) {
+                            updateFirebaseAuthenticationPassword(passwordStr, user.getUid());
+                        }
 
-                    reference.updateChildren(updatedUserData).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                               handleProfileUpdateSuccess();
-                            } else {
-                                if (task.getException() != null) {
-                                    Toast.makeText(EditProfileScreen.this, "Profile Update Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        reference.updateChildren(updatedUserData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    handleProfileUpdateSuccess();
                                 } else {
-                                    Toast.makeText(EditProfileScreen.this, "Profile Update Failed. Please verify your changes.", Toast.LENGTH_SHORT).show();
+                                    if (task.getException() != null) {
+                                        throw new RuntimeException("Error updating profile: " + task.getException().getMessage(), task.getException());
+                                    } else {
+                                        throw new RuntimeException("Unknown error occurred while updating profile.");
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
+            } catch (Exception e) {
+                // Handle any exception that occurs during profile update
+                e.printStackTrace();
+                Toast.makeText(EditProfileScreen.this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-       loadUserData();
+        loadUserData();
 
     }
 
     private void loadUserData() {
-        SharedPreferences preferences = EditProfileScreen.this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        userUID = preferences.getString(USER_UID_KEY, null);
-        if (userUID != null) {
-            fetchUserDataFromFirebase();
-        } else {
-            // Handle case where userUID is not available
+        try {
+            SharedPreferences preferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            userUID = preferences.getString(USER_UID_KEY, null);
+            if (userUID != null) {
+                fetchUserDataFromFirebase();
+            } else {
+                // Handle case where userUID is not available
+                Toast.makeText(EditProfileScreen.this, "User data not found", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            // Handle any exception that occurs during data loading
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error loading user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
+
     private void updateFirebaseAuthenticationPassword(String newPassword, String userUID) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        try {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Authentication password update successful, now update Realtime Database
+                            updateFirebaseRealtimeDatabasePassword(userUID, newPassword);
 
-        if (user != null) {
-            user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        // Authentication password update successful, now update Realtime Database
-                        updateFirebaseRealtimeDatabasePassword(userUID, newPassword);
+                            // Clear Remember Me
+                            clearUserUIDfromSharedPreferences();
 
-                        // Clear Remember Me
-                        clearUserUIDfromSharedPreferences();
-
-                    } else {
-                        // Handle failure
-                        Toast.makeText(EditProfileScreen.this, "Failed to update password in Authentication", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Handle failure
+                            Toast.makeText(EditProfileScreen.this, "Failed to update password in Authentication", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
+            }
+        } catch (Exception e) {
+            // Handle any exception that occurs during password update
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error updating authentication password: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void updateFirebaseRealtimeDatabasePassword(String userUID, String newPassword) {
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userUID).child("Profile");
-        userRef.child("password").setValue(newPassword);
-        userRef.child("confirmPass").setValue(newPassword);
+        try {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(userUID).child("Profile");
+            userRef.child("password").setValue(newPassword);
+            userRef.child("confirmPass").setValue(newPassword);
+        } catch (Exception e) {
+            // Handle any exception that occurs during database update
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error updating password in Realtime Database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void fetchUserDataFromFirebase() {
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(userUID).child("Profile");
+        try {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
+                    .child("Users").child(userUID).child("Profile");
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    String firstName = snapshot.child("firstName").getValue(String.class);
-                    String lastName = snapshot.child("lastName").getValue(String.class);
-                    String sex = snapshot.child("sex").getValue(String.class);
-                    String email = snapshot.child("email").getValue(String.class);
-                    String password = snapshot.child("password").getValue(String.class);
-                    String confirmPassword = snapshot.child("confirmPass").getValue(String.class);
-                    String dob = snapshot.child("dob").getValue(String.class);
-                    String contactNumber = snapshot.child("contactNum").getValue(String.class);
-                    Double weight = snapshot.child("weight").getValue(Double.class);
-                    Double height = snapshot.child("height").getValue(Double.class);
-                    String foodAllergens = snapshot.child("foodAllergens").getValue(String.class);
-                    String healthConditions = snapshot.child("healthConditions").getValue(String.class);
-                    String phyActivity = snapshot.child("phyActivity").getValue(String.class);
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String firstName = snapshot.child("firstName").getValue(String.class);
+                        String lastName = snapshot.child("lastName").getValue(String.class);
+                        String sex = snapshot.child("sex").getValue(String.class);
+                        String email = snapshot.child("email").getValue(String.class);
+                        String password = snapshot.child("password").getValue(String.class);
+                        String confirmPassword = snapshot.child("confirmPass").getValue(String.class);
+                        String dob = snapshot.child("dob").getValue(String.class);
+                        String contactNumber = snapshot.child("contactNum").getValue(String.class);
+                        Double weight = snapshot.child("weight").getValue(Double.class);
+                        Double height = snapshot.child("height").getValue(Double.class);
+                        String foodAllergens = snapshot.child("foodAllergens").getValue(String.class);
+                        String healthConditions = snapshot.child("healthConditions").getValue(String.class);
+                        String phyActivity = snapshot.child("phyActivity").getValue(String.class);
 
-                    binding.emailAddProfile.setText(email);
-                    binding.passwordProfile.setText(password);
-                    binding.confirmPassProfile.setText(confirmPassword);
-
-                    binding.firstNameProfile.setText(firstName);
-                    binding.lastNameProfile.setText(lastName);
-                    binding.dobProfile.setText(dob);
-                    binding.selectSexProfile.setText(sex);
-                    if (contactNumber != null && contactNumber.startsWith("+63")) {
-                        contactNumber = contactNumber.substring(3); // Remove "+63"
+                        // Update UI with fetched data
+                        updateUIWithData(firstName, lastName, sex, email, password, confirmPassword, dob,
+                                contactNumber, weight, height, foodAllergens, healthConditions, phyActivity);
                     }
-                    binding.contactNumProfile.setText(contactNumber);
-                    binding.weightProfile.setText(String.valueOf(weight));
-                    binding.heightProfile.setText(String.valueOf(height));
-
-
-                    binding.phyActivityLvlProfile.setText(phyActivity);
-                    // Your array resource for activity levels in strings.xml
-                    String[] allActivityLevels = getResources().getStringArray(R.array.physical_activity_levels);
-
-                    // Determine the valid options based on the fetched phyActivity
-                    List<String> validOptions;
-                    if (phyActivity != null && phyActivity.equals("Very Active")) {
-                        validOptions = Arrays.asList("Very Active");
-                    } else if (phyActivity != null && phyActivity.equals("Moderately Active")) {
-                        validOptions = Arrays.asList("Very Active", "Moderately Active");
-                    } else if (phyActivity != null && phyActivity.equals("Lightly Active")) {
-                        validOptions = Arrays.asList("Very Active", "Moderately Active", "Lightly Active");
-                    } else {
-                        validOptions = Arrays.asList(allActivityLevels); // Show all options if phyActivity is null or unexpected
-                    }
-
-                    ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(EditProfileScreen.this, android.R.layout.simple_dropdown_item_1line, validOptions);
-                    binding.phyActivityLvlProfile.setAdapter(phyAdapter);
-
-                    binding.foodAllergensProfile.setText(foodAllergens);
-                    binding.healthConditionsProfile.setText(healthConditions);
-
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle database cancellation error
+                    Toast.makeText(EditProfileScreen.this, "Database operation cancelled", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            // Handle any exceptions
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error fetching user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
-            }
+    private void updateUIWithData(String firstName, String lastName, String sex, String email, String password,
+                                  String confirmPassword, String dob, String contactNumber, Double weight, Double height,
+                                  String foodAllergens, String healthConditions, String phyActivity) {
+        // Update UI with fetched data
+        binding.emailAddProfile.setText(email);
+        binding.passwordProfile.setText(password);
+        binding.confirmPassProfile.setText(confirmPassword);
+
+        binding.firstNameProfile.setText(firstName);
+        binding.lastNameProfile.setText(lastName);
+        binding.dobProfile.setText(dob);
+        binding.selectSexProfile.setText(sex);
+        if (contactNumber != null && contactNumber.startsWith("+63")) {
+            contactNumber = contactNumber.substring(3); // Remove "+63"
+        }
+        binding.contactNumProfile.setText(contactNumber);
+        binding.weightProfile.setText(String.valueOf(weight));
+        binding.heightProfile.setText(String.valueOf(height));
+
+        binding.phyActivityLvlProfile.setText(phyActivity);
+        // Define arrays for main options and descriptors
+        String[] mainOptions = new String[]{"Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary"};
+
+        // Set the helper text for the initial value
+        setHelperTextForPhyActivity(phyActivity);
+
+        ArrayAdapter<String> phyAdapter = new ArrayAdapter<>(EditProfileScreen.this, android.R.layout.simple_spinner_dropdown_item, mainOptions);
+
+        binding.phyActivityLvlProfile.setAdapter(phyAdapter);
+
+        binding.phyActivityLvlProfile.setOnClickListener(view -> hideKeyboard());
+
+        binding.phyActivityLvlProfile.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedOption = mainOptions[position]; // The main option
+
+            // Set the helper text for the selected option
+            setHelperTextForPhyActivity(selectedOption);
+
+            // Validate the selected option
+            validatePhysicalActivityLevel(selectedOption);
         });
+
+        binding.foodAllergensProfile.setText(foodAllergens);
+        binding.healthConditionsProfile.setText(healthConditions);
+    }
+
+    private void setHelperTextForPhyActivity(String selectedOption) {
+        // Define arrays for main options and descriptors
+        String[] mainOptions = new String[]{"Athlete", "Very Active", "Active", "Low Active", "Inactive", "Sedentary"};
+        String[] descriptors = new String[]{"Professional athlete", "Exercise 6-7 times a week", "Exercise 3-5 times a week", "Exercise 2-3 times a week", "Exercise 1-2 times a week", "Little to no exercise"};
+
+        // Find the position of the selected option
+        int position = Arrays.asList(mainOptions).indexOf(selectedOption);
+
+        // Set the descriptor text
+        if (position >= 0 && position < descriptors.length) {
+            String descriptor = descriptors[position];
+            // Set helper text to the descriptor regardless of the error state
+            binding.profilePhyActivityTextInput.setHelperTextEnabled(true);
+            binding.profilePhyActivityTextInput.setHelperText(descriptor);
+
+            // Get the green color from colors.xml
+            int greenColor = ContextCompat.getColor(EditProfileScreen.this, R.color.green);
+
+            // Set helper text color to green
+            binding.profilePhyActivityTextInput.setHelperTextColor(ColorStateList.valueOf(greenColor));
+        }
     }
 
     private void clearUserUIDfromSharedPreferences() {
-        // Clear userUID from SharedPreferences
-        SharedPreferences preferences = EditProfileScreen.this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(USER_UID_KEY); // USER_UID_KEY is the key used to store userUID
-        editor.apply();
+        try {
+            // Clear userUID from SharedPreferences
+            SharedPreferences preferences = EditProfileScreen.this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+//            editor.remove(USER_UID_KEY); // USER_UID_KEY is the key used to store userUID
+//            editor.apply();
 
-        // Clear "Remember Me" preferences
-        editor.remove("isUserRemembered");
-        editor.remove("savedEmail");
-        editor.remove("savedPassword");
-        editor.apply();
+            // Clear "Remember Me" preferences
+            editor.remove("isUserRemembered");
+            editor.remove("savedEmail");
+            editor.remove("savedPassword");
+            editor.apply();
+        } catch (Exception e) {
+            // Handle any exceptions
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error clearing SharedPreferences: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private double calculateWeightHeightValue(double value) {
+        // Rounds to one decimal place
+        return Math.round(value * 10.0) / 10.0;
     }
 
     @Override
@@ -461,29 +594,35 @@ public class EditProfileScreen extends AppCompatActivity {
 
 
     private void handleProfileUpdateSuccess() {
-        Toast.makeText(EditProfileScreen.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(EditProfileScreen.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
 
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
-        String currentDate = dateFormat.format(calendar.getTime());
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
+            String currentDate = dateFormat.format(calendar.getTime());
 
-        // Create ActivityLogs structure
-        DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-        DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
+            // Create ActivityLogs structure
+            DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
+            DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
-        // Get current time
-        String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+            // Get current time
+            String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
 
-        // Generate a unique ID for the log entry
-        String logID = "LogID_" + System.currentTimeMillis();
+            // Generate a unique ID for the log entry
+            String logID = "LogID_" + System.currentTimeMillis();
 
-        // Create the log entry structure for the activity logs
-        DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
-        logEntryRef.child("action").setValue("Updated Profile Details");
-        logEntryRef.child("category").setValue("Profile");
-        logEntryRef.child("timestamp").setValue(currentTime);
+            // Create the log entry structure for the activity logs
+            DatabaseReference logEntryRef = activityLogsRef.child(currentDate).child(logID);
+            logEntryRef.child("action").setValue("Updated Profile Details");
+            logEntryRef.child("category").setValue("Profile");
+            logEntryRef.child("timestamp").setValue(currentDate + "\n" + currentTime);
 
-        navigateToProfileFragment();
+            navigateToProfileFragment();
+        } catch (Exception e) {
+            // Handle any exceptions
+            e.printStackTrace();
+            Toast.makeText(EditProfileScreen.this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint("MissingSuperCall")
@@ -512,10 +651,9 @@ public class EditProfileScreen extends AppCompatActivity {
         alertDialogBuilder.show();
     }
 
-
     private void navigateToProfileFragment() {
         Intent intent = new Intent(EditProfileScreen.this, NavigationScreen.class);
-        intent.putExtra("activeFragment","ProfileFragment");
+        intent.putExtra("activeFragment", "ProfileFragment");
         startActivity(intent);
         finish(); // Finish the EditProfileScreen activity
     }
@@ -533,7 +671,7 @@ public class EditProfileScreen extends AppCompatActivity {
             if (binding.selectSexProfile.getText().toString().trim().equals("Male")) {
                 items = new String[]{"Kidney Disease", "Diabetes", "Hypertension", "Heart Disease"};
             } else {
-                items = new String[]{"Pregnancy", "Diabetes", "Hypertension", "Heart Disease"};
+                items = new String[]{"Pregnancy", "Lactating", "Kidney Disease", "Diabetes", "Hypertension", "Heart Disease"};
             }
         } else {
             items = new String[0];

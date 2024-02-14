@@ -20,7 +20,8 @@
                 android:id="@+id/foodPreview"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -119,7 +120,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:backgroundTint="@color/light_orange"
-                    android:text="EDIT MEAL BUTTON"
+                    android:text="EDIT MEAL"
                     app:cornerRadius="32dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -130,7 +131,7 @@
                     android:layout_toRightOf="@id/editMealPlanButton"
                     android:layout_alignParentBottom="true"
                     android:backgroundTint="@color/green"
-                    android:text="ADD TO MEAL PLAN"
+                    android:text="ADD MEAL"
                     app:cornerRadius="32dp" />
 
             </LinearLayout>

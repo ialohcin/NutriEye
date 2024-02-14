@@ -250,31 +250,6 @@
                         app:layout_constraintEnd_toEndOf="@+id/standardVitB1" />
 
                     <TextView
-                        android:id="@+id/sugarLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Sugar: "
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        app:layout_constraintEnd_toEndOf="@+id/proteinLabel"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/proteinLabel" />
-
-                    <TextView
-                        android:id="@+id/standardSugar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="0g"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/sugarLabel"
-                        app:layout_constraintEnd_toEndOf="@+id/standardProtein"
-                        app:layout_constraintTop_toBottomOf="@+id/standardProtein" />
-
-                    <TextView
                         android:id="@+id/fiberLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -284,7 +259,7 @@
                         android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="@+id/proteinLabel"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sugarLabel" />
+                        app:layout_constraintTop_toBottomOf="@+id/proteinLabel" />
 
                     <TextView
                         android:id="@+id/standardFiber"
@@ -296,8 +271,8 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/fiberLabel"
-                        app:layout_constraintEnd_toEndOf="@+id/standardSugar"
-                        app:layout_constraintTop_toBottomOf="@+id/standardSugar" />
+                        app:layout_constraintEnd_toEndOf="@+id/standardProtein"
+                        app:layout_constraintTop_toBottomOf="@+id/standardProtein" />
 
 
                     <TextView
@@ -310,7 +285,7 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/standardSugar"
+                        app:layout_constraintStart_toEndOf="@+id/standardFiber"
                         app:layout_constraintTop_toBottomOf="@+id/vitaminB2_label" />
 
                     <TextView

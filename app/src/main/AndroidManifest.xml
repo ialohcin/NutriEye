@@ -31,6 +31,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NutriEye"
+        android:screenOrientation="portrait"
         tools:targetApi="31">
         <activity
             android:name=".RecentLogsScreen"
@@ -65,7 +66,6 @@
             android:exported="true"
             android:theme="@style/Theme.NutriEye.NoActionBar"
             android:windowSoftInputMode="adjustPan">
-
         </activity>
         <activity
             android:name=".SplashScreen"
@@ -79,12 +79,12 @@
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
+            android:authorities="com.example.nutrieye.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
 
     </application>

@@ -1,15 +1,17 @@
 package com.example.nutrieye;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.nutrieye.databinding.ActivityNavigationScreenBinding;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,15 +28,20 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class NavigationScreen extends AppCompatActivity {
+public class NavigationScreen extends AppCompatActivity implements HomeFragment.FragmentInteractionListener,
+        ProfileFragment.FragmentInteractionListener, MealPlanFragment.FragmentInteractionListener,
+        ResourcesFragment.FragmentInteractionListener {
     private String userUID;
-    ActivityNavigationScreenBinding binding;
+    static ActivityNavigationScreenBinding binding;
     public static final String USER_UID_KEY = "userUID";
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNavigationScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Check for the activeFragment extra and set it if present
         String activeFragment = getIntent().getStringExtra("activeFragment");
@@ -44,8 +52,7 @@ public class NavigationScreen extends AppCompatActivity {
 
         if (userUID == null) {
             // If userUID is not available in SharedPreferences, set a default value or handle it as needed
-            //userUID = getIntent().getStringExtra("USER_UID");
-            userUID = "6IAG8FBcGIRL4xg89X5DmsSVE0H2";
+            userUID = getIntent().getStringExtra("USER_UID");
             preferences.edit().putString(USER_UID_KEY, userUID).apply(); // Store the default userUID
         }
 
@@ -54,6 +61,7 @@ public class NavigationScreen extends AppCompatActivity {
                 case "ProfileFragment":
                     setBottomNavigationItemChecked(R.id.profile);
                     replaceOrPopFragment(new ProfileFragment(), false);
+
                     break;
                 case "MealPlanFragment":
                     setBottomNavigationItemChecked(R.id.mealplan);
@@ -72,6 +80,10 @@ public class NavigationScreen extends AppCompatActivity {
         } else {
             setBottomNavigationItemChecked(R.id.home);
             replaceOrPopFragment(new HomeFragment(), false);
+        }
+
+        if (savedInstanceState != null) {
+            return;
         }
 
         binding.bottomNavigationView.setBackground(null);
@@ -103,94 +115,98 @@ public class NavigationScreen extends AppCompatActivity {
             Intent intent = new Intent(NavigationScreen.this, CameraScreen.class);
             startActivity(intent);
         });
-
-//        new Handler(this.getMainLooper()).postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.home);
-//                badgeDrawable.setVisible(true);
-//                badgeDrawable.setVerticalOffset(dpToPx(NavigationScreen.this, 3));
-//                badgeDrawable.setBadgeTextColor(getResources().getColor(R.color.red));
-//
-//            }
-//        }, 1000);
     }
 
-    public static int dpToPx(Context context, int dp){
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save any relevant data or state into the outState bundle
+        outState.putString("userUID", userUID);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore any relevant data or state from the savedInstanceState bundle
+        userUID = savedInstanceState.getString("userUID");
+    }
+
+    public static int dpToPx(Context context, int dp) {
         Resources resources = context.getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
     }
 
-//    public void replaceOrPopFragment(Fragment frag) {
-//        FragmentManager fragManager = getSupportFragmentManager();
-//        Fragment existingFragment = fragManager.findFragmentById(R.id.frame_layout);
-//
-//        if (existingFragment != null && existingFragment.getClass().equals(frag.getClass())) {
-//            // Fragment already exists, no need to replace
-//            return;
-//        }
-//
-//        FragmentTransaction fragTransaction = fragManager.beginTransaction();
-//
-//        if (existingFragment != null) {
-//            // Hide the existing fragment instead of replacing it
-//            fragTransaction.hide(existingFragment);
-//        }
-//
-//        boolean fragmentPopped = fragManager.popBackStackImmediate(frag.getClass().getName(), 0);
-//
-//        if (!fragmentPopped) {
-//            // Add the new fragment to the container
-//            fragTransaction.add(R.id.frame_layout, frag, frag.getClass().getName());
-//        } else {
-//            // Show the fragment if it's already in the back stack
-//            fragTransaction.show(frag);
-//        }
-//
-//        fragTransaction.addToBackStack(frag.getClass().getName());
-//        fragTransaction.commit();
-//    }
+    public void updateBadgeVisibility(boolean isVisible, String fragmentTag) {
+        int menuItemId = 0; // Default value, change based on fragment
+        switch (fragmentTag) {
+            case "HomeFragment":
+                menuItemId = R.id.home;
+                break;
+            case "MealPlanFragment":
+                menuItemId = R.id.mealplan;
+                break;
+            case "ResourcesFragment":
+                menuItemId = R.id.resources;
+                break;
+            case "ProfileFragment":
+                menuItemId = R.id.profile;
+                break;
+        }
+
+        BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(menuItemId);
+        badgeDrawable.setVisible(isVisible);
+        badgeDrawable.setVerticalOffset(dpToPx(this, 3));
+        badgeDrawable.setBadgeTextColor(getResources().getColor(R.color.red));
+    }
 
     public void replaceOrPopFragment(Fragment frag, boolean triggeredBySwipeRefresh) {
         FragmentManager fragManager = getSupportFragmentManager();
-        Fragment existingFragment = fragManager.findFragmentById(R.id.frame_layout);
-
-        if (existingFragment != null && existingFragment.getClass().equals(frag.getClass())) {
-            // Fragment already exists
-            if (triggeredBySwipeRefresh) {
-                /// If the refresh is triggered by swipe, call the refreshContent method
-                if (existingFragment instanceof HomeFragment) {
-                    ((HomeFragment) existingFragment).refreshContent();
-                } else if(existingFragment instanceof MealPlanFragment) {
-                    ((MealPlanFragment) existingFragment).refreshContent();
-                }else if(existingFragment instanceof ResourcesFragment) {
-                    ((ResourcesFragment) existingFragment).refreshContent();
-                }else if(existingFragment instanceof ProfileFragment) {
-                    ((ProfileFragment) existingFragment).refreshContent();
-                }
-            }
-            return;
-        }
-
         FragmentTransaction fragTransaction = fragManager.beginTransaction();
 
-        if (existingFragment != null) {
-            // Hide the existing fragment instead of replacing it
-            fragTransaction.hide(existingFragment);
-        }
-
-        boolean fragmentPopped = fragManager.popBackStackImmediate(frag.getClass().getName(), 0);
-
-        if (!fragmentPopped) {
-            // Add the new fragment to the container
-            fragTransaction.add(R.id.frame_layout, frag, frag.getClass().getName());
+        if (triggeredBySwipeRefresh) {
+            // Refresh the content of the current fragment without popping the back stack
+            refreshFragmentContent(frag);
         } else {
-            // Show the fragment if it's already in the back stack
-            fragTransaction.show(frag);
-        }
+            // Check if the fragment already exists in the FragmentManager
+            Fragment existingFragment = fragManager.findFragmentByTag(frag.getClass().getName());
 
-        fragTransaction.addToBackStack(frag.getClass().getName());
-        fragTransaction.commit();
+            if (existingFragment == null) {
+                // Fragment is not in the FragmentManager, add it
+                fragTransaction.add(R.id.frame_layout, frag, frag.getClass().getName());
+            } else {
+                // Fragment already exists, show it
+                fragTransaction.show(existingFragment);
+            }
+
+            // Hide all other fragments
+            for (Fragment fragment : fragManager.getFragments()) {
+                if (fragment != existingFragment) {
+                    fragTransaction.hide(fragment);
+                }
+            }
+
+            // Add transaction to back stack if it's a new fragment
+            if (existingFragment == null) {
+                fragTransaction.addToBackStack(frag.getClass().getName());
+            }
+
+            fragTransaction.commit();
+
+            // Update bottom navigation item based on the current fragment
+            updateBottomNavigationItem();
+        }
+    }
+
+    public void refreshFragmentContent(Fragment frag) {
+        if (frag instanceof HomeFragment) {
+            ((HomeFragment) frag).refreshContent();
+        } else if (frag instanceof MealPlanFragment) {
+            ((MealPlanFragment) frag).refreshContent();
+        } else if (frag instanceof ResourcesFragment) {
+            ((ResourcesFragment) frag).refreshContent();
+        } else if (frag instanceof ProfileFragment) {
+            ((ProfileFragment) frag).refreshContent();
+        }
     }
 
     private void updateBottomNavigationItem() {
@@ -215,82 +231,119 @@ public class NavigationScreen extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        preferences.edit().remove(USER_UID_KEY).apply(); // Clear the userUID from SharedPreferences
+        try {
+            super.onDestroy();
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            preferences.edit().remove(USER_UID_KEY).apply(); // Clear the userUID from SharedPreferences
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error onDestroy operation: ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            int backStackEntryCount = fragmentManager.getBackStackEntryCount();
 
-        if (backStackEntryCount > 1) {
-            // If there are fragments in the backstack (more than one), pop the top fragment
-            fragmentManager.popBackStack();
-            updateBottomNavigationItem();
-        } else if (backStackEntryCount == 1) {
-            // If there is only one fragment left in the backstack, display the exit app dialog
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Exit App");
-            alertDialog.setMessage("Are you sure you want to exit the app?");
-            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int option) {
-                    // Log the activity here if needed
-                    logExitAppActivity();
+            if (backStackEntryCount > 1) {
+                // If there are fragments in the backstack (more than one), pop the top fragment
+                fragmentManager.popBackStack();
 
-                    // Clear userUID from SharedPreferences if needed
-                    clearUserUIDfromSharedPreferences();
+                // Get the topmost fragment from the back stack
+                FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(backStackEntryCount - 2);
+                String topFragmentTag = backStackEntry.getName();
+                Fragment topFragment = fragmentManager.findFragmentByTag(topFragmentTag);
 
-                    // Close the app
-                    finishAffinity();
+                // Show the topmost fragment and hide all others
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                for (Fragment fragment : fragmentManager.getFragments()) {
+                    if (fragment == topFragment) {
+                        transaction.show(fragment);
+                    } else {
+                        transaction.hide(fragment);
+                    }
                 }
-            });
-            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int option) {
-                    dialogInterface.dismiss();
-                }
-            });
-            alertDialog.show();
+                transaction.commit();
+
+                // Update bottom navigation item based on the current fragment
+                updateBottomNavigationItem();
+            } else if (backStackEntryCount == 1) {
+                // If there is only one fragment left in the backstack, display the exit app dialog
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                alertDialog.setTitle("Exit App");
+                alertDialog.setMessage("Are you sure you want to exit the app?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int option) {
+                        // Log the activity here if needed
+                        logExitAppActivity();
+
+                        // Clear userUID from SharedPreferences if needed
+                        clearUserUIDfromSharedPreferences();
+
+                        // Close the app
+                        finishAffinity();
+                    }
+                });
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int option) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error onBackStack operation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
         }
     }
 
-
     private void logExitAppActivity() {
-        // Create ActivityLogs structure
-        DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
-        DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
+        try {
+            // Create ActivityLogs structure
+            DatabaseReference userRootRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userUID);
+            DatabaseReference activityLogsRef = userRootRef.child("ActivityLogs");
 
-        // Get current time
-        String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
-        String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
+            // Get current time
+            String currentTime = new SimpleDateFormat("hh:mm:ss a", Locale.US).format(Calendar.getInstance().getTime());
+            String currentDay = new SimpleDateFormat("MMM dd yyyy", Locale.US).format(Calendar.getInstance().getTime());
 
-        // Generate a unique ID for the log entry
-        String logID = "LogID_" + System.currentTimeMillis();
+            // Generate a unique ID for the log entry
+            String logID = "LogID_" + System.currentTimeMillis();
 
-        // Create the log entry structure
-        DatabaseReference logEntryRef = activityLogsRef.child(currentDay).child(logID);
+            // Create the log entry structure
+            DatabaseReference logEntryRef = activityLogsRef.child(currentDay).child(logID);
 
-        // Modify the description to indicate exiting the app
-        logEntryRef.child("action").setValue("Exited App");
-        logEntryRef.child("category").setValue("Application");
-        logEntryRef.child("timestamp").setValue(currentTime);
+            // Modify the description to indicate exiting the app
+            logEntryRef.child("action").setValue("Exited App");
+            logEntryRef.child("category").setValue("Application");
+            logEntryRef.child("timestamp").setValue(currentTime);
+        } catch (Exception e) {
+            throw new RuntimeException("Error logging exit activity: " + e.getMessage(), e);
+        }
     }
 
     private void clearUserUIDfromSharedPreferences() {
-        // Clear userUID from SharedPreferences
-        SharedPreferences preferences = NavigationScreen.this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(USER_UID_KEY); // USER_UID_KEY is the key used to store userUID
-        editor.apply();
+        try {
+            // Clear userUID from SharedPreferences
+            SharedPreferences preferences = NavigationScreen.this.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove(USER_UID_KEY); // USER_UID_KEY is the key used to store userUID
+            editor.apply();
 
-        // Clear "Remember Me" preferences
-        editor.remove("isUserRemembered");
-        editor.remove("savedEmail");
-        editor.remove("savedPassword");
-        editor.apply();
+            // Clear "Remember Me" preferences
+            editor.remove("isUserRemembered");
+            editor.remove("savedEmail");
+            editor.remove("savedPassword");
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error clearing SharedPreferences: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

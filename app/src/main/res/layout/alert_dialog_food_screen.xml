@@ -27,7 +27,7 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/closeDialog"
+                android:id="@+id/closeServingDialog"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
@@ -39,7 +39,7 @@
                 app:tint="@color/white" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/mealPlanLayout"
+                android:id="@+id/inputServingLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 app:errorTextAppearance="@style/ErrorHelperTextAppearance">
 
                 <AutoCompleteTextView
-                    android:id="@+id/mealPlanSelection"
+                    android:id="@+id/inputServingText"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/mealPlanLayout"
+                android:layout_below="@id/inputServingLayout"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
                 android:hint="Serving Size"
@@ -102,7 +102,7 @@
                 android:layout_below="@id/recommendedLabel"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="12dp"
-                android:text="1 Cup"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -115,7 +115,7 @@
                 android:weightSum="2">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/cancelMeal"
+                    android:id="@+id/cancelServing"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginLeft="12dp"
@@ -129,7 +129,7 @@
                     android:layout_height="0dp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/saveMeal"
+                    android:id="@+id/saveServing"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginRight="12dp"
